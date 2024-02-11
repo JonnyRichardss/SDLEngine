@@ -16,7 +16,7 @@ public:
 	SDL_Renderer* GetRenderContext();
 	void RenderFrame();
 	void ToggleFullscreen();
-	void ToggleFPSCounter();
+
 	void Enqueue(RenderableComponent* object);
 private:
 	std::vector<RenderableComponent*> RenderQueue;
@@ -24,9 +24,6 @@ private:
 	SDL_Window* window;
 	SDL_Renderer* renderContext;
 	SDL_DisplayMode mode;
-	TTF_Font* FPSfont;
-	bool SHOW_FPS;
-	long long fps;
-	void DrawFPS();
+
 };
 #endif // !USE_RENDER

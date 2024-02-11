@@ -4,6 +4,7 @@
 #include "GameClock.h"
 #include "RenderEngine.h"
 #include "GameObject.h"
+#include "FPSCounter.h"
 #include <vector>
 class GameEngine
 {
@@ -18,7 +19,7 @@ private:
 	const int FRAME_CAP = 240;
 	RenderEngine* rendering;
 	GameClock* clock;
-
+	FPSCounter* FPS;
 	std::vector<GameObject*> UpdateQueue;
 	void ProcessEvents();
 	void Update();

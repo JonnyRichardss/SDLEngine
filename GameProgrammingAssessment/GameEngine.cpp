@@ -7,6 +7,8 @@ GameEngine::GameEngine()
     clock = GameClock::GetInstance();
     rendering = RenderEngine::GetInstance(); 
     clock->SetFPSLimit(FRAME_CAP);
+    FPS = new FPSCounter();
+    
 }
 
 GameEngine::~GameEngine()
@@ -22,6 +24,7 @@ GameEngine* GameEngine::GetInstance()
 
 void GameEngine::StartLoop()
 {
+    RegisterObject(FPS);
     GameLoop();
 }
 
@@ -50,7 +53,7 @@ void GameEngine::ProcessEvents()
                 clock->SetFPSLimit(0);
                 break;
             case SDLK_F8:
-                rendering->ToggleFPSCounter();
+                FPS->ToggleVisibility();
                 break;
             }
         }

@@ -17,9 +17,6 @@ RenderEngine::RenderEngine()
     SDL_GetDesktopDisplayMode(0, &mode);
     window = SDL_CreateWindow("Jonathan Richards -- 26541501", mode.w /4, mode.h / 4, 800, 600, SDL_WINDOW_RESIZABLE);
     renderContext = SDL_CreateRenderer(window, -1, 0);
-    fps = 0;
-    SHOW_FPS = false;
-    FPSfont = nullptr;
     TTF_Init();
 }
 
@@ -50,27 +47,13 @@ void RenderEngine::RenderFrame()
     SDL_RenderFillRect(renderer, &rectangle);
     SDL_RenderDrawLine(renderer, 200, 100, 200, 500);
     */
-    if (SHOW_FPS) DrawFPS();
     for (RenderableComponent* c : RenderQueue) {
-        SDL_RenderCopy(renderContext, c->texture, c->source_pos, c->destination_pos);
+        SDL_RenderCopy(renderContext, c->GetTexture(), c->GetSourcePos(), c->GetDestPos());
     }
     RenderQueue.clear();
     SDL_RenderPresent(renderContext);
 }
-void RenderEngine::DrawFPS()
-{
-    if (FPSfont == nullptr)
-        return;
-    if (clock->GetFrameCount() % 10 == 0)
-        fps = clock->GetFPS();
-    std::stringstream fpsText;
-    fpsText << fps << "\n" << clock->GetBudgetPercent() << "%";
-    SDL_Texture* fpsTexture = SDL_CreateTextureFromSurface(renderContext,TTF_RenderUTF8_LCD_Wrapped(FPSfont, fpsText.str().c_str(), {255,255,255,255}, {0,0,0,0},0));
-    SDL_Rect counterLocation = { 0, 0, 25 * (log10(fps)+1),72};
-    RenderableComponent component(fpsTexture, &counterLocation);
-    Enqueue(&component);
 
-}
 void RenderEngine::ToggleFullscreen()
 {
     if (SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) 
@@ -79,20 +62,6 @@ void RenderEngine::ToggleFullscreen()
         SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 }
 
-void RenderEngine::ToggleFPSCounter()
-{
-    if (SHOW_FPS) {
-        std::cout << "DISABLED FPS COUNTER\n";
-        SHOW_FPS = false;
-        TTF_CloseFont(FPSfont);
-        FPSfont = nullptr;
-    }
-    else {
-        std::cout << "ENABLED FPS COUNTER\n";
-        SHOW_FPS = true;
-        FPSfont = TTF_OpenFont("cour.ttf", 72);
-    }
-}
 
 void RenderEngine::Enqueue(RenderableComponent* object)
 {

@@ -29,3 +29,41 @@ RenderableComponent::~RenderableComponent()
 	//delete destination_pos;
 	//delete source_pos;
 }
+
+SDL_Rect* RenderableComponent::GetSourcePos()
+{
+	return source_pos;
+}
+
+SDL_Rect* RenderableComponent::GetDestPos()
+{
+	return destination_pos;
+}
+
+SDL_Texture* RenderableComponent::GetTexture()
+{
+	return texture;
+}
+
+void RenderableComponent::UpdateSourcePos(SDL_Rect* newPos)
+{
+	if (source_pos == nullptr) {
+		source_pos = new SDL_Rect();
+	}
+	*source_pos = *newPos;
+}
+
+void RenderableComponent::UpdateDestPos(SDL_Rect* newPos)
+{
+	if (destination_pos == nullptr) {
+		destination_pos = new SDL_Rect();
+	}
+	*destination_pos = *newPos;
+}
+
+void RenderableComponent::UpdateTexture(SDL_Texture* newTex)
+{
+	if (texture !=nullptr)
+		SDL_DestroyTexture(texture);
+	texture = newTex;
+}
