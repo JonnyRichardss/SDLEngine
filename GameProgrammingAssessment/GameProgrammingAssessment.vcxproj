@@ -127,24 +127,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EshopAnim.cpp" />
     <ClCompile Include="GameClock.cpp" />
     <ClCompile Include="GameEngine.cpp" />
+    <ClCompile Include="GameMath.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="RenderableComponent.cpp" />
     <ClCompile Include="RenderEngine.cpp" />
+    <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ColourRGBA.h" />
+    <ClInclude Include="EshopAnim.h" />
     <ClInclude Include="GameClock.h" />
     <ClInclude Include="GameEngine.h" />
+    <ClInclude Include="GameMath.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="RenderableComponent.h" />
     <ClInclude Include="RenderEngine.h" />
+    <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
+    <Font Include="cour.ttf" />
     <Font Include="USN_Stencil.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

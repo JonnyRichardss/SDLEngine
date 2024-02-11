@@ -1,15 +1,23 @@
 #include "GameEngine.h"
 #include <iostream>
+static GameEngine* _instance;
 GameEngine::GameEngine()
 {
     SDL_Init(SDL_INIT_EVERYTHING);
-    clock.SetFPSLimit(60);
-    rendering = new RenderEngine(&clock); //need to do it this way since SDL_Init needs to come BEFORE creating window and such
+    clock = GameClock::GetInstance();
+    rendering = RenderEngine::GetInstance(); 
+    clock->SetFPSLimit(FRAME_CAP);
 }
 
 GameEngine::~GameEngine()
 {
-    delete rendering;
+}
+
+GameEngine* GameEngine::GetInstance()
+{
+    if (_instance == nullptr)
+        _instance = new GameEngine();
+    return _instance;
 }
 
 void GameEngine::StartLoop()
@@ -20,6 +28,7 @@ void GameEngine::StartLoop()
 void GameEngine::RegisterObject(GameObject* g)
 {
     UpdateQueue.push_back(g);
+    g->Init();
 }
 
 void GameEngine::ProcessEvents()
@@ -35,10 +44,10 @@ void GameEngine::ProcessEvents()
                 ExitGame();
                 break;
             case SDLK_F10:
-                clock.SetFPSLimit(60);
+                clock->SetFPSLimit(FRAME_CAP);
                 break;
             case SDLK_F9:
-                clock.SetFPSLimit(0);
+                clock->SetFPSLimit(0);
                 break;
             case SDLK_F8:
                 rendering->ToggleFPSCounter();
@@ -54,7 +63,7 @@ void GameEngine::ProcessEvents()
 void GameEngine::Update()
 {
     for (GameObject* g : UpdateQueue) {
-        RenderableComponent newComponent;
+        RenderableComponent* newComponent = nullptr;
         if (g->UpdateAndRender(newComponent)) {
             rendering->Enqueue(newComponent);
         }
@@ -68,9 +77,9 @@ void GameEngine::GameLoop() {
         ProcessEvents();
         Update();
         rendering->RenderFrame();
-        clock.Tick();
-        std::cout << "Frame " << clock.GetFrameCount() << " - ";
-        std::cout << clock.GetFPS() << "\n";
+        clock->Tick();
+        std::cout << "Frame " << clock->GetFrameCount() << " - " << clock->GetFPS() << " - ";
+        std::cout << clock->GetBudgetPercent()<< "%\n";
     }
 }
 

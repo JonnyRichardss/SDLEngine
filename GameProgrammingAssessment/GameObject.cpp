@@ -7,9 +7,10 @@ GameObject::GameObject()
 
 GameObject::~GameObject()
 {
+	delete visuals;
 }
 
-bool GameObject::UpdateAndRender(RenderableComponent &render)
+bool GameObject::UpdateAndRender(RenderableComponent*& render)
 {
 	Update();
 	if (shown) {

@@ -6,13 +6,16 @@ class GameObject
 public:
 	GameObject();
 	virtual ~GameObject();
-	bool UpdateAndRender(RenderableComponent &render);
-	virtual void Update() = 0;
+	bool UpdateAndRender(RenderableComponent*& render);
+	
 	void Hide();
 	void Show();
-private:
+	virtual void Init() = 0;
+protected:
+	
+	virtual void Update() = 0;
 	bool shown;
-	RenderableComponent visuals;
+	RenderableComponent* visuals;
 };
 #endif // !USE_GAMEOBJECT
 

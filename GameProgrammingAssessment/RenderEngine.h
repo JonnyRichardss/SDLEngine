@@ -9,18 +9,20 @@
 class RenderEngine
 {
 public:
-	RenderEngine(GameClock* _clock);
+	static RenderEngine* GetInstance();
+	RenderEngine();
 	~RenderEngine();
-	
+	SDL_Window* GetWindow();
+	SDL_Renderer* GetRenderContext();
 	void RenderFrame();
 	void ToggleFullscreen();
 	void ToggleFPSCounter();
-	void Enqueue(RenderableComponent& object);
+	void Enqueue(RenderableComponent* object);
 private:
-	std::vector<RenderableComponent> RenderQueue;
+	std::vector<RenderableComponent*> RenderQueue;
 	GameClock* clock;
 	SDL_Window* window;
-	SDL_Renderer* renderer;
+	SDL_Renderer* renderContext;
 	SDL_DisplayMode mode;
 	TTF_Font* FPSfont;
 	bool SHOW_FPS;

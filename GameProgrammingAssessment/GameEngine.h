@@ -8,17 +8,18 @@
 class GameEngine
 {
 public:
-	GameEngine();
-	~GameEngine();
+	static GameEngine* GetInstance();
 	void StartLoop();
 	void RegisterObject(GameObject* g);
 private:
+	GameEngine();
+	~GameEngine();
 	bool ENGINE_QUIT_FLAG = false;
-	
+	const int FRAME_CAP = 240;
 	RenderEngine* rendering;
+	GameClock* clock;
 
 	std::vector<GameObject*> UpdateQueue;
-	GameClock clock;
 	void ProcessEvents();
 	void Update();
 	void GameLoop();
