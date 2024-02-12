@@ -3,6 +3,7 @@
 #include <cmath>
 #include <sstream>
 #include <iostream>
+#include <algorithm>
 static RenderEngine* _instance;
 RenderEngine* RenderEngine::GetInstance()
 {
@@ -47,6 +48,7 @@ void RenderEngine::RenderFrame()
     SDL_RenderFillRect(renderer, &rectangle);
     SDL_RenderDrawLine(renderer, 200, 100, 200, 500);
     */
+    std::sort(RenderQueue.begin(),RenderQueue.end(), [](auto a, auto b){return *a < *b;});
     for (RenderableComponent* c : RenderQueue) {
         SDL_RenderCopy(renderContext, c->GetTexture(), c->GetSourcePos(), c->GetDestPos());
     }
@@ -61,7 +63,6 @@ void RenderEngine::ToggleFullscreen()
     else 
         SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 }
-
 
 void RenderEngine::Enqueue(RenderableComponent* object)
 {

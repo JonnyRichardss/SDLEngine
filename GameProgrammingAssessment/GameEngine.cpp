@@ -8,7 +8,7 @@ GameEngine::GameEngine()
     rendering = RenderEngine::GetInstance(); 
     clock->SetFPSLimit(FRAME_CAP);
     FPS = new FPSCounter();
-    
+    RegisterObject(FPS);
 }
 
 GameEngine::~GameEngine()
@@ -24,7 +24,7 @@ GameEngine* GameEngine::GetInstance()
 
 void GameEngine::StartLoop()
 {
-    RegisterObject(FPS);
+    
     GameLoop();
 }
 

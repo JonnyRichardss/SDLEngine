@@ -19,10 +19,10 @@ protected:
 	
 private:
 	const std::string name = "Jonathan Richards";
-	const int numBars = 50;
+	const int numBars = 6;
 	const int ptsize = 48;
 	const int movePeriod = 600;
-	const int colourPeriod = 1800;
+	const int colourPeriod = 2400;
 
 	ColourRGBA leftInit = { 255,128,0,0 };
 	ColourRGBA leftFinal = { 255,196,0,0 };

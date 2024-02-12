@@ -7,6 +7,7 @@ void FPSCounter::Init()
     renderer = RenderEngine::GetInstance();
     renderContext = renderer->GetRenderContext();
     FPSfont = TTF_OpenFont("cour.ttf", 72);
+    visuals->UpdateLayer(100);
 }
 
 

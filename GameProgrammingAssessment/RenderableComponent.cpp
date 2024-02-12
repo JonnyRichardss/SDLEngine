@@ -5,6 +5,7 @@ RenderableComponent::RenderableComponent()
 	texture = nullptr;
 	destination_pos = nullptr;
 	source_pos = nullptr;
+	layer = 0;
 }
 
 RenderableComponent::RenderableComponent(SDL_Texture* _texture, SDL_Rect* _destination_pos) : RenderableComponent()
@@ -19,6 +20,16 @@ RenderableComponent::RenderableComponent(SDL_Texture* _texture, SDL_Rect* _desti
 RenderableComponent::RenderableComponent(SDL_Texture* _texture, SDL_Rect* _destination_pos, SDL_Rect* _source_pos) : RenderableComponent(_texture,_destination_pos)
 {
 	source_pos = _source_pos;
+}
+
+RenderableComponent::RenderableComponent(SDL_Texture* _texture, SDL_Rect* _destination_pos, int _layer) : RenderableComponent(_texture, _destination_pos)
+{
+	layer = _layer;
+}
+
+RenderableComponent::RenderableComponent(SDL_Texture* _texture, SDL_Rect* _destination_pos, SDL_Rect* _source_pos, int _layer) : RenderableComponent(_texture,  _destination_pos,  _source_pos)
+{
+	layer = _layer;
 }
 
 RenderableComponent::~RenderableComponent()
@@ -45,6 +56,16 @@ SDL_Texture* RenderableComponent::GetTexture()
 	return texture;
 }
 
+int RenderableComponent::GetLayer()
+{
+	return layer;
+}
+
+void RenderableComponent::UpdateLayer(int newLayer)
+{
+	layer = newLayer;
+}
+
 void RenderableComponent::UpdateSourcePos(SDL_Rect* newPos)
 {
 	if (source_pos == nullptr) {
@@ -66,4 +87,14 @@ void RenderableComponent::UpdateTexture(SDL_Texture* newTex)
 	if (texture !=nullptr)
 		SDL_DestroyTexture(texture);
 	texture = newTex;
+}
+
+bool RenderableComponent::operator>(const RenderableComponent& other)
+{
+	return this->layer > other.layer;
+}
+
+bool RenderableComponent::operator<(const RenderableComponent& other)
+{
+	return this->layer < other.layer;
 }

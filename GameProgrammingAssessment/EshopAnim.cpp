@@ -15,7 +15,7 @@ void EshopAnim::Update()
 {
 	GetWindowParams();
 	MoveName();
-	UpdateColours();
+	//UpdateColours();
 	Animate();
 }
 void EshopAnim::MoveName() {
@@ -54,8 +54,8 @@ void EshopAnim::UpdateColours()
 }
 void EshopAnim::Animate()
 {
-
-	//float lerpFactor = 0.5;
+	//reverseAnim = true;
+	//float lerpFactor = 0.333;
 	float lerpFactor = (clock->GetFrameCount() % movePeriod) / (float)movePeriod;
 	if (lerpFactor ==1 || lerpFactor == 0) 
 		reverseAnim = reverseAnim ? false : true;//learning to use ternary operator - its pretty cool
