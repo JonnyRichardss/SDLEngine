@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "FPSCounter.h"
 #include <vector>
+#include "Global_Flags.h"
 class GameEngine
 {
 public:
@@ -16,7 +17,7 @@ private:
 	GameEngine();
 	~GameEngine();
 	bool ENGINE_QUIT_FLAG = false;
-	const int FRAME_CAP = 240;
+	
 	RenderEngine* rendering;
 	GameClock* clock;
 	FPSCounter* FPS;

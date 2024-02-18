@@ -6,6 +6,7 @@
 #include "SDL.h"
 #include "SDL_ttf.h"
 #include "RenderEngine.h"
+#include "Timer.h"
 class FPSCounter : public GameObject
 {
 public:
@@ -15,6 +16,7 @@ public:
 protected:
 	long long fps = 0;
 	bool initialised = false;
+	Timer timer;
 	bool enabled;
 	void Update();
 	TTF_Font* FPSfont;

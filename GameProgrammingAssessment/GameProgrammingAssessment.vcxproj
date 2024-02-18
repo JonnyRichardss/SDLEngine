@@ -150,6 +150,7 @@
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameMath.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Global_Flags.h" />
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="RenderableComponent.h" />
     <ClInclude Include="RenderEngine.h" />

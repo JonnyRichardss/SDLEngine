@@ -6,7 +6,7 @@ GameEngine::GameEngine()
     SDL_Init(SDL_INIT_EVERYTHING);
     clock = GameClock::GetInstance();
     rendering = RenderEngine::GetInstance(); 
-    clock->SetFPSLimit(FRAME_CAP);
+    clock->SetFPSLimit(GF_FRAME_CAP);
     FPS = new FPSCounter();
     RegisterObject(FPS);
 }
@@ -47,7 +47,7 @@ void GameEngine::ProcessEvents()
                 ExitGame();
                 break;
             case SDLK_F10:
-                clock->SetFPSLimit(FRAME_CAP);
+                clock->SetFPSLimit(GF_FRAME_CAP);
                 break;
             case SDLK_F9:
                 clock->SetFPSLimit(0);
@@ -82,7 +82,7 @@ void GameEngine::GameLoop() {
         rendering->RenderFrame();
         clock->Tick();
         std::cout << "Frame " << clock->GetFrameCount() << " - " << clock->GetFPS() << " - ";
-        std::cout << clock->GetBudgetPercent()<< "%\n";
+        std::cout << clock->GetFrametime().count() << "\n";
     }
 }
 

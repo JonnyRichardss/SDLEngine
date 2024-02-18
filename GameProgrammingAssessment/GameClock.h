@@ -1,13 +1,14 @@
 #ifndef USE_GAMECLOCK
 #define USE_GAMECLOCK
 #include <chrono>
-
+#include "Global_Flags.h"
+using namespace std::chrono_literals;
 class GameClock
 {
 public:
 	static GameClock* GetInstance();
 	void Tick();
-	long long GetFrametime();
+	std::chrono::nanoseconds GetFrametime();
 	long long GetFrameCount();
 	float GetBudgetPercent();
 	std::chrono::high_resolution_clock::time_point GetTimePoint();
@@ -20,13 +21,15 @@ private:
 	const std::chrono::high_resolution_clock::time_point ENGINE_START_TP;
 	std::chrono::high_resolution_clock::time_point last_frame_tp;
 
-	long long frametime_ns;
-	long long unused_ns;
+	std::chrono::nanoseconds frametime_ns;
+	std::chrono::nanoseconds unused_ns;
+	std::chrono::nanoseconds target_ns;
+
 	long long framecounter;
-	long long target_ns;
-	long long GetRemainingBudget();
+	std::chrono::nanoseconds GetRemainingBudget();
 	void EnforceLimit();
-	long long TimeSinceLastFrame();
+	std::chrono::nanoseconds TimeSinceLastFrame();
+	void WaitFor(std::chrono::nanoseconds wait_ns);
 };
 #endif // !USE_GAMECLOCK
 
