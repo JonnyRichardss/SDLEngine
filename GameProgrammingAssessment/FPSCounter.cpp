@@ -10,26 +10,24 @@ void FPSCounter::Init()
     visuals->UpdateLayer(100);
     timer.Start();
 }
-static int nextcount = 0;
+
 void FPSCounter::Update()
 {
-    nextcount++;
-    if (!shown) {
+   
+    if (FPSfont == nullptr || !shown)
         return;
-    }
-    if (FPSfont == nullptr)
-        return;
-    /*
-    if (clock->GetFrameCount() % 10 == 0)
-        fps = clock->GetFPS();*/
-    if (timer.GetTimeElapsedms() >= 1000) {
+    nextFrameCount++;
+    nextBudgetTotal += clock->GetBudgetPercent();
+    if (timer.GetTimeElapsed() > 1s) {
         timer.Reset();
-        fps = nextcount;
-        nextcount = 0;
+        fps = nextFrameCount;
+        budget = nextBudgetTotal / nextFrameCount;
+        nextFrameCount = 0;
+        nextBudgetTotal = 0;
     }
 
     std::stringstream fpsText;
-    fpsText << fps << "\n" << clock->GetBudgetPercent() << "%";
+    fpsText << fps << "\n" << budget << "%";
     SDL_Texture* fpsTexture = SDL_CreateTextureFromSurface(renderContext, TTF_RenderUTF8_LCD_Wrapped(FPSfont, fpsText.str().c_str(), { 255,255,255,255 }, { 0,0,0,0 }, 0));
     SDL_Rect counterLocation = { 0, 0, 25 * (log10(fps) + 1),72 };
     visuals->UpdateTexture( fpsTexture);

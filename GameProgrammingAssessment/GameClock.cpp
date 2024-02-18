@@ -48,7 +48,7 @@ float GameClock::GetBudgetPercent()
 	if (target_ns == 0ns)
 		return 100.0f;
 	else
-		return roundf((1- ( (float)unused_ns.count() / (float)target_ns.count())) / 100);
+		return roundf((1- (float)unused_ns.count() / (float)target_ns.count()) * 100 );
 }
 
 std::chrono::nanoseconds GameClock::GetRemainingBudget()

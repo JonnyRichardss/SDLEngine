@@ -15,6 +15,9 @@ public:
 	
 protected:
 	long long fps = 0;
+	float budget = 0;
+	int nextFrameCount = 0;
+	float nextBudgetTotal = 0;
 	bool initialised = false;
 	Timer timer;
 	bool enabled;

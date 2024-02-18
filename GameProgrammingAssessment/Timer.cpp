@@ -20,12 +20,12 @@ void Timer::Reset()
 	start_tp = clock->GetTimePoint();
 }
 
-long long Timer::GetTimeElapsedms()
+std::chrono::nanoseconds Timer::GetTimeElapsed()
 {
 	if (running)
-		return std::chrono::duration_cast<std::chrono::milliseconds>(clock->GetTimePoint() - start_tp).count();
+		return std::chrono::duration_cast<std::chrono::nanoseconds>(clock->GetTimePoint() - start_tp);
 	else
-		return -1;
+		return 0ns;
 }
 
 Timer::Timer()

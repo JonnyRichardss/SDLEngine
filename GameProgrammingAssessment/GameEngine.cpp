@@ -82,7 +82,7 @@ void GameEngine::GameLoop() {
         rendering->RenderFrame();
         clock->Tick();
         std::cout << "Frame " << clock->GetFrameCount() << " - " << clock->GetFPS() << " - ";
-        std::cout << clock->GetFrametime().count() << "\n";
+        std::cout << clock->GetBudgetPercent() << "%\n";
     }
 }
 
