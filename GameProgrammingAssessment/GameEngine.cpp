@@ -6,9 +6,8 @@ GameEngine::GameEngine()
     SDL_Init(SDL_INIT_EVERYTHING);
     clock = GameClock::GetInstance();
     rendering = RenderEngine::GetInstance(); 
-    clock->SetFPSLimit(GF_FRAME_CAP);
-    FPS = new FPSCounter();
-    RegisterObject(FPS);
+    clock->SetFPSLimit(FRAME_CAP);
+    
 }
 
 GameEngine::~GameEngine()
@@ -24,7 +23,8 @@ GameEngine* GameEngine::GetInstance()
 
 void GameEngine::StartLoop()
 {
-    
+    FPS = new FPSCounter();
+    RegisterObject(FPS);
     GameLoop();
 }
 
@@ -32,6 +32,7 @@ void GameEngine::RegisterObject(GameObject* g)
 {
     UpdateQueue.push_back(g);
     g->Init();
+    g->InitVisuals();
 }
 
 void GameEngine::ProcessEvents()
@@ -44,10 +45,10 @@ void GameEngine::ProcessEvents()
                 rendering->ToggleFullscreen();
                 break;
             case SDLK_ESCAPE:
-                ExitGame();
+                ENGINE_QUIT_FLAG = true;
                 break;
             case SDLK_F10:
-                clock->SetFPSLimit(GF_FRAME_CAP);
+                clock->SetFPSLimit(FRAME_CAP);
                 break;
             case SDLK_F9:
                 clock->SetFPSLimit(0);
@@ -58,7 +59,7 @@ void GameEngine::ProcessEvents()
             }
         }
         if (event.type == SDL_QUIT) {
-            ExitGame();
+            ENGINE_QUIT_FLAG = true;
         }
     }
 }
@@ -72,7 +73,12 @@ void GameEngine::Update()
         }
     }
 }
-
+void GameEngine::MoveStatics() {
+    for (GameObject* g : UpdateQueue) {
+        if (g->GetStaticStatus())
+            g->MoveVisuals();
+    }
+}
 
 
 void GameEngine::GameLoop() {
@@ -80,14 +86,22 @@ void GameEngine::GameLoop() {
         ProcessEvents();
         Update();
         rendering->RenderFrame();
+        if (DEBUG_DRAW_BB)
+            DrawBBs();
         clock->Tick();
+
         std::cout << "Frame " << clock->GetFrameCount() << " - " << clock->GetFPS() << " - ";
         std::cout << clock->GetBudgetPercent() << "%\n";
     }
+    SDL_Quit();
 }
 
-
-void GameEngine::ExitGame() {
-    SDL_Quit();
-    ENGINE_QUIT_FLAG = true;
+void GameEngine::DrawBBs()
+{
+    SDL_Renderer* renderContext = rendering->GetRenderContext();
+    SDL_SetRenderDrawColor(renderContext, 255, 0, 0, 255);
+    for (GameObject* g : UpdateQueue) {
+        g->DrawBoundingBox();
+    }
+    SDL_RenderPresent(renderContext);
 }

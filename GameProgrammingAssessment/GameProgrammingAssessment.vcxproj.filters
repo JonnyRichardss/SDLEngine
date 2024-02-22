@@ -108,8 +108,6 @@
     </Font>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config">
-      <Filter>Resource Files</Filter>
-    </None>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

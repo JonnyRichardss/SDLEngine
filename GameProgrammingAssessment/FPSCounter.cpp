@@ -3,12 +3,18 @@
 void FPSCounter::Init()
 {
     shown = false;
+    is_static = true;
     clock = GameClock::GetInstance();
     renderer = RenderEngine::GetInstance();
     renderContext = renderer->GetRenderContext();
+   
+    timer.Start();
+}
+
+void FPSCounter::InitVisuals()
+{
     FPSfont = TTF_OpenFont("cour.ttf", 72);
     visuals->UpdateLayer(100);
-    timer.Start();
 }
 
 void FPSCounter::Update()
@@ -27,7 +33,7 @@ void FPSCounter::Update()
     }
 
     std::stringstream fpsText;
-    fpsText << fps << "\n" << budget << "%";
+    fpsText << fps << "\n" << (int)budget << "%";
     SDL_Texture* fpsTexture = SDL_CreateTextureFromSurface(renderContext, TTF_RenderUTF8_LCD_Wrapped(FPSfont, fpsText.str().c_str(), { 255,255,255,255 }, { 0,0,0,0 }, 0));
     SDL_Rect counterLocation = { 0, 0, 25 * (log10(fps) + 1),72 };
     visuals->UpdateTexture( fpsTexture);

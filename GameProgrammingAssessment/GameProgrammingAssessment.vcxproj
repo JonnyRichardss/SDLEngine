@@ -141,9 +141,6 @@
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="ColourRGBA.h" />
     <ClInclude Include="EshopAnim.h" />
     <ClInclude Include="FPSCounter.h" />
@@ -161,6 +158,9 @@
   <ItemGroup>
     <Font Include="cour.ttf" />
     <Font Include="USN_Stencil.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

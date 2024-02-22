@@ -2,8 +2,10 @@
 #define USE_GAMEOBJECT
 #include "RenderableComponent.h"
 #include "RenderEngine.h"
-
+#include "GameMath.h"
 #include "GameClock.h"
+#include "ColourRGBA.h"
+class GameEngine;
 class GameObject
 {
 public:
@@ -16,12 +18,27 @@ public:
 	void Show();
 	void ToggleVisibility();
 	virtual void Init() = 0;
+	virtual void InitVisuals() = 0;
+	void DrawBoundingBox();
+	bool GetStaticStatus();
+	void MoveVisuals();
+	Vector2 GetPos();
+	Vector2 GetBB();
 protected:
-	int windowWidth, windowHeight;
 	virtual void Update() = 0;
+
+	int windowWidth, windowHeight;
+	Vector2 position;
+	Vector2 velocity;
+	Vector2 BoundingBox;
+	Vector2 GameToWindowCoords(Vector2 GameCoords);
+	Vector2 GameToWindowScaling(Vector2 vec);
+	SDL_Rect BBtoDestRect();
 	void GetWindowParams();
 	bool shown;
+	bool is_static = false;
 	RenderEngine* renderer;
+	GameEngine* engine;
 	GameClock* clock;
 	SDL_Window* window;
 	SDL_Renderer* renderContext;

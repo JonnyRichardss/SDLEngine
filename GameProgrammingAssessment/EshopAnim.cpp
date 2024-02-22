@@ -3,10 +3,9 @@
 void EshopAnim::Init()
 {
 	shown = true;
+	is_static = true;
 	
-	
-	CreateNameText();
-	InitComponents();
+	InitVisuals();
 	timer.Start();
 	
 }
@@ -17,6 +16,29 @@ void EshopAnim::Update()
 	MoveName();
 	//UpdateColours();
 	Animate();
+}
+void EshopAnim::InitVisuals()
+{
+	CreateNameText();
+	//make two coloured textures
+	SDL_Surface* leftSurf = SDL_CreateRGBSurface(0, 1, 1, 32, 0, 0, 0, 0);
+	SDL_Surface* rightSurf = SDL_CreateRGBSurface(0, 1, 1, 32, 0, 0, 0, 0);
+
+	SDL_FillRect(leftSurf, NULL, leftInit.MapFromColour(leftSurf->format));
+	SDL_FillRect(rightSurf, NULL, rightInit.MapFromColour(rightSurf->format));
+	//make textures
+	SDL_Texture* leftTex = SDL_CreateTextureFromSurface(renderContext, leftSurf);
+	SDL_Texture* rightTex = SDL_CreateTextureFromSurface(renderContext, rightSurf);
+	//surfs no longer needed
+	SDL_FreeSurface(leftSurf);
+	SDL_FreeSurface(rightSurf);
+	//rect to construct renderableComponents
+	SDL_Rect blankRect = { 0,0,0,0 };
+	//make renderableComponents
+	for (int i = 0; i < numBars; i++) {
+		lefts.push_back(new RenderableComponent(leftTex, new SDL_Rect(blankRect)));
+		rights.push_back(new RenderableComponent(rightTex, new SDL_Rect(blankRect)));
+	}
 }
 void EshopAnim::MoveName() {
 
@@ -89,31 +111,10 @@ void EshopAnim::Animate()
 void EshopAnim::CreateNameText()
 {
 	nameFont = TTF_OpenFont("cour.ttf", ptsize);
-	SDL_Texture* nameTexture = SDL_CreateTextureFromSurface(renderContext, TTF_RenderUTF8_Solid(nameFont, name.c_str(), {255,255,255,255})); 
+	SDL_Texture* nameTexture = SDL_CreateTextureFromSurface(renderContext, TTF_RenderUTF8_Solid(nameFont, name.c_str(), {255,255,255,255}));
 	const char* test = SDL_GetError();
 	visuals->UpdateTexture(nameTexture);
+	visuals->UpdateLayer(10);
 }
 
 
-void EshopAnim::InitComponents()
-{
-	//make two coloured textures
-	SDL_Surface* leftSurf = SDL_CreateRGBSurface(0, 1, 1, 32, 0, 0, 0, 0);
-	SDL_Surface* rightSurf = SDL_CreateRGBSurface(0, 1, 1, 32, 0, 0, 0, 0);
-
-	SDL_FillRect(leftSurf, NULL, leftInit.MapFromColour(leftSurf->format));
-	SDL_FillRect(rightSurf, NULL, rightInit.MapFromColour(rightSurf->format));
-	//make textures
-	SDL_Texture* leftTex = SDL_CreateTextureFromSurface(renderContext,leftSurf);
-	SDL_Texture* rightTex = SDL_CreateTextureFromSurface(renderContext, rightSurf);
-	//surfs no longer needed
-	SDL_FreeSurface(leftSurf);
-	SDL_FreeSurface(rightSurf);
-	//rect to construct renderableComponents
-	SDL_Rect blankRect = { 0,0,0,0 };
-	//make renderableComponents
-	for (int i = 0; i < numBars; i++) {
-		lefts.push_back(new RenderableComponent(leftTex,new SDL_Rect(blankRect)));
-		rights.push_back(new RenderableComponent(rightTex, new SDL_Rect(blankRect)));
-	}
-}

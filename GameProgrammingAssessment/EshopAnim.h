@@ -16,6 +16,7 @@ public:
 protected:
 	
 	void Update();
+	void InitVisuals();
 	
 private:
 	const std::string name = "Jonathan Richards";
@@ -46,7 +47,6 @@ private:
 	void CreateNameText();
 	void MoveName();
 	void UpdateColours();
-	void InitComponents();
 };
 
 #endif // !USE_ESHOP

@@ -12,15 +12,13 @@ class FPSCounter : public GameObject
 public:
 	//things
 	void Init();
-	
+	void InitVisuals();
 protected:
 	long long fps = 0;
 	float budget = 0;
 	int nextFrameCount = 0;
 	float nextBudgetTotal = 0;
-	bool initialised = false;
 	Timer timer;
-	bool enabled;
 	void Update();
 	TTF_Font* FPSfont;
 

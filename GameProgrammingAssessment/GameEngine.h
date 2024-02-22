@@ -24,7 +24,8 @@ private:
 	std::vector<GameObject*> UpdateQueue;
 	void ProcessEvents();
 	void Update();
+	void MoveStatics();
 	void GameLoop();
-	void ExitGame();
+	void DrawBBs();
 };
 #endif // !USE_ENGINE
