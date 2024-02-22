@@ -1,6 +1,8 @@
 #include "GameEngine.h"
 #include <iostream>
+#include "SpriteSheetTest.h"
 static GameEngine* _instance;
+static SpriteSheetTest* spriteSheet;
 GameEngine::GameEngine()
 {
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -24,7 +26,9 @@ GameEngine* GameEngine::GetInstance()
 void GameEngine::StartLoop()
 {
     FPS = new FPSCounter();
+    spriteSheet = new SpriteSheetTest();
     RegisterObject(FPS);
+    RegisterObject(spriteSheet);
     GameLoop();
 }
 
@@ -69,6 +73,10 @@ void GameEngine::ProcessEvents()
                 break;
             case SDLK_F8:
                 FPS->ToggleVisibility();
+                break;
+            case SDLK_SPACE:
+                spriteSheet->NextSprite();
+                //std::cout << "ASD";
                 break;
             }
         }

@@ -21,7 +21,7 @@ public:
 	void UpdateTexture(SDL_Texture* newTex);
 	bool operator > (const RenderableComponent& other);
 	bool operator < (const RenderableComponent& other);
-private:
+protected:
 	int layer;
 	SDL_Rect* source_pos;
 	SDL_Texture* texture;
