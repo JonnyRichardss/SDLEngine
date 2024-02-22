@@ -133,6 +133,7 @@
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GameMath.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameUtils.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="GameRNG.cpp" />
     <ClCompile Include="PlayerController.cpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameMath.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameUtils.h" />
     <ClInclude Include="Global_Flags.h" />
     <ClInclude Include="GameRNG.h" />
     <ClInclude Include="PlayerController.h" />

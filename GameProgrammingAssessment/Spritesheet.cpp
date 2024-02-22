@@ -1,7 +1,7 @@
 #include "Spritesheet.h"
 #include "SDL_image.h"
 #include "RenderEngine.h"
-#include <iostream>
+#include "GameUtils.h"
 int Spritesheet::GetSpriteIndex()
 {
 	return currentSprite;
@@ -21,14 +21,20 @@ int Spritesheet::GetSpriteIndexMax()
 void Spritesheet::InitSprites(std::string filename,std::string fileformat)
 {
 	//load Texture
-	SDL_Surface* Surf = IMG_Load(filename.append(fileformat).c_str());
+	std::string imgPath = filename+fileformat;
+	std::string dimPath = filename+".spritedims";
+	SDL_Surface* Surf = IMG_Load(imgPath.c_str());
 	SDL_Texture* Tex = SDL_CreateTextureFromSurface(RenderEngine::GetInstance()->GetRenderContext(), Surf);
 	SDL_FreeSurface(Surf);
 	UpdateTexture(Tex);
 	//load dimension file
-	int w = 3;
-	int h = 5;
-	int numsprites = 10;
+	std::vector<std::string> dimLines = ReadFile(dimPath);
+	std::vector<std::string> dimNums = Split(dimLines[0], ',');
+	
+
+	int w = stoi(dimNums[0]);
+	int h = stoi(dimNums[1]);
+	int numsprites = stoi(dimNums[2]);
 	//HARDCODED FOR NOW
 	for (int i = 0; i < numsprites; i++) {
 		Sprites.push_back(new SDL_Rect());
