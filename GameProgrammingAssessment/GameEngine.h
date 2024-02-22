@@ -13,6 +13,7 @@ public:
 	static GameEngine* GetInstance();
 	void StartLoop();
 	void RegisterObject(GameObject* g);
+	bool DeregisterObject(GameObject* g,bool delete_obj);
 private:
 	GameEngine();
 	~GameEngine();

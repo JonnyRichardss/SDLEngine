@@ -34,6 +34,20 @@ void GameEngine::RegisterObject(GameObject* g)
     g->Init();
     g->InitVisuals();
 }
+bool GameEngine::DeregisterObject(GameObject* g,bool delete_obj) {
+    bool found = false;
+    for (auto i = UpdateQueue.begin(); i != UpdateQueue.end();i++ ) {
+        if (*i == g) {
+            UpdateQueue.erase(i);
+            found = true;
+            break;
+        }
+    }
+    if (found && delete_obj) {
+        delete g;
+    }
+    return found;
+}
 
 void GameEngine::ProcessEvents()
 {
