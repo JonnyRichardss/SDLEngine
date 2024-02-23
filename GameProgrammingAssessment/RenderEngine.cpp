@@ -2,8 +2,8 @@
 #include <string>
 #include <cmath>
 #include <sstream>
-#include <iostream>
 #include <algorithm>
+
 static RenderEngine* _instance;
 RenderEngine* RenderEngine::GetInstance()
 {
@@ -14,7 +14,7 @@ RenderEngine* RenderEngine::GetInstance()
 RenderEngine::RenderEngine()
 {
     clock = GameClock::GetInstance();
-    
+    logging = GameLogging::GetInstance();
     SDL_GetDesktopDisplayMode(0, &mode);
     window = SDL_CreateWindow("Jonathan Richards -- 26541501", mode.w /4, mode.h / 4, 800, 600, SDL_WINDOW_RESIZABLE);
     renderContext = SDL_CreateRenderer(window, -1, 0);

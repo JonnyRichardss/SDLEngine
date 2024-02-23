@@ -1,7 +1,7 @@
 #ifndef USE_GAMECLOCK
 #define USE_GAMECLOCK
 #include <chrono>
-#include "Global_Flags.h"
+#include "GameLogging.h"
 using namespace std::chrono_literals;
 class GameClock
 {
@@ -13,11 +13,13 @@ public:
 	float GetBudgetPercent();
 	std::chrono::high_resolution_clock::time_point GetTimePoint();
 	int GetFPS();
-	void SetFPSLimit(int fps);
+	
 private:
 	GameClock();
 	~GameClock();
 	
+	GameLogging* logging;
+
 	const std::chrono::high_resolution_clock::time_point ENGINE_START_TP;
 	std::chrono::high_resolution_clock::time_point last_frame_tp;
 
@@ -26,6 +28,7 @@ private:
 	std::chrono::nanoseconds target_ns;
 
 	long long framecounter;
+	void SetFPSLimit(int fps);
 	std::chrono::nanoseconds GetRemainingBudget();
 	void EnforceLimit();
 	std::chrono::nanoseconds TimeSinceLastFrame();

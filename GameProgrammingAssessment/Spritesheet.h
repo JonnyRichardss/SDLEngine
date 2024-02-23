@@ -4,7 +4,7 @@
 #include "SDL.h"
 #include <vector>
 #include <string>
-class Spritesheet : public RenderableComponent
+class SpriteSheet : public RenderableComponent
 {
 public:
 	int GetSpriteIndex();

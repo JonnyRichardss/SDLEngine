@@ -4,8 +4,10 @@
 #include <vector>
 #include <string>
 
-std::vector<std::string> Split(std::string input, char delim);
-std::vector<std::string> ReadFile(std::string filePath);
+std::vector<std::string> StringSplit(std::string input, char delim);
+bool ReadFile(std::string filePath, std::vector<std::string>& output);
+bool ReadFileFirstLine(std::string filePath, std::string& output);
+bool WriteFile(std::string filePath,std::vector<std::string> lines);
 #endif // !USE_UTILS
 
 

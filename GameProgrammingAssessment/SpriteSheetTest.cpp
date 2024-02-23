@@ -10,7 +10,7 @@ void SpriteSheetTest::InitVisuals()
 {
 	BoundingBox = Vector2(30, 50);
 	delete visuals;
-	Sprites = new Spritesheet();
+	Sprites = new SpriteSheet();
 	visuals = Sprites;
 	Sprites->InitSprites("Numbers", ".png");
 	Sprites->UpdateLayer(100);

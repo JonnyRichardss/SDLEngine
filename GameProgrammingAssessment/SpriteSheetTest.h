@@ -10,7 +10,7 @@ public:
 	void NextSprite();
 protected:
 	void Update();
-	Spritesheet* Sprites;
+	SpriteSheet* Sprites;
 };
 #endif // !USE_TESTSS
 

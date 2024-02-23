@@ -1,14 +1,17 @@
 #include "GameClock.h"
 #include "SDL.h"
+#include "Global_Flags.h"
 #include <thread>
 static GameClock* _instance;
 GameClock::GameClock() : ENGINE_START_TP(std::chrono::high_resolution_clock::now())
 {
+	logging = GameLogging::GetInstance();
 	last_frame_tp = ENGINE_START_TP;
 	framecounter = 0;
 	frametime_ns = 0ns;
 	target_ns = 0ns;
 	unused_ns = 0ns;
+	SetFPSLimit(FRAME_CAP);
 }
 
 GameClock::~GameClock()
@@ -30,6 +33,12 @@ void GameClock::Tick()
 	EnforceLimit();
 	frametime_ns = TimeSinceLastFrame();
 	last_frame_tp = std::chrono::high_resolution_clock::now();
+	std::string logString = "Frame ";
+	logString.append(std::to_string(GetFrameCount()) + " - ");
+	logString.append(std::to_string(GetFPS()) + " - ");
+	logString.append(std::to_string((int)(GetBudgetPercent())) + "% ");
+	logString.append(std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(GetFrametime()).count()) + "ms");
+	logging->Log(logString);
 	
 }
 

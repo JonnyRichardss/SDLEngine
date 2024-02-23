@@ -6,6 +6,7 @@ RenderableComponent::RenderableComponent()
 	destination_pos = nullptr;
 	source_pos = nullptr;
 	layer = 0;
+	logging = GameLogging::GetInstance();
 }
 
 RenderableComponent::RenderableComponent(SDL_Texture* _texture, SDL_Rect* _destination_pos) : RenderableComponent()

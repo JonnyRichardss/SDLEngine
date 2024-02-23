@@ -2,6 +2,7 @@
 #ifndef USE_RENDERABLE
 #define USE_RENDERABLE
 #include "SDL.h"
+#include "GameLogging.h"
 class RenderableComponent
 {
 public:
@@ -26,5 +27,6 @@ protected:
 	SDL_Rect* source_pos;
 	SDL_Texture* texture;
 	SDL_Rect* destination_pos;
+	GameLogging* logging;
 };
 #endif

@@ -6,6 +6,7 @@
 #include "SDL_ttf.h"
 #include "RenderableComponent.h"
 #include <vector>
+#include "GameLogging.h"
 class RenderEngine
 {
 public:
@@ -20,6 +21,7 @@ public:
 	void Enqueue(RenderableComponent* object);
 private:
 	std::vector<RenderableComponent*> RenderQueue;
+	GameLogging* logging;
 	GameClock* clock;
 	SDL_Window* window;
 	SDL_Renderer* renderContext;

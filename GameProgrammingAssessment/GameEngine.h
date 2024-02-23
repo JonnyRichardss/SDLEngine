@@ -7,6 +7,7 @@
 #include "FPSCounter.h"
 #include <vector>
 #include "Global_Flags.h"
+#include "GameLogging.h"
 class GameEngine
 {
 public:
@@ -18,7 +19,7 @@ private:
 	GameEngine();
 	~GameEngine();
 	bool ENGINE_QUIT_FLAG = false;
-	
+	GameLogging* logging;
 	RenderEngine* rendering;
 	GameClock* clock;
 	FPSCounter* FPS;

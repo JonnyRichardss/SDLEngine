@@ -1,31 +1,23 @@
 #ifndef USE_GAMEGLOBALS
 #define USE_GAMEGLOBALS
 
-const int FRAME_CAP = 60;
+static const int FRAME_CAP = 60;
 
-const int WINDOW_WIDTH = 640;
-const int WINDOW_HEIGHT = 480;
-const int GAME_MAX_X = 400;
-const int GAME_MAX_Y = 300;
+static const int WINDOW_WIDTH = 640;
+static const int WINDOW_HEIGHT = 480;
+static const int GAME_MAX_X = 400;
+static const int GAME_MAX_Y = 300;
 
-/*
-* 
-* PONG ONLY
-const int PADDLE_X_ABS = 350;
-const int PADDLE_W = 20;
-const int PADDLE_H = 150;
+static const char* LOG_FOLDER_PATH = "Logs/";
+static const char* LOGFILE_NAME = "latest.log";
 
-const int SCORE_Y = 250;
-const int SCORE_X_ABS = 150;
+static const char* SPRITE_INFO_FORMAT = ".spritedims";
 
-const int BALL_SIZE = 15;
+static const bool DEBUG_DRAW_BB = false;
 
-const int PADDLE_MOVESPEED = 5;
-
-const float  ACCLERATION_CLAMP_FACTOR = 70000.0f;
-const float DEFLECTION_REDUCTION_MODIFIER = 250.0f;
-*/
-const bool DEBUG_DRAW_BB = false;
-enum WaitMethods {BUSY,SDL,THREAD};
-const WaitMethods GF_WAIT_METHOD = BUSY; //SDL seems to under-sleep and THREAD seems to over-sleep
+static const bool CONSOLE_LOG_DEFAULT = true;
+static const bool DO_FILE_LOGGING = true;
+static const bool VERBOSE_CONSOLE = false;
+static enum WaitMethods {BUSY,SDL,THREAD};
+static const WaitMethods GF_WAIT_METHOD = BUSY; //SDL seems to under-sleep and THREAD seems to over-sleep
 #endif // !USE_GAMEGLOBALS

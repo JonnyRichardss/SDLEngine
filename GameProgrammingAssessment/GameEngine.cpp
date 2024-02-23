@@ -1,5 +1,5 @@
 #include "GameEngine.h"
-#include <iostream>
+
 #include "SpriteSheetTest.h"
 static GameEngine* _instance;
 static SpriteSheetTest* spriteSheet;
@@ -7,9 +7,8 @@ GameEngine::GameEngine()
 {
     SDL_Init(SDL_INIT_EVERYTHING);
     clock = GameClock::GetInstance();
-    rendering = RenderEngine::GetInstance(); 
-    clock->SetFPSLimit(FRAME_CAP);
-    
+    rendering = RenderEngine::GetInstance();
+    logging = GameLogging::GetInstance();
 }
 
 GameEngine::~GameEngine()
@@ -66,10 +65,10 @@ void GameEngine::ProcessEvents()
                 ENGINE_QUIT_FLAG = true;
                 break;
             case SDLK_F10:
-                clock->SetFPSLimit(FRAME_CAP);
+                //clock->SetFPSLimit(FRAME_CAP);
                 break;
             case SDLK_F9:
-                clock->SetFPSLimit(0);
+                //clock->SetFPSLimit(0);
                 break;
             case SDLK_F8:
                 FPS->ToggleVisibility();
@@ -111,9 +110,7 @@ void GameEngine::GameLoop() {
         if (DEBUG_DRAW_BB)
             DrawBBs();
         clock->Tick();
-
-        std::cout << "Frame " << clock->GetFrameCount() << " - " << clock->GetFPS() << " - ";
-        std::cout << clock->GetBudgetPercent() << "%\n";
+        
     }
     SDL_Quit();
 }
