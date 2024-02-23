@@ -56,8 +56,8 @@ void GameLogging::SaveLogFile()
     if (WriteFile(LogPath, logBuffer))
         logBuffer.clear();
     else {
-        Log("SaveLogFile() write failed!");
         fileExists = false;
+        Log("SaveLogFile() write failed!"); 
     }
     
 }
@@ -88,7 +88,7 @@ void GameLogging::MakeNewLogFile()
     strftime(timeString, 20, "%F-%H-%M-%S",&tmNow);
     logBuffer.insert(logBuffer.begin(), timeString);
     delete[20] timeString;
-    if (WriteFile(LOGFILE_NAME, logBuffer)) {
+    if (WriteFile(LogPath, logBuffer)) {
         
         Log("Successfully created " +std::string(LOGFILE_NAME));
         fileExists = true;
