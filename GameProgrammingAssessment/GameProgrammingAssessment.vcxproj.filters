@@ -40,6 +40,9 @@
     <Filter Include="Source Files\Main">
       <UniqueIdentifier>{3e1a1773-61db-4e12-b322-edb1ddddfbc8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Scenes">
+      <UniqueIdentifier>{8b44e3b1-040c-4e3d-af8d-34c9aa9af870}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EshopAnim.cpp">
@@ -88,6 +91,9 @@
       <Filter>Source Files\Main</Filter>
     </ClCompile>
     <ClCompile Include="GameLogging.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
   </ItemGroup>
@@ -142,6 +148,15 @@
     </ClInclude>
     <ClInclude Include="RenderEngine.h">
       <Filter>Header Files\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="IncludeGameObjects.h">
+      <Filter>Header Files\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="IncludeScenes.h">
+      <Filter>Header Files\Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

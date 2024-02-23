@@ -5,13 +5,13 @@
 #include "GameMath.h"
 #include "GameClock.h"
 #include "ColourRGBA.h"
+#include <string>
 class GameEngine;
 class GameObject
 {
 public:
 	GameObject();
 	virtual ~GameObject();
-	
 	bool UpdateAndRender(RenderableComponent*& render);
 	
 	void Hide();
@@ -22,11 +22,12 @@ public:
 	void DrawBoundingBox();
 	bool GetStaticStatus();
 	void MoveVisuals();
+	std::string GetName();
 	Vector2 GetPos();
 	Vector2 GetBB();
 protected:
 	virtual void Update() = 0;
-
+	std::string name;
 	int windowWidth, windowHeight;
 	Vector2 position;
 	Vector2 velocity;

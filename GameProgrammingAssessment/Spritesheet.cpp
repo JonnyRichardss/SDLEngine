@@ -21,11 +21,11 @@ int SpriteSheet::GetSpriteIndexMax()
 void SpriteSheet::InitSprites(std::string filename,std::string fileformat)
 {
 	//load Texture
-	std::string imgPath = filename+fileformat;
-	std::string dimPath = filename+SPRITE_INFO_FORMAT;
+	std::string basePath = std::string(BASE_ASSET_PATH) + filename;
+	std::string imgPath = basePath+fileformat;
+	std::string dimPath = basePath+SPRITE_INFO_FORMAT;
 	SDL_Surface* Surf = IMG_Load(imgPath.c_str());
 	if (Surf == nullptr) {
-		logging->Log("Could not open File" + imgPath);
 		logging->Log(SDL_GetError());
 		return;
 	}
@@ -35,12 +35,13 @@ void SpriteSheet::InitSprites(std::string filename,std::string fileformat)
 	//load dimension file
 	std::vector<std::string> dimLines;
 	if (!ReadFile(dimPath, dimLines)){
-		logging->Log("Could not open File"+dimPath);
+		logging->Log("Could not open File "+dimPath);
 		return;
 	}
 	std::vector<std::string> dimNums = StringSplit(dimLines[0], ',');
-	//this can error but im not *really* sure I care
-	//maybe later when adding logging and stuff I can crashdump it or something
+	//these comments are old I *think* the checks above have sorted it i'm not really sure - could use try catch but i cant be bothered lol
+					//this can error but im not *really* sure I care
+					//maybe later when adding logging and stuff I can crashdump it or something
 
 	int w = stoi(dimNums[0]);
 	int h = stoi(dimNums[1]);
@@ -51,4 +52,5 @@ void SpriteSheet::InitSprites(std::string filename,std::string fileformat)
 		*Sprites[i] = { w * i,0,w,h };
 	}
 	SetSpriteIndex(0);
+	logging->FileLog("Successfully loaded asset " + imgPath);
 }

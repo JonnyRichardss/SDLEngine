@@ -12,6 +12,7 @@ GameObject::GameObject()
 	GetWindowParams();
 	velocity = Vector2::zero();
 	position = Vector2::zero();
+	name = "Default GameObject name";
 }
 
 GameObject::~GameObject()
@@ -118,5 +119,10 @@ void GameObject::MoveVisuals()
 	SDL_Rect pos = BBtoDestRect();
 
 	visuals->UpdateDestPos(&pos);
+}
+
+std::string GameObject::GetName()
+{
+	return name;
 }
 

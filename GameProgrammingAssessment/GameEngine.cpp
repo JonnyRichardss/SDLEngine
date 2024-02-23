@@ -1,14 +1,14 @@
 #include "GameEngine.h"
-
-#include "SpriteSheetTest.h"
+#include "IncludeGameObjects.h"
 static GameEngine* _instance;
 static SpriteSheetTest* spriteSheet;
 GameEngine::GameEngine()
 {
     SDL_Init(SDL_INIT_EVERYTHING);
     clock = GameClock::GetInstance();
-    rendering = RenderEngine::GetInstance();
+    renderer = RenderEngine::GetInstance();
     logging = GameLogging::GetInstance();
+    
 }
 
 GameEngine::~GameEngine()
@@ -25,31 +25,18 @@ GameEngine* GameEngine::GetInstance()
 void GameEngine::StartLoop()
 {
     FPS = new FPSCounter();
-    spriteSheet = new SpriteSheetTest();
-    RegisterObject(FPS);
-    RegisterObject(spriteSheet);
+    FPS->Init();
     GameLoop();
 }
 
-void GameEngine::RegisterObject(GameObject* g)
+void GameEngine::SwitchScene(int SceneIndex)
 {
-    UpdateQueue.push_back(g);
-    g->Init();
-    g->InitVisuals();
-}
-bool GameEngine::DeregisterObject(GameObject* g,bool delete_obj) {
-    bool found = false;
-    for (auto i = UpdateQueue.begin(); i != UpdateQueue.end();i++ ) {
-        if (*i == g) {
-            UpdateQueue.erase(i);
-            found = true;
-            break;
-        }
+    if (SceneIndex < 0 || SceneIndex >= AllScenes.size()) {
+        logging->Log("Failed to switch to scene with index: " + std::to_string(SceneIndex));
+        return;
     }
-    if (found && delete_obj) {
-        delete g;
-    }
-    return found;
+    ActiveScene = AllScenes[SceneIndex];
+    logging->Log("Switched to scene with index: " + std::to_string(SceneIndex));
 }
 
 void GameEngine::ProcessEvents()
@@ -59,7 +46,7 @@ void GameEngine::ProcessEvents()
         if (event.type == SDL_KEYDOWN) {
             switch (event.key.keysym.sym) {
             case SDLK_F11:
-                rendering->ToggleFullscreen();
+                renderer->ToggleFullscreen();
                 break;
             case SDLK_ESCAPE:
                 ENGINE_QUIT_FLAG = true;
@@ -85,42 +72,25 @@ void GameEngine::ProcessEvents()
     }
 }
 
-void GameEngine::Update()
-{
-    for (GameObject* g : UpdateQueue) {
-        RenderableComponent* newComponent = nullptr;
-        if (g->UpdateAndRender(newComponent)) {
-            rendering->Enqueue(newComponent);
-        }
+void GameEngine::FPSUpdate() {
+    RenderableComponent* newComponent = nullptr;
+    if (FPS->UpdateAndRender(newComponent)) {
+        renderer->Enqueue(newComponent);
     }
 }
-void GameEngine::MoveStatics() {
-    for (GameObject* g : UpdateQueue) {
-        if (g->GetStaticStatus())
-            g->MoveVisuals();
-    }
-}
-
 
 void GameEngine::GameLoop() {
     while (!ENGINE_QUIT_FLAG) {
         ProcessEvents();
-        Update();
-        rendering->RenderFrame();
+        ActiveScene->Update();
+        
+        renderer->RenderFrame();
         if (DEBUG_DRAW_BB)
-            DrawBBs();
+           ActiveScene->DrawBBs();
         clock->Tick();
         
     }
     SDL_Quit();
 }
 
-void GameEngine::DrawBBs()
-{
-    SDL_Renderer* renderContext = rendering->GetRenderContext();
-    SDL_SetRenderDrawColor(renderContext, 255, 0, 0, 255);
-    for (GameObject* g : UpdateQueue) {
-        g->DrawBoundingBox();
-    }
-    SDL_RenderPresent(renderContext);
-}
+

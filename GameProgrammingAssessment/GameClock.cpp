@@ -35,9 +35,10 @@ void GameClock::Tick()
 	last_frame_tp = std::chrono::high_resolution_clock::now();
 	std::string logString = "Frame ";
 	logString.append(std::to_string(GetFrameCount()) + " - ");
-	logString.append(std::to_string(GetFPS()) + " - ");
+	logString.append(std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(GetFrametime()).count()) + "ms - ");
+	//logString.append(std::to_string(GetFPS()) + " - ");
 	logString.append(std::to_string((int)(GetBudgetPercent())) + "% ");
-	logString.append(std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(GetFrametime()).count()) + "ms");
+	
 	logging->Log(logString);
 	
 }

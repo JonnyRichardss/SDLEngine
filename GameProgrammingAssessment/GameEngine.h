@@ -5,29 +5,33 @@
 #include "RenderEngine.h"
 #include "GameObject.h"
 #include "FPSCounter.h"
-#include <vector>
 #include "Global_Flags.h"
 #include "GameLogging.h"
+#include "GameScene.h"
+#include <vector>
 class GameEngine
 {
 public:
 	static GameEngine* GetInstance();
 	void StartLoop();
-	void RegisterObject(GameObject* g);
-	bool DeregisterObject(GameObject* g,bool delete_obj);
+	
 private:
 	GameEngine();
 	~GameEngine();
 	bool ENGINE_QUIT_FLAG = false;
 	GameLogging* logging;
-	RenderEngine* rendering;
+	RenderEngine* renderer;
 	GameClock* clock;
 	FPSCounter* FPS;
-	std::vector<GameObject*> UpdateQueue;
+	GameScene* ActiveScene;
+	std::vector<GameScene*> AllScenes;
+	void SwitchScene(int SceneIndex);
 	void ProcessEvents();
-	void Update();
-	void MoveStatics();
+
+	void FPSUpdate();
+
+
 	void GameLoop();
-	void DrawBBs();
+
 };
 #endif // !USE_ENGINE

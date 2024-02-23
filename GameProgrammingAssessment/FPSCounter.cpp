@@ -7,7 +7,7 @@ void FPSCounter::Init()
     clock = GameClock::GetInstance();
     renderer = RenderEngine::GetInstance();
     renderContext = renderer->GetRenderContext();
-   
+    InitVisuals();
     timer.Start();
 }
 
