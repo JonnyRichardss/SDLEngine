@@ -97,7 +97,7 @@ void GameLogging::MakeNewLogFile()
     logBuffer.insert(logBuffer.begin(), timeString);
     delete[20] timeString;
     if (WriteFile(LogPath, logBuffer)) {
-        
+        logBuffer.clear();
         Log("Successfully created " +std::string(LOGFILE_NAME));
         fileExists = true;
     }
