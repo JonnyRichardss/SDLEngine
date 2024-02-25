@@ -26,7 +26,9 @@ public:
 	GameLogging* logging;
 	RenderEngine* renderer;
 protected:
+	bool initialised = false;
 	void Init();
+	void DestroyObjects();
 	std::vector<GameObject*> UpdateQueue;
 	std::string name;
 };

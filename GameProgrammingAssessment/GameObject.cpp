@@ -7,6 +7,7 @@ GameObject::GameObject()
 	renderer = RenderEngine::GetInstance();
 	engine = GameEngine::GetInstance();
 	clock = GameClock::GetInstance();
+	logging = GameLogging::GetInstance();
 	window = renderer->GetWindow();
 	renderContext = renderer->GetRenderContext();
 	GetWindowParams();

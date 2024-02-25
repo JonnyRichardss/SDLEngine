@@ -3,11 +3,13 @@
 GameScene::GameScene()
 {
     logging = GameLogging::GetInstance();
+    renderer = RenderEngine::GetInstance();
     name = "Default Scene name";
 }
 
 GameScene::~GameScene()
 {
+    DestroyObjects();
 }
 
 void GameScene::Init()
@@ -19,10 +21,23 @@ void GameScene::Init()
         logString.append(obj->GetName()+", ");
     }
     logging->FileLog(logString);
+    initialised = true;
+}
+
+void GameScene::DestroyObjects()
+{
+    for (GameObject* obj : UpdateQueue) {
+        delete obj;
+    }
+    std::string logString = "Scene " + name + ": destroyed all objects.";
+    logging->Log(logString);
 }
 
 void GameScene::Update()
 {
+    if (!initialised)
+        Init();
+        
     for (GameObject* g : UpdateQueue) {
         RenderableComponent* newComponent = nullptr;
         if (g->UpdateAndRender(newComponent)) {

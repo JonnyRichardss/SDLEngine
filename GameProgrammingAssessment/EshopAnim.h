@@ -19,7 +19,7 @@ protected:
 	void InitVisuals();
 	
 private:
-	const std::string name = "Jonathan Richards";
+	const std::string myName = "Jonathan Richards";
 	const int numBars = 6;
 	const int ptsize = 48;
 	const int movePeriod = 600;

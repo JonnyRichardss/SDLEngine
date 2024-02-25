@@ -1,7 +1,7 @@
 #include "GameEngine.h"
-#include "IncludeGameObjects.h"
+//#include "IncludeGameObjects.h"
+#include "IncludeScenes.h"
 static GameEngine* _instance;
-static SpriteSheetTest* spriteSheet;
 GameEngine::GameEngine()
 {
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -26,7 +26,27 @@ void GameEngine::StartLoop()
 {
     FPS = new FPSCounter();
     FPS->Init();
+    CreateScenes();
     GameLoop();
+}
+
+ void GameEngine::CreateScenes()
+{
+     GameScene* scene0 = new EshopScene();
+     AllScenes.push_back(scene0);
+
+
+
+     for (auto Scene : AllScenes) {
+         Scene->CreateObjects();
+         logging->FileLog("Created object queues for all scenes.");
+     }
+     if (AllScenes.size() == 0) {
+         logging->Log("Scene list empty!! Exiting!");
+         ENGINE_QUIT_FLAG = true;
+         return;
+     }
+     ActiveScene = AllScenes[0];
 }
 
 void GameEngine::SwitchScene(int SceneIndex)
@@ -50,23 +70,18 @@ void GameEngine::ProcessEvents()
                 break;
             case SDLK_ESCAPE:
                 ENGINE_QUIT_FLAG = true;
-                break;
-            case SDLK_F10:
-                //clock->SetFPSLimit(FRAME_CAP);
-                break;
-            case SDLK_F9:
-                //clock->SetFPSLimit(0);
+                logging->Log("Recieved ESC input");
                 break;
             case SDLK_F8:
                 FPS->ToggleVisibility();
                 break;
             case SDLK_SPACE:
-                spriteSheet->NextSprite();
-                //std::cout << "ASD";
+                //dothings
                 break;
             }
         }
         if (event.type == SDL_QUIT) {
+            logging->Log("Recieved SDL Quit");
             ENGINE_QUIT_FLAG = true;
         }
     }
@@ -83,13 +98,14 @@ void GameEngine::GameLoop() {
     while (!ENGINE_QUIT_FLAG) {
         ProcessEvents();
         ActiveScene->Update();
-        
+        FPSUpdate();
         renderer->RenderFrame();
         if (DEBUG_DRAW_BB)
            ActiveScene->DrawBBs();
         clock->Tick();
         
     }
+    logging->Log("Exiting Program");
     SDL_Quit();
 }
 

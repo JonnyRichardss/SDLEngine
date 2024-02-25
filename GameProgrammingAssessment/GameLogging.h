@@ -9,6 +9,7 @@ public:
 	static GameLogging* GetInstance();
 	void Log(std::string logText);
 	void FileLog(std::string logText);
+	void DebugLog(std::string logText);
 	void ToggleConsoleLog();
 private:
 	GameLogging();

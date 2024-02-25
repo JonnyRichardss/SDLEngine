@@ -25,6 +25,7 @@ private:
 	FPSCounter* FPS;
 	GameScene* ActiveScene;
 	std::vector<GameScene*> AllScenes;
+	void CreateScenes();
 	void SwitchScene(int SceneIndex);
 	void ProcessEvents();
 

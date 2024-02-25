@@ -40,6 +40,11 @@ void GameLogging::FileLog(std::string logText)
             SaveLogFile();
     }
 }
+void GameLogging::DebugLog(std::string logText) {
+    if (DEBUG_EXTRA_LOGGING) {
+        Log(logText);
+    }
+}
 
 void GameLogging::ToggleConsoleLog()
 {

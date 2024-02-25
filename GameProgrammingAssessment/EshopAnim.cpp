@@ -4,9 +4,7 @@ void EshopAnim::Init()
 {
 	shown = true;
 	is_static = true;
-	
-	InitVisuals();
-	timer.Start();
+	name = "Eshop Animation";
 	
 }
 
@@ -20,6 +18,7 @@ void EshopAnim::Update()
 void EshopAnim::InitVisuals()
 {
 	CreateNameText();
+	MoveName();
 	//make two coloured textures
 	SDL_Surface* leftSurf = SDL_CreateRGBSurface(0, 1, 1, 32, 0, 0, 0, 0);
 	SDL_Surface* rightSurf = SDL_CreateRGBSurface(0, 1, 1, 32, 0, 0, 0, 0);
@@ -39,11 +38,12 @@ void EshopAnim::InitVisuals()
 		lefts.push_back(new RenderableComponent(leftTex, new SDL_Rect(blankRect)));
 		rights.push_back(new RenderableComponent(rightTex, new SDL_Rect(blankRect)));
 	}
+	UpdateColours();
 }
 void EshopAnim::MoveName() {
 
 	SDL_GetWindowSize(window, &windowWidth, &windowHeight);
-	SDL_Rect nameLocation = { 0, windowHeight - ptsize, 25 * (name.length() + 1),ptsize }; 
+	SDL_Rect nameLocation = { 0, windowHeight - ptsize, 25 * (myName.length() + 1),ptsize }; 
 	visuals->UpdateDestPos(&nameLocation);
 
 }
@@ -111,7 +111,7 @@ void EshopAnim::Animate()
 void EshopAnim::CreateNameText()
 {
 	nameFont = TTF_OpenFont("cour.ttf", ptsize);
-	SDL_Texture* nameTexture = SDL_CreateTextureFromSurface(renderContext, TTF_RenderUTF8_Solid(nameFont, name.c_str(), {255,255,255,255}));
+	SDL_Texture* nameTexture = SDL_CreateTextureFromSurface(renderContext, TTF_RenderUTF8_Solid(nameFont, myName.c_str(), {255,255,255,255}));
 	const char* test = SDL_GetError();
 	visuals->UpdateTexture(nameTexture);
 	visuals->UpdateLayer(10);

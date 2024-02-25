@@ -13,6 +13,7 @@ RenderEngine* RenderEngine::GetInstance()
 }
 RenderEngine::RenderEngine()
 {
+    RenderQueue.clear();
     clock = GameClock::GetInstance();
     logging = GameLogging::GetInstance();
     SDL_GetDesktopDisplayMode(0, &mode);

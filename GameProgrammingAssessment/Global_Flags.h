@@ -15,10 +15,12 @@ static const char* BASE_ASSET_PATH = "Assets/";
 static const char* SPRITE_INFO_FORMAT = ".spritedims";
 
 static const bool DEBUG_DRAW_BB = false;
+static const bool DEBUG_EXTRA_LOGGING = false;
 
 static const bool CONSOLE_LOG_DEFAULT = true;
 static const bool DO_FILE_LOGGING = true;
 static const bool VERBOSE_CONSOLE = false;
+
 enum WaitMethods {BUSY,SDL,THREAD};
 static const WaitMethods GF_WAIT_METHOD = BUSY; //SDL seems to under-sleep and THREAD seems to over-sleep
 #endif // !USE_GAMEGLOBALS

@@ -4,6 +4,7 @@ void FPSCounter::Init()
 {
     shown = false;
     is_static = true;
+    name = "FPS counter";
     clock = GameClock::GetInstance();
     renderer = RenderEngine::GetInstance();
     renderContext = renderer->GetRenderContext();

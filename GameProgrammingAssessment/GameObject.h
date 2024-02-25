@@ -6,7 +6,7 @@
 #include "GameClock.h"
 #include "ColourRGBA.h"
 #include <string>
-class GameEngine;
+class GameEngine; //forward definition to prevent circular includes in header
 class GameObject
 {
 public:
@@ -27,8 +27,9 @@ public:
 	Vector2 GetBB();
 protected:
 	virtual void Update() = 0;
-	std::string name;
+	
 	int windowWidth, windowHeight;
+	std::string name;
 	Vector2 position;
 	Vector2 velocity;
 	Vector2 BoundingBox;
@@ -38,6 +39,7 @@ protected:
 	void GetWindowParams();
 	bool shown;
 	bool is_static = false;
+	GameLogging* logging;
 	RenderEngine* renderer;
 	GameEngine* engine;
 	GameClock* clock;

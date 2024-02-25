@@ -3,6 +3,7 @@
 void SpriteSheetTest::Init()
 {
 	shown = true;
+	name = "Sprite Sheet tester";
 	
 }
 
