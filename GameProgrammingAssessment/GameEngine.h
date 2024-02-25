@@ -18,7 +18,6 @@ public:
 private:
 	GameEngine();
 	~GameEngine();
-	bool ENGINE_QUIT_FLAG = false;
 	GameLogging* logging;
 	RenderEngine* renderer;
 	GameClock* clock;

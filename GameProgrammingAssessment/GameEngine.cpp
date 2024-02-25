@@ -4,8 +4,11 @@
 static GameEngine* _instance;
 GameEngine::GameEngine()
 {
-    SDL_Init(SDL_INIT_EVERYTHING);
     logging = GameLogging::GetInstance();
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+        logging->Log("Failed to initialise SDL: exiting.");
+        ENGINE_QUIT_FLAG = true;
+    }
     clock = GameClock::GetInstance();
     renderer = RenderEngine::GetInstance();
     

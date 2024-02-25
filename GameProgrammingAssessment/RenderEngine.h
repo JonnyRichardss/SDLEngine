@@ -11,8 +11,7 @@ class RenderEngine
 {
 public:
 	static RenderEngine* GetInstance();
-	RenderEngine();
-	~RenderEngine();
+	
 	SDL_Window* GetWindow();
 	SDL_Renderer* GetRenderContext();
 	void RenderFrame();
@@ -20,6 +19,8 @@ public:
 
 	void Enqueue(RenderableComponent* object);
 private:
+	RenderEngine();
+	~RenderEngine();
 	std::vector<RenderableComponent*> RenderQueue;
 	GameLogging* logging;
 	GameClock* clock;

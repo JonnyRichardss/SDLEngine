@@ -22,7 +22,11 @@ static const bool DO_FILE_LOGGING = true;
 static const bool DO_BATCH_LOGGING = true;
 static const bool VERBOSE_CONSOLE = false;
 
-static const bool DO_PROFILING = true;
+static const bool DO_PROFILING = false;
+
+static const bool AUDIO_FAILURE_FATAL = true;
+
+bool ENGINE_QUIT_FLAG = false;
 
 enum WaitMethods {BUSY,SDL,THREAD};
 static const WaitMethods GF_WAIT_METHOD = BUSY; //SDL seems to under-sleep and THREAD seems to over-sleep
