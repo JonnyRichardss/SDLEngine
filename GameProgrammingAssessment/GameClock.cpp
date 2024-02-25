@@ -7,6 +7,10 @@ GameClock::GameClock() : ENGINE_START_TP(std::chrono::high_resolution_clock::now
 {
 	logging = GameLogging::GetInstance();
 	last_frame_tp = ENGINE_START_TP;
+	frame_start_tp = ENGINE_START_TP;
+	input_tp = ENGINE_START_TP;
+	update_tp = ENGINE_START_TP;
+	render_tp = ENGINE_START_TP;
 	framecounter = 0;
 	frametime_ns = 0ns;
 	target_ns = 0ns;
@@ -42,6 +46,13 @@ void GameClock::Tick()
 	logString.append(std::to_string((int)(GetBudgetPercent())) + "% ");
 	
 	logging->Log(logString);
+	if (DO_PROFILING) {
+		std::string profileLog = "Profiling:\n";
+		profileLog.append("INPUT - "+std::to_string(std::chrono::duration_cast<std::chrono::microseconds>(input_tp - frame_start_tp).count())+"\u00B5s\n");
+		profileLog.append("UPDATE - " + std::to_string(std::chrono::duration_cast<std::chrono::microseconds>(update_tp - input_tp).count()) + "\u00B5s\n");
+		profileLog.append("RENDER - " + std::to_string(std::chrono::duration_cast<std::chrono::microseconds>(render_tp - update_tp).count()) + "\u00B5s\n");
+		logging->Log(profileLog);
+	}
 	
 }
 
@@ -79,6 +90,31 @@ int GameClock::GetFPS()
 		return 1000000000;
 	else
 		return 1000000000/frametime_ns.count();
+}
+
+void GameClock::TickProfiling(ProfilerPhases phase)
+{
+	if (!DO_PROFILING)
+		return;
+	auto TP = std::chrono::high_resolution_clock::now();
+	switch (phase) {
+		case START:
+			frame_start_tp = TP;
+			break;
+		case INPUT:
+			input_tp = TP;
+			break;
+		case UPDATE:
+			update_tp = TP;
+			break;
+		case RENDER:
+			render_tp = TP;
+			break;
+		default:
+			throw "Invalid profile phase";
+			//pretty sure the enum prevents invalid values being set but this isnt hurting anyone so
+			break;
+	}
 }
 
 void GameClock::SetFPSLimit(int newLimit)

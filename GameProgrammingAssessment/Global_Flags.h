@@ -1,7 +1,7 @@
 #ifndef USE_GAMEGLOBALS
 #define USE_GAMEGLOBALS
-
-static const int FRAME_CAP = 60;
+//SOME OF THESE CAN PROBABLY BE MACROS SO THEY COMPILE OUT THE CODE THEY POINT TO BUT IM NOT ENTIRELY SURE THATS REALLY NECESSARY
+static const int FRAME_CAP = 240;
 
 static const int WINDOW_WIDTH = 640;
 static const int WINDOW_HEIGHT = 480;
@@ -21,6 +21,8 @@ static const bool CONSOLE_LOG_DEFAULT = true;
 static const bool DO_FILE_LOGGING = true;
 static const bool DO_BATCH_LOGGING = true;
 static const bool VERBOSE_CONSOLE = false;
+
+static const bool DO_PROFILING = true;
 
 enum WaitMethods {BUSY,SDL,THREAD};
 static const WaitMethods GF_WAIT_METHOD = BUSY; //SDL seems to under-sleep and THREAD seems to over-sleep
