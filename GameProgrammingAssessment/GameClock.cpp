@@ -12,6 +12,7 @@ GameClock::GameClock() : ENGINE_START_TP(std::chrono::high_resolution_clock::now
 	target_ns = 0ns;
 	unused_ns = 0ns;
 	SetFPSLimit(FRAME_CAP);
+	logging->Log("Initialised game clock.");
 }
 
 GameClock::~GameClock()
@@ -30,12 +31,13 @@ GameClock* GameClock::GetInstance()
 void GameClock::Tick()
 {
 	framecounter++;
+	auto frameProcessTime = target_ns - GetRemainingBudget();
 	EnforceLimit();
 	frametime_ns = TimeSinceLastFrame();
 	last_frame_tp = std::chrono::high_resolution_clock::now();
 	std::string logString = "Frame ";
 	logString.append(std::to_string(GetFrameCount()) + " - ");
-	logString.append(std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(GetFrametime()).count()) + "ms - ");
+	logString.append(std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(frameProcessTime).count()) + "ms - ");
 	//logString.append(std::to_string(GetFPS()) + " - ");
 	logString.append(std::to_string((int)(GetBudgetPercent())) + "% ");
 	

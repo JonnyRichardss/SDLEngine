@@ -15,10 +15,11 @@ static const char* BASE_ASSET_PATH = "Assets/";
 static const char* SPRITE_INFO_FORMAT = ".spritedims";
 
 static const bool DEBUG_DRAW_BB = false;
-static const bool DEBUG_EXTRA_LOGGING = false;
+static const bool DEBUG_EXTRA_LOGGING = false; //designed for when using print debugging so I can (possibly) leave the logs in
 
 static const bool CONSOLE_LOG_DEFAULT = true;
 static const bool DO_FILE_LOGGING = true;
+static const bool DO_BATCH_LOGGING = true;
 static const bool VERBOSE_CONSOLE = false;
 
 enum WaitMethods {BUSY,SDL,THREAD};

@@ -16,6 +16,7 @@ GameLogging::GameLogging()
     LogPath = std::string(LOG_FOLDER_PATH) + std::string(LOGFILE_NAME);
     RenameLastLogFile();
     MakeNewLogFile();
+    Log("Initialised logging.");
 }
 
 GameLogging::~GameLogging()
@@ -36,7 +37,7 @@ void GameLogging::FileLog(std::string logText)
         std::cout << logText << "\n";
     if (DO_FILE_LOGGING) {
         logBuffer.push_back(logText);
-        if(fileExists)
+        if(!DO_BATCH_LOGGING)
             SaveLogFile();
     }
 }
@@ -58,6 +59,8 @@ void GameLogging::SaveLogFile()
     //right now I'm thinking it's better to log instantly so it's easier to identify where errors occur
     //could be moved to update or something for performance but obviously if it crashes between logs I will lose the information
     //fun fact I learned about how frustrating this can be because PCSX2 won't display a std::cout until it detects a \n
+    if (!fileExists)
+        return;
     if (WriteFile(LogPath, logBuffer))
         logBuffer.clear();
     else {

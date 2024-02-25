@@ -11,6 +11,7 @@ public:
 	void FileLog(std::string logText);
 	void DebugLog(std::string logText);
 	void ToggleConsoleLog();
+	void SaveLogFile();
 private:
 	GameLogging();
 	~GameLogging();
@@ -18,7 +19,7 @@ private:
 	bool fileExists=false;
 	std::string LogPath;
 	std::vector<std::string> logBuffer;
-	void SaveLogFile();
+	
 	void RenameLastLogFile();
 	void MakeNewLogFile();
 };

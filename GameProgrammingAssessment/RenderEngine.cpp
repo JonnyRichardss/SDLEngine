@@ -20,6 +20,7 @@ RenderEngine::RenderEngine()
     window = SDL_CreateWindow("Jonathan Richards -- 26541501", mode.w /4, mode.h / 4, 800, 600, SDL_WINDOW_RESIZABLE);
     renderContext = SDL_CreateRenderer(window, -1, 0);
     TTF_Init();
+    logging->Log("Initialised render engine.");
 }
 
 RenderEngine::~RenderEngine()

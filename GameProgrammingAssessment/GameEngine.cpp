@@ -5,10 +5,11 @@ static GameEngine* _instance;
 GameEngine::GameEngine()
 {
     SDL_Init(SDL_INIT_EVERYTHING);
+    logging = GameLogging::GetInstance();
     clock = GameClock::GetInstance();
     renderer = RenderEngine::GetInstance();
-    logging = GameLogging::GetInstance();
     
+    logging->Log("Initialised game engine.");
 }
 
 GameEngine::~GameEngine()
@@ -103,7 +104,8 @@ void GameEngine::GameLoop() {
         if (DEBUG_DRAW_BB)
            ActiveScene->DrawBBs();
         clock->Tick();
-        
+        if (DO_BATCH_LOGGING)
+            logging->SaveLogFile();
     }
     logging->Log("Exiting Program");
     SDL_Quit();
