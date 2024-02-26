@@ -1,7 +1,7 @@
 #ifndef USE_GAMEGLOBALS
 #define USE_GAMEGLOBALS
 //SOME OF THESE CAN PROBABLY BE MACROS SO THEY COMPILE OUT THE CODE THEY POINT TO BUT IM NOT ENTIRELY SURE THATS REALLY NECESSARY
-static const int FRAME_CAP = 240;
+static const int FRAME_CAP = 60;
 
 static const int WINDOW_WIDTH = 640;
 static const int WINDOW_HEIGHT = 480;
@@ -15,7 +15,7 @@ static const char* BASE_ASSET_PATH = "Assets/";
 static const char* SPRITE_INFO_FORMAT = ".spritedims";
 
 static const bool DEBUG_DRAW_BB = false;
-static const bool DEBUG_EXTRA_LOGGING = false; //designed for when using print debugging so I can (possibly) leave the logs in
+static const bool DEBUG_EXTRA_LOGGING = true; //designed for when using print debugging so I can (possibly) leave the logs in
 
 static const bool CONSOLE_LOG_DEFAULT = true;
 static const bool DO_FILE_LOGGING = true;
@@ -26,8 +26,11 @@ static const bool DO_PROFILING = false;
 
 static const bool AUDIO_FAILURE_FATAL = true;
 
-bool ENGINE_QUIT_FLAG = false;
+static bool ENGINE_QUIT_FLAG = false;
 
+static const int MUSIC_START_OFFSET = 0;
+static const int MUSIC_VOLUME = 16;
+static const int MASTER_VOLUME = 16;
 enum WaitMethods {BUSY,SDL,THREAD};
 static const WaitMethods GF_WAIT_METHOD = BUSY; //SDL seems to under-sleep and THREAD seems to over-sleep
 #endif // !USE_GAMEGLOBALS

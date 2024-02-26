@@ -41,7 +41,7 @@ protected:
 	bool is_static = false;
 	GameLogging* logging;
 	RenderEngine* renderer;
-	GameEngine* engine;
+	//GameEngine* engine;
 	GameClock* clock;
 	SDL_Window* window;
 	SDL_Renderer* renderContext;

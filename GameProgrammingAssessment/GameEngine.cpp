@@ -11,7 +11,7 @@ GameEngine::GameEngine()
     }
     clock = GameClock::GetInstance();
     renderer = RenderEngine::GetInstance();
-    
+    audio = AudioEngine::GetInstance();
     logging->Log("Initialised game engine.");
 }
 
@@ -80,7 +80,7 @@ void GameEngine::ProcessEvents()
                 FPS->ToggleVisibility();
                 break;
             case SDLK_SPACE:
-                //dothings
+                audio->ToggleTrack();
                 break;
             }
         }

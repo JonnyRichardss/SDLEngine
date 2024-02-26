@@ -5,7 +5,7 @@ GameObject::GameObject()
 	shown = true;
 	visuals = new RenderableComponent();
 	renderer = RenderEngine::GetInstance();
-	engine = GameEngine::GetInstance();
+	//engine = GameEngine::GetInstance();
 	clock = GameClock::GetInstance();
 	logging = GameLogging::GetInstance();
 	window = renderer->GetWindow();
