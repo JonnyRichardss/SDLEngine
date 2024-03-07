@@ -1,5 +1,7 @@
 #include "RenderableComponent.h"
-
+#include "GameMath.h"
+#include "RenderEngine.h"
+#include "SDL_image.h"
 RenderableComponent::RenderableComponent()
 {
 	texture = nullptr;
@@ -139,7 +141,6 @@ void RenderableComponent::LoadTexture(std::string filename, std::string fileform
 {
 	std::string basePath = std::string(BASE_ASSET_PATH) + filename;
 	std::string imgPath = basePath + fileformat;
-	std::string dimPath = basePath + SPRITE_INFO_FORMAT;
 	SDL_Surface* Surf = IMG_Load(imgPath.c_str());
 	if (Surf == nullptr) {
 		logging->Log(SDL_GetError());

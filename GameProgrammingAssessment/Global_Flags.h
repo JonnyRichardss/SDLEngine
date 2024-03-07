@@ -26,11 +26,11 @@ static const bool DO_PROFILING = false;
 
 static const bool AUDIO_FAILURE_FATAL = true;
 
-static bool ENGINE_QUIT_FLAG = false;
+static bool ENGINE_QUIT_FLAG = false;//be aware this doesn't work the way you think it does
 
 static const int MUSIC_START_OFFSET = 0;
-static const int MUSIC_VOLUME = 16;
-static const int MASTER_VOLUME = 16;
+static const int MUSIC_VOLUME = 0;
+static const int MASTER_VOLUME = 0;
 enum WaitMethods {BUSY,SDL,THREAD};
 static const WaitMethods GF_WAIT_METHOD = BUSY; //SDL seems to under-sleep and THREAD seems to over-sleep
 #endif // !USE_GAMEGLOBALS

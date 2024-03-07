@@ -20,6 +20,9 @@ int SpriteSheet::GetSpriteIndexMax()
 
 void SpriteSheet::InitSprites(std::string filename, std::string fileformat)
 {
+	std::string basePath = std::string(BASE_ASSET_PATH) + filename;
+	std::string imgPath = basePath + fileformat;
+	std::string dimPath = basePath + SPRITE_INFO_FORMAT;
 	//load Texture
 	LoadTexture(filename, fileformat);
 	//load dimension file
