@@ -28,6 +28,7 @@ public:
 	void UpdateAngleRAD(double newAngle);
 	void UpdateAngleDEG(double newAngle);
 	void UpdateFlip(SDL_RendererFlip newFlip);
+	void LoadTexture(std::string filename, std::string fileformat);
 	bool operator > (const RenderableComponent& other);
 	bool operator < (const RenderableComponent& other);
 protected:

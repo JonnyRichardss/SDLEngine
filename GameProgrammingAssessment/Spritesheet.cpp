@@ -18,20 +18,10 @@ int SpriteSheet::GetSpriteIndexMax()
 	return (Sprites.size()-1);
 }
 
-void SpriteSheet::InitSprites(std::string filename,std::string fileformat)
+void SpriteSheet::InitSprites(std::string filename, std::string fileformat)
 {
 	//load Texture
-	std::string basePath = std::string(BASE_ASSET_PATH) + filename;
-	std::string imgPath = basePath+fileformat;
-	std::string dimPath = basePath+SPRITE_INFO_FORMAT;
-	SDL_Surface* Surf = IMG_Load(imgPath.c_str());
-	if (Surf == nullptr) {
-		logging->Log(SDL_GetError());
-		return;
-	}
-	SDL_Texture* Tex = SDL_CreateTextureFromSurface(RenderEngine::GetInstance()->GetRenderContext(), Surf);
-	SDL_FreeSurface(Surf);
-	UpdateTexture(Tex);
+	LoadTexture(filename, fileformat);
 	//load dimension file
 	std::vector<std::string> dimLines;
 	if (!ReadFile(dimPath, dimLines)){

@@ -134,3 +134,18 @@ void RenderableComponent::UpdateFlip(SDL_RendererFlip newFlip)
 {
 	flip = newFlip;
 }
+
+void RenderableComponent::LoadTexture(std::string filename, std::string fileformat)
+{
+	std::string basePath = std::string(BASE_ASSET_PATH) + filename;
+	std::string imgPath = basePath + fileformat;
+	std::string dimPath = basePath + SPRITE_INFO_FORMAT;
+	SDL_Surface* Surf = IMG_Load(imgPath.c_str());
+	if (Surf == nullptr) {
+		logging->Log(SDL_GetError());
+		return;
+	}
+	SDL_Texture* Tex = SDL_CreateTextureFromSurface(RenderEngine::GetInstance()->GetRenderContext(), Surf);
+	SDL_FreeSurface(Surf);
+	UpdateTexture(Tex);
+}
