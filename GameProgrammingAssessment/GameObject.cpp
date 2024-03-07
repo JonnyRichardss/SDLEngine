@@ -120,6 +120,7 @@ void GameObject::MoveVisuals()
 	SDL_Rect pos = BBtoDestRect();
 
 	visuals->UpdateDestPos(&pos);
+	visuals->UpdateAngleRAD(facing);
 }
 
 std::string GameObject::GetName()

@@ -5,7 +5,10 @@ RenderableComponent::RenderableComponent()
 	texture = nullptr;
 	destination_pos = nullptr;
 	source_pos = nullptr;
+	centrePoint = nullptr;
 	layer = 0;
+	angle = 0;
+	flip = SDL_FLIP_NONE;
 	logging = GameLogging::GetInstance();
 }
 
@@ -17,12 +20,23 @@ RenderableComponent::RenderableComponent(SDL_Texture* _texture, SDL_Rect* _desti
 	destination_pos = _destination_pos;
 	//source pos can be optionally null - dest pos can too but at that point itd render fullscreen so prob best to just get a rect of the screen instead
 }
+SDL_Point* RenderableComponent::GetCentrePoint()
+{
+	return centrePoint;
+}
 
+SDL_RendererFlip RenderableComponent::GetFlip()
+{
+	return flip;
+}
 RenderableComponent::RenderableComponent(SDL_Texture* _texture, SDL_Rect* _destination_pos, SDL_Rect* _source_pos) : RenderableComponent(_texture,_destination_pos)
 {
 	source_pos = _source_pos;
 }
-
+double RenderableComponent::GetAngle()
+{
+	return angle;
+}
 RenderableComponent::RenderableComponent(SDL_Texture* _texture, SDL_Rect* _destination_pos, int _layer) : RenderableComponent(_texture, _destination_pos)
 {
 	layer = _layer;
@@ -98,4 +112,25 @@ bool RenderableComponent::operator>(const RenderableComponent& other)
 bool RenderableComponent::operator<(const RenderableComponent& other)
 {
 	return this->layer < other.layer;
+}
+void RenderableComponent::UpdateCentrePoint(Vector2 newPoint)
+{
+	if (centrePoint == nullptr)
+		centrePoint = new SDL_Point();
+	*centrePoint = { (int)newPoint.x,(int)newPoint.y };
+}
+
+void RenderableComponent::UpdateAngleRAD(double newAngle)
+{
+	UpdateAngleDEG((newAngle * 180.0f) / M_PI);
+}
+
+void RenderableComponent::UpdateAngleDEG(double newAngle)
+{
+	angle = newAngle;
+}
+
+void RenderableComponent::UpdateFlip(SDL_RendererFlip newFlip)
+{
+	flip = newFlip;
 }
