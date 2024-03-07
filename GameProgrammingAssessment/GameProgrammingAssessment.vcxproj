@@ -132,6 +132,7 @@
     <ClCompile Include="EshopScene.cpp" />
     <ClCompile Include="FPSCounter.cpp" />
     <ClCompile Include="GameClock.cpp" />
+    <ClCompile Include="GameConductor.cpp" />
     <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="GameLogging.cpp" />
     <ClCompile Include="GameMath.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="EshopScene.h" />
     <ClInclude Include="FPSCounter.h" />
     <ClInclude Include="GameClock.h" />
+    <ClInclude Include="GameConductor.h" />
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameLogging.h" />
     <ClInclude Include="GameMath.h" />

@@ -28,6 +28,7 @@ static const bool AUDIO_FAILURE_FATAL = true;
 
 static bool ENGINE_QUIT_FLAG = false;//be aware this doesn't work the way you think it does
 
+static const int MUSIC_TEMPO = 192;
 static const int MUSIC_START_OFFSET = 0;
 static const int MUSIC_VOLUME = 0;
 static const int MASTER_VOLUME = 0;

@@ -10,6 +10,7 @@ GameEngine::GameEngine()
         ENGINE_QUIT_FLAG = true;
     }
     clock = GameClock::GetInstance();
+    conductor = GameConductor::GetInstance();
     renderer = RenderEngine::GetInstance();
     audio = AudioEngine::GetInstance();
     logging->Log("Initialised game engine.");
