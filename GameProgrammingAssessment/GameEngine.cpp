@@ -13,6 +13,7 @@ GameEngine::GameEngine()
     conductor = GameConductor::GetInstance();
     renderer = RenderEngine::GetInstance();
     audio = AudioEngine::GetInstance();
+    input = InputHandler::GetInstance();
     logging->Log("Initialised game engine.");
 }
 

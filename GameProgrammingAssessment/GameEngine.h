@@ -10,6 +10,7 @@
 #include "GameScene.h"
 #include "GameConductor.h"
 #include "AudioEngine.h"
+#include "InputHandler.h"
 #include <vector>
 class GameEngine
 {
@@ -27,6 +28,7 @@ private:
 	GameClock* clock;
 	FPSCounter* FPS;
 	GameScene* ActiveScene;
+	InputHandler* input;
 	std::vector<GameScene*> AllScenes;
 	void CreateScenes();
 	void SwitchScene(int SceneIndex);
