@@ -12,3 +12,7 @@ void EshopScene::CreateObjects()
 	EshopAnim* Eshop = new EshopAnim();
 	UpdateQueue.push_back(Eshop);
 }
+
+void EshopScene::PreUpdate()
+{
+}

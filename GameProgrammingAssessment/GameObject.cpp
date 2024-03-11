@@ -87,7 +87,10 @@ void GameObject::ToggleVisibility()
 {
 	shown = shown ? false : true;
 }
-
+void GameObject::SetOwner(GameScene* owner)
+{
+	scene = owner;
+}
 void GameObject::DrawBoundingBox()
 {
 
@@ -98,7 +101,10 @@ void GameObject::DrawBoundingBox()
 	//SDL_RenderDrawRect(renderContext, &PosRect);
 	SDL_RenderDrawPoint(renderContext, WindowPos.x, WindowPos.y);
 }
-
+float GameObject::GetFacing()
+{
+	return facing;
+}
 bool GameObject::GetStaticStatus()
 {
 	return is_static;
@@ -107,6 +113,11 @@ bool GameObject::GetStaticStatus()
 Vector2 GameObject::GetPos()
 {
 	return position;
+}
+
+Vector2 GameObject::GetVelo()
+{
+	return velocity;
 }
 
 Vector2 GameObject::GetBB()

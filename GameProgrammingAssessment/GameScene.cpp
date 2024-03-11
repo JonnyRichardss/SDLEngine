@@ -37,7 +37,7 @@ void GameScene::Update()
 {
     if (!initialised)
         Init();
-        
+    PreUpdate();
     for (GameObject* g : UpdateQueue) {
         RenderableComponent* newComponent = nullptr;
         if (g->UpdateAndRender(newComponent)) {

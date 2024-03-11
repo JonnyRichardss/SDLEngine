@@ -19,6 +19,7 @@ public:
 	virtual ~GameScene();
 	virtual void CreateObjects() = 0;
 	void Update();
+	virtual void PreUpdate() = 0;
 	void MoveStatics();
 	void RegisterObject(GameObject* obj);
 	void DeregisterObject(GameObject* obj);
