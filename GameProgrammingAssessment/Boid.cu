@@ -42,6 +42,8 @@ void Boid::SetName(int num)
 void Boid::InitVisuals()
 {
 	visuals->LoadTexture("boid", ".png");
+	SDL_Texture* Tex = visuals->GetTexture();
+	SDL_SetTextureColorMod(Tex, RNG::randi(0, 0), RNG::randi(0, 128), RNG::randi(128, 255));
 	SDL_Rect DefaultRect = BBtoDestRect();
 	visuals->UpdateDestPos(&DefaultRect);
 
