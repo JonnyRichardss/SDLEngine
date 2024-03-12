@@ -17,7 +17,7 @@ class GameEngine
 public:
 	static GameEngine* GetInstance();
 	void StartLoop();
-	
+	void DeleteScene(GameScene* scene);
 private:
 	GameEngine();
 	~GameEngine();

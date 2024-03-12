@@ -61,7 +61,8 @@ void GameObject::GetWindowParams()
 bool GameObject::UpdateAndRender(RenderableComponent*& render)
 {
 	Update();
-
+	if (!is_static)//now i'm back looking at this im not entirely sure specifing static objects is necessary but ig it can stay as an artefact from pong
+		position += velocity;
 	if (shown) {
 		if (!is_static)
 			MoveVisuals();

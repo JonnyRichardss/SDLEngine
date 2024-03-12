@@ -16,9 +16,9 @@ static constexpr float BOID_AVOID_DISTANCE = BOID_VISION_DISTANCE;// will try ch
 static constexpr float BOID_VISION_ANGLE = 3.141592653589;
 static constexpr float BOID_STEER_MULTIPLIER = 0.07f;
 static constexpr float BOID_SEPARATION_STRENGTH = 1.0f;
-static constexpr float BOID_ALIGNMENT_STRENGTH = 0.4f;
+static constexpr float BOID_ALIGNMENT_STRENGTH = 0.3f;
 static constexpr float BOID_COHESION_STRENGTH = 1.0f;
-static constexpr float RAND_WALK_SIZE_RAD = 0.5f;
+static constexpr float RAND_WALK_SIZE_RAD = 0.05f;
 void Boid::Init()
 {
 	BoundingBox = Vector2(BOID_SIZE, BOID_SIZE * 2);
@@ -34,6 +34,10 @@ void Boid::SetOwner(BoidScene* owner){
 	GameScene* newPtr = dynamic_cast<GameScene*>(owner);
 	if (newPtr != nullptr)
 		GameObject::SetOwner(newPtr);
+}
+void Boid::SetName(int num)
+{
+	name = "Boid " + std::to_string(num);
 }
 void Boid::InitVisuals()
 {
@@ -201,11 +205,11 @@ namespace JRCudaCalc {
 
 		delete[] boids;
 	}
-	void Init(int size) {
+	void Alloc(int size) {
 		arraySize = sizeof(CudaNeighbourStruct) * size;
 		cudaMalloc((void**)&gpuBoids, arraySize);
 	}
-	void Clear() {
+	void Free() {
 		cudaFree(gpuBoids);
 	}
 

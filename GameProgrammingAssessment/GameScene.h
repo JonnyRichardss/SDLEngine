@@ -20,14 +20,21 @@ public:
 	virtual void CreateObjects() = 0;
 	void Update();
 	virtual void PreUpdate() = 0;
+	virtual void PostUpdate() = 0;
+	//technically they can have any implementation but the intent is that Load() only has to be called AFTER Unload()
+	virtual void Load()=0;
+	virtual void Unload()=0;
+	void Delete();
 	void MoveStatics();
 	void RegisterObject(GameObject* obj);
 	void DeregisterObject(GameObject* obj);
 	void DrawBBs();
+	std::string GetName();
 	GameLogging* logging;
 	RenderEngine* renderer;
 protected:
 	bool initialised = false;
+	bool loaded = false;
 	void Init();
 	void DestroyObjects();
 	std::vector<GameObject*> UpdateQueue;

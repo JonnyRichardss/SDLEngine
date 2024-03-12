@@ -8,6 +8,9 @@ public:
 	~BoidScene();
 	void CreateObjects();
 	void PreUpdate();
+	void PostUpdate();
+	void Load();
+	void Unload();
 private:
 
 };

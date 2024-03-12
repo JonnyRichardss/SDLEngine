@@ -10,6 +10,9 @@ public:
 	~EshopScene();
 	void CreateObjects();
 	void PreUpdate();
+	void PostUpdate();
+	void Load();
+	void Unload();
 };
 #endif // !USE_ESHOPSCENE
 

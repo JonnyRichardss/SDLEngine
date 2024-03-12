@@ -36,10 +36,14 @@ void GameEngine::StartLoop()
     GameLoop();
 }
 
+
+
  void GameEngine::CreateScenes()
 {
-     GameScene* scene0 = new EshopScene();
-     AllScenes.push_back(scene0);
+     GameScene* boidScene = new BoidScene();
+     AllScenes.push_back(boidScene);
+     GameScene* eshopScene = new EshopScene();
+     AllScenes.push_back(eshopScene);
 
 
 
@@ -61,10 +65,27 @@ void GameEngine::SwitchScene(int SceneIndex)
         logging->Log("Failed to switch to scene with index: " + std::to_string(SceneIndex));
         return;
     }
+    //unloading and reloading allows for certain types of memory to be freed when not in use
+    if (ActiveScene !=nullptr)
+        ActiveScene->Unload();//incase last scene was unloaded
     ActiveScene = AllScenes[SceneIndex];
+    ActiveScene->Load();
     logging->Log("Switched to scene with index: " + std::to_string(SceneIndex));
 }
-
+void GameEngine::DeleteScene(GameScene* scene)
+{
+    //WARNING: THIS FUCKS WITH YOUR SCENE INDICES -- USE CAREFULLY
+    auto position = std::find(AllScenes.begin(), AllScenes.end(), scene);
+    if (position == AllScenes.end()) {
+        logging->FileLog("Failed to delete scene - not found in AllScenes!");
+        return;
+    }
+    logging->FileLog("Deleted scene: " + scene->GetName());
+    AllScenes.erase(position);
+    SwitchScene(0); //default to switch to scene since activeScene is now invalid
+    //this will get VERY confusing for generic deletes but I only plan to use this to clean up the splash screen since itll be big
+    
+}
 void GameEngine::ProcessEvents()
 {
     SDL_Event event;

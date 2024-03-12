@@ -16,3 +16,15 @@ void EshopScene::CreateObjects()
 void EshopScene::PreUpdate()
 {
 }
+
+void EshopScene::PostUpdate()
+{
+}
+
+void EshopScene::Load()
+{
+}
+
+void EshopScene::Unload()
+{
+}

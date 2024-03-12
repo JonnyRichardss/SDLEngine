@@ -9,6 +9,7 @@ public:
 	void Init();
 	void InitVisuals();
 	void SetOwner(BoidScene* owner);
+	void SetName(int num);
 	std::vector<Boid*> Neighbours;
 protected:
 	Vector2 steerTarget;
@@ -26,8 +27,8 @@ protected:
 };
 namespace JRCudaCalc {
 	void GetNeighboursCUDA(std::vector<GameObject*>& AllBoids);
-	void Init(int size);
-	void Clear();
+	void Alloc(int size);
+	void Free();
 }
 #endif // !USE_BOID
 

@@ -1,5 +1,5 @@
 #include "GameScene.h"
-
+#include "GameEngine.h"
 GameScene::GameScene()
 {
     logging = GameLogging::GetInstance();
@@ -44,6 +44,12 @@ void GameScene::Update()
             renderer->Enqueue(newComponent);
         }
     }
+    PostUpdate();
+}
+
+void GameScene::Delete()
+{
+    GameEngine::GetInstance()->DeleteScene(this);
 }
 
 void GameScene::MoveStatics()
@@ -89,4 +95,9 @@ void GameScene::DrawBBs()
         g->DrawBoundingBox();
     }
     SDL_RenderPresent(renderContext);
+}
+
+std::string GameScene::GetName()
+{
+    return name;
 }
