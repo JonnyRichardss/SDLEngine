@@ -4,8 +4,8 @@ constexpr int FRAME_CAP = 60;
 
 constexpr int WINDOW_WIDTH = 800;
 constexpr int WINDOW_HEIGHT = 600;
-constexpr int GAME_MAX_X = 800;
-constexpr int GAME_MAX_Y = 600;
+constexpr int GAME_MAX_X = 1600;
+constexpr int GAME_MAX_Y = 1200;
 
 constexpr int SPLASH_SCREEN_DURATION = 999;
 static const char* LOG_FOLDER_PATH = "Logs/";

@@ -20,40 +20,35 @@ GameObject::~GameObject()
 {
 	delete visuals;
 }
-Vector2 GameObject::GameToWindowCoords(Vector2 GameCoords)
+Vector2 GameObject::GameToWindowTranslation(Vector2 GameCoords)
 {
+	//this function assumes you have already scaled - not much i can do about that save for combining the transforms but the way BBs work ATM i need scaling separate
 	//INVERT Y AXIS
 	GameCoords.y *= -1;
 	//TRANSFORM VECTOR INTO +VE +VE
-	GameCoords += Vector2(GAME_MAX_X, GAME_MAX_Y);
-	//SCALE VECTOR
-	GameCoords = GameToWindowScaling(GameCoords);
+	GameCoords += GameToWindowScaling(Vector2(GAME_MAX_X, GAME_MAX_Y));
 
 	return GameCoords;
 }
 //THIS IS VERY BROKEN: I THINK I NEED TO CHANGE TO CALCULATING AN CONSTEXPR MATRIX AND DOING THE TRANSFORMS THAT WAY
 //not constexpr since window size can change with fullscreen but im sure the renderer can swap them out
 //get renderengine to handle transformations - just hand it gamecoordinate SDL_Rects and get it to deal with them
+//nvm turns out that its just Game to window always requires me to divide window by game width -- no idea how i didnt catch that when I was making the system in the first place
 Vector2 GameObject::GameToWindowScaling(Vector2 vec) {
-	float ScaleFacX, ScaleFacY;
-	if (GAME_MAX_X > windowWidth)
-		ScaleFacX = (float)GAME_MAX_X / (float)windowWidth;
-	else
-		ScaleFacX = (float)windowWidth / (float)GAME_MAX_X;
+	//lowkey tempted to add a element-wise multiply but since multiplication technically isn't defined for vectors im just going to leave it as is with 2 variables
 
-	if (GAME_MAX_Y > windowHeight)
-		ScaleFacY = (float)GAME_MAX_Y / (float)windowHeight;
-	else
-		ScaleFacY = (float)windowHeight / (float)GAME_MAX_Y;
-	vec.x *= ScaleFacX / 2.0f;
-	vec.y *= ScaleFacY / 2.0f;
+	vec.x *= (float)windowWidth / (float)(GAME_MAX_X*2);
+
+	vec.y *= (float)windowHeight / (float)(GAME_MAX_Y*2);
 	return vec;
 }
 SDL_Rect GameObject::BBtoDestRect()
 {
-	Vector2 TransformedPos(position.x - (BoundingBox.x / 2.0f), position.y + (BoundingBox.y / 2.0f));
-	TransformedPos = GameToWindowCoords(TransformedPos);
 	Vector2 TransformedBB = GameToWindowScaling(BoundingBox);
+	Vector2 TransformedPos = GameToWindowScaling(position);
+	TransformedPos -= (TransformedBB*0.5f);
+	TransformedPos = GameToWindowTranslation(TransformedPos);
+	
 	SDL_Rect dest = { TransformedPos.x,TransformedPos.y,TransformedBB.x,TransformedBB.y };
 	return dest;
 }
@@ -99,7 +94,7 @@ void GameObject::DrawBoundingBox()
 {
 
 	SDL_Rect BBrect = BBtoDestRect();
-	Vector2 WindowPos = GameToWindowCoords(position);
+	Vector2 WindowPos = GameToWindowTranslation(position);
 	//SDL_Rect PosRect = {WindowPos.x,WindowPos.y,5,5};
 	SDL_RenderDrawRect(renderContext, &BBrect);
 	//SDL_RenderDrawRect(renderContext, &PosRect);

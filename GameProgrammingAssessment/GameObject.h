@@ -38,7 +38,7 @@ protected:
 	Vector2 position;
 	Vector2 velocity;
 	Vector2 BoundingBox;
-	Vector2 GameToWindowCoords(Vector2 GameCoords);
+	Vector2 GameToWindowTranslation(Vector2 GameCoords);
 	Vector2 GameToWindowScaling(Vector2 vec);
 	SDL_Rect BBtoDestRect();
 	void GetWindowParams();
