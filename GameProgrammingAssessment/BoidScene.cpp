@@ -32,7 +32,7 @@ void BoidScene::PreUpdate()
 
 void BoidScene::PostUpdate()
 {
-	if (SplashTimer.GetTimeElapsed() > 999s) {
+	if (SplashTimer.GetTimeElapsed() > std::chrono::seconds(SPLASH_SCREEN_DURATION)) {
 		Delete();
 		//the way DeleteScene is implemented it goes to scene 0
 	}

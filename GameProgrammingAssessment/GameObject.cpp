@@ -31,6 +31,9 @@ Vector2 GameObject::GameToWindowCoords(Vector2 GameCoords)
 
 	return GameCoords;
 }
+//THIS IS VERY BROKEN: I THINK I NEED TO CHANGE TO CALCULATING AN CONSTEXPR MATRIX AND DOING THE TRANSFORMS THAT WAY
+//not constexpr since window size can change with fullscreen but im sure the renderer can swap them out
+//get renderengine to handle transformations - just hand it gamecoordinate SDL_Rects and get it to deal with them
 Vector2 GameObject::GameToWindowScaling(Vector2 vec) {
 	float ScaleFacX, ScaleFacY;
 	if (GAME_MAX_X > windowWidth)
