@@ -71,4 +71,33 @@ void RenderEngine::Enqueue(RenderableComponent* object)
     RenderQueue.push_back(object);
 }
 
+Vector2 RenderEngine::GameToWindowScaling(Vector2 vec)
+{
+    //lowkey tempted to add a element-wise multiply but since multiplication technically isn't defined for vectors im just going to leave it as is with 2 variables
+    int windowWidth, windowHeight;
+    SDL_GetWindowSize(window, &windowWidth, &windowHeight);
+    vec.x *= (float)windowWidth / (float)(GAME_MAX_X * 2);
+
+    vec.y *= (float)windowHeight / (float)(GAME_MAX_Y * 2);
+    return vec;
+}
+
+Vector2 RenderEngine::GameToWindowTranslation(Vector2 vec)
+{
+    //this function assumes you have already scaled - not much i can do about that save for combining the transforms but the way BBs work ATM i need scaling separate
+    //INVERT Y AXIS
+    vec.y *= -1;
+    //TRANSFORM VECTOR INTO +VE +VE
+    vec += GameToWindowScaling(Vector2(GAME_MAX_X, GAME_MAX_Y));
+
+    return vec;
+}
+
+Vector2 RenderEngine::GameToWindowCoords(Vector2 vec)
+{
+    vec = GameToWindowScaling(vec);
+    vec = GameToWindowTranslation(vec);
+    return vec;
+}
+
 

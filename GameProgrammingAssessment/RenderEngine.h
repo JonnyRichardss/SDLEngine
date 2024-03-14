@@ -7,6 +7,7 @@
 #include "RenderableComponent.h"
 #include <vector>
 #include "GameLogging.h"
+#include "GameMath.h"
 class RenderEngine
 {
 public:
@@ -18,6 +19,9 @@ public:
 	void ToggleFullscreen();
 
 	void Enqueue(RenderableComponent* object);
+	Vector2 GameToWindowScaling(Vector2 vec);
+	Vector2 GameToWindowTranslation(Vector2 vec);
+	Vector2 GameToWindowCoords(Vector2 vec);
 private:
 	RenderEngine();
 	~RenderEngine();

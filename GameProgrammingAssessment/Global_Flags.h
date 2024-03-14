@@ -4,8 +4,8 @@ constexpr int FRAME_CAP = 60;
 
 constexpr int WINDOW_WIDTH = 800;
 constexpr int WINDOW_HEIGHT = 600;
-constexpr int GAME_MAX_X = 1600;
-constexpr int GAME_MAX_Y = 1200;
+constexpr int GAME_MAX_X = 1000;
+constexpr int GAME_MAX_Y = 1000;
 
 constexpr int SPLASH_SCREEN_DURATION = 999;
 static const char* LOG_FOLDER_PATH = "Logs/";
@@ -32,7 +32,7 @@ constexpr int NUM_BOIDS = 1024;
 
 constexpr int MUSIC_TEMPO = 192;
 constexpr int MUSIC_START_OFFSET = 0;
-constexpr int MUSIC_VOLUME = 0.2;
+constexpr int MUSIC_VOLUME = 0;
 constexpr int MASTER_VOLUME = 0;
 enum WaitMethods {BUSY,SDL,THREAD};
 static constexpr WaitMethods GF_WAIT_METHOD = BUSY; //SDL seems to under-sleep and THREAD seems to over-sleep
