@@ -34,8 +34,8 @@ SDL_Rect GameObject::BBtoDestRect()
 JRrect GameObject::BBtoGameRect()
 {
 	JRrect GameRect = JRrect((position - (BoundingBox * 0.5f)), {position.x + (BoundingBox.x*0.5f),position.y - (BoundingBox.y * 0.5f)}, (position + (BoundingBox * 0.5f)), { position.x - (BoundingBox.x * 0.5f),position.y + (BoundingBox.y * 0.5f) });
-	GameRect.RotateAroundPoint(facing, position);
-	return GameRect;
+	
+	return JRrect::RotateAroundPoint(GameRect,facing, position);
 
 }
 void GameObject::GetWindowParams()

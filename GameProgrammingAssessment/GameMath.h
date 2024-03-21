@@ -91,9 +91,9 @@ struct JRrect {
         points[2] = c;
         points[3] = d;
     }
-    void RotateAroundPoint(float angleRAD, Vector2 centre) {
+    static JRrect RotateAroundPoint(JRrect rect,float angleRAD, Vector2 centre) {
         for (int i = 0; i < 4;i++) {
-            points[i] = Vector2::RotateAroundPoint(points[i], angleRAD, centre);
+            rect.points[i] = Vector2::RotateAroundPoint(rect.points[i], angleRAD, centre);
         }
     }
 };
