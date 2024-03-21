@@ -154,6 +154,7 @@
   <ItemGroup>
     <ClInclude Include="AudioEngine.h" />
     <ClInclude Include="BoidScene.h" />
+    <ClInclude Include="CollisionCalculator.cuh" />
     <ClInclude Include="ColourRGBA.h" />
     <ClInclude Include="EshopAnim.h" />
     <ClInclude Include="EshopScene.h" />
@@ -190,6 +191,7 @@
       <FileType>Document</FileType>
     </CudaCompile>
     <ClInclude Include="Boid.cuh" />
+    <CudaCompile Include="CollisionCalculator.cu" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

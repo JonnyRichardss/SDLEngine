@@ -95,6 +95,7 @@ struct JRrect {
         for (int i = 0; i < 4;i++) {
             rect.points[i] = Vector2::RotateAroundPoint(rect.points[i], angleRAD, centre);
         }
+        return rect;
     }
 };
 long double Lerp(long double a, long double b, long double fac);

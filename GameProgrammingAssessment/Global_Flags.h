@@ -7,6 +7,9 @@ constexpr int WINDOW_HEIGHT = 600;
 constexpr int GAME_MAX_X = 1000;
 constexpr int GAME_MAX_Y = 1000;
 
+constexpr int COLLISION_INIT_SIZE = 100;
+constexpr int COLLISION_EXPAND_SIZE = 10;
+
 constexpr int SPLASH_SCREEN_DURATION = 999;
 static const char* LOG_FOLDER_PATH = "Logs/";
 static const char* LOGFILE_NAME = "latest.log";

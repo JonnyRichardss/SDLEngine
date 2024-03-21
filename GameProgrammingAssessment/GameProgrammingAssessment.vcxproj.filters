@@ -194,6 +194,9 @@
     <ClInclude Include="Boid.cuh">
       <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
+    <ClInclude Include="CollisionCalculator.cuh">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Font Include="USN_Stencil.ttf">
@@ -214,6 +217,9 @@
   <ItemGroup>
     <CudaCompile Include="Boid.cu">
       <Filter>Source Files\GameObjects</Filter>
+    </CudaCompile>
+    <CudaCompile Include="CollisionCalculator.cu">
+      <Filter>Source Files\Engine</Filter>
     </CudaCompile>
   </ItemGroup>
 </Project>

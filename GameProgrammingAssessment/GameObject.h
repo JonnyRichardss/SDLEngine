@@ -6,6 +6,7 @@
 #include "GameClock.h"
 #include "ColourRGBA.h"
 #include <string>
+#include <vector>
 class GameEngine; //forward definition to prevent circular includes in header
 class GameScene;
 class GameObject
@@ -20,6 +21,7 @@ public:
 	void ToggleVisibility();
 	virtual void Init() = 0;
 	virtual void InitVisuals() = 0;
+	bool hasCollision = true;
 	void SetOwner(GameScene* owner);
 	float GetFacing();
 	void DrawBoundingBox();
@@ -30,6 +32,7 @@ public:
 	Vector2 GetVelo();
 	Vector2 GetBB();
 	JRrect GetCorners();
+	std::vector<GameObject> colliders;
 protected:
 	virtual void Update() = 0;
 	
