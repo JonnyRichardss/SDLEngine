@@ -31,6 +31,13 @@ SDL_Rect GameObject::BBtoDestRect()
 	SDL_Rect dest = { TransformedPos.x,TransformedPos.y,TransformedBB.x,TransformedBB.y };
 	return dest;
 }
+JRrect GameObject::BBtoGameRect()
+{
+	JRrect GameRect = JRrect((position - (BoundingBox * 0.5f)), {position.x + (BoundingBox.x*0.5f),position.y - (BoundingBox.y * 0.5f)}, (position + (BoundingBox * 0.5f)), { position.x - (BoundingBox.x * 0.5f),position.y + (BoundingBox.y * 0.5f) });
+	GameRect.RotateAroundPoint(facing, position);
+	return GameRect;
+
+}
 void GameObject::GetWindowParams()
 {
 	SDL_GetWindowSize(window, &windowWidth, &windowHeight);
@@ -101,6 +108,11 @@ Vector2 GameObject::GetVelo()
 Vector2 GameObject::GetBB()
 {
 	return BoundingBox;
+}
+
+JRrect GameObject::GetCorners()
+{
+	return BBtoGameRect();
 }
 
 void GameObject::MoveVisuals()

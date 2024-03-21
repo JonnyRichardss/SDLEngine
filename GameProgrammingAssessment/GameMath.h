@@ -56,6 +56,18 @@ struct Vector2 {
         float det = a.x * b.y - a.y * b.x;
         return (atan2(det, dot(a, b)));
     }
+    static Vector2 RotateAroundOrigin(Vector2 point, float angleRAD) {
+        float x = point.x;
+        float y = point.y;
+        float newX = x * cos(angleRAD) - y * sin(angleRAD);
+        float newY = y * cos(angleRAD) + x * sin(angleRAD);
+        return Vector2(newX, newY);
+    }
+    static Vector2 RotateAroundPoint(Vector2 point,float angleRAD ,Vector2 centre){
+        Vector2 translated = point - centre;
+        Vector2 newPos = RotateAroundOrigin(translated,angleRAD);
+        return translated + centre;
+    }
     float GetMagnitude() {
         return sqrt(pow(x, 2) + pow(y, 2));
     }
@@ -64,6 +76,25 @@ struct Vector2 {
         float _x = x / mag;
         float _y = y / mag;
         return Vector2(_x, _y);
+    }
+};
+struct JRrect {
+    Vector2 points[4];
+    JRrect() {
+        for (int i = 0; i < 4; i++) {
+            points[i] = Vector2::zero();
+        }
+    }
+    JRrect(Vector2 a, Vector2 b, Vector2 c, Vector2 d) {
+        points[0] = a;
+        points[1] = b;
+        points[2] = c;
+        points[3] = d;
+    }
+    void RotateAroundPoint(float angleRAD, Vector2 centre) {
+        for (int i = 0; i < 4;i++) {
+            points[i] = Vector2::RotateAroundPoint(points[i], angleRAD, centre);
+        }
     }
 };
 long double Lerp(long double a, long double b, long double fac);

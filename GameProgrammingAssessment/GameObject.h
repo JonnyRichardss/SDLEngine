@@ -29,6 +29,7 @@ public:
 	Vector2 GetPos();
 	Vector2 GetVelo();
 	Vector2 GetBB();
+	JRrect GetCorners();
 protected:
 	virtual void Update() = 0;
 	
@@ -38,7 +39,9 @@ protected:
 	Vector2 position;
 	Vector2 velocity;
 	Vector2 BoundingBox;
+	JRrect corners;
 	SDL_Rect BBtoDestRect();
+	JRrect BBtoGameRect();
 	void GetWindowParams();
 	bool shown;
 	bool is_static = false;
