@@ -32,7 +32,7 @@ public:
 	Vector2 GetVelo();
 	Vector2 GetBB();
 	JRrect GetCorners();
-	std::vector<GameObject> colliders;
+	std::vector<GameObject*> colliders;
 protected:
 	virtual void Update() = 0;
 	
