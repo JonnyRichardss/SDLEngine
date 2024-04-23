@@ -4,6 +4,7 @@
 #include "Global_Flags.h"
 #include "GameMath.h"
 #include <math.h>
+#include "GameLogging.h"
 static int AllocSize = COLLISION_INIT_SIZE;
 
 struct GameObjectCUDA {
@@ -69,12 +70,12 @@ __device__ inline bool SATCheck(GameObjectCUDA* object, GameObjectCUDA* other) {
 }
 __device__ inline float SqrDistance(float2 p1, float2 p2) {
 	float2 offset = make_float2(p1.x - p2.x, p1.y - p2.y);
-	return offset.x * offset.x + offset.y * offset.y;
+	return (offset.x * offset.x) + (offset.y * offset.y);
 }
 __device__ inline bool SphereCheck(GameObjectCUDA* object, GameObjectCUDA* other) {
 	float SQRradius = fmaxf(SqrDistance(object->centre,object->points[0]), SqrDistance(other->centre,other->points[0]));
 
-	return SQRradius < SqrDistance(object->centre, other->centre);
+	return SqrDistance(object->centre, other->centre) < SQRradius;
 }
 __global__ void GPUCollisionCalc(GameObjectCUDA* objs, int size) {
 	int i = blockIdx.x;
@@ -83,12 +84,13 @@ __global__ void GPUCollisionCalc(GameObjectCUDA* objs, int size) {
 		GameObjectCUDA* object = &objs[i];
 		GameObjectCUDA* other = &objs[j];
 		//TRUE IS A COLLISION
-		if (!SphereCheck(object, other)) //simple sphere check to see if they are in range of each other
-			continue;
+		//if (!SphereCheck(object, other)) //simple sphere check to see if they are in range of each other
+		//	continue;
 		//full SAT to see if they actually collide
 		//if collision found add to j.id to colliders
 		if (SATCheck(object, other)) {
 			unsigned int index = atomicInc(&objs[i].currentIdx, (MAX_COLLISIONS));//atomic inc prevents race conditions - each thread *should* always have its own unique index to access
+			
 			objs[i].colliders[index] = objs[j].id;
 		}
 	}
@@ -98,8 +100,10 @@ void MakePoints(JRrect rect,GameObjectCUDA& output) {
 		output.points[i] = make_float2(rect.points[i].x, rect.points[i].y);
 	}
 }
-void MakeStructs(GameObjectCUDA* output, std::vector<GameObject*> input) {
+void MakeStructs(GameObjectCUDA* output, std::vector<GameObject*>& input) {
 	for (int i = 0; i < input.size(); i++) {
+		//clear colliders from last frame
+		input[i]->colliders.clear();
 		output[i].id = i;
 		Vector2 pos = input[i]->GetPos();
 		output[i].centre = make_float2(pos.x,pos.y);
@@ -107,13 +111,21 @@ void MakeStructs(GameObjectCUDA* output, std::vector<GameObject*> input) {
 		input[i]->colliders.clear();
 	}
 }
-void UnMakeStructs(std::vector<GameObject*> output, GameObjectCUDA* input) {
+void UnMakeStructs(std::vector<GameObject*>& output, GameObjectCUDA* input) {
 	for (int i = 0; i < output.size(); i++) {
 		int idx = static_cast<int>(input[i].currentIdx);
 		for (int j = 0; j < std::min(idx, (int)output.size()); j++) {
-			if (i == input[i].colliders[j])continue;
-			if (output[i] == nullptr) continue;
-			output[i]->colliders.push_back(output[input[i].colliders[j]]);
+			if (i == input[i].colliders[j])
+				continue;
+			if (output[i] == nullptr) 
+				continue;
+			int outID = input[i].colliders[j];
+			if (outID < 0 || outID >= output.size()) {
+				//GameLogging::GetInstance()->Log("ERROR: Invalid ID for detected collider (objectID colliderID) " + std::to_string(i) + " " + std::to_string(outID));
+				continue;
+			}
+
+			output[i]->colliders.push_back(output[outID]);
 		}
 	}
 }
@@ -128,29 +140,40 @@ void AllocCUDA(int size) {
 	cudaMalloc((void**)&objsGPU, sizeof(GameObjectCUDA) * size);
 	allocated = true;
 }
-
-void CalculateCollsion(std::vector<GameObject*>& UpdateQueue)
-{
-	//make sure we have enough room on the GPU -- doing it this way prevents us from allocating every frame for different update queue sizes
-	bool need_new_alloc = false;
-	while (AllocSize < UpdateQueue.size()) {
-		AllocSize += COLLISION_EXPAND_SIZE;
-		need_new_alloc = true;
-	}
-	if (need_new_alloc) {
+namespace JRCollision {
+	void Init() {
 		AllocCUDA(AllocSize);
 	}
-	GameObjectCUDA* objs = new GameObjectCUDA[UpdateQueue.size()];
-	//copy to
-	MakeStructs(objs, UpdateQueue);
-	cudaMemcpy(objsGPU, objs, sizeof(GameObjectCUDA) * AllocSize, cudaMemcpyHostToDevice);
+	void Free()
+	{
+		FreeCUDA();
+	}
+	void CalculateCollsion(std::vector<GameObject*>& UpdateQueue)
+	{
+		//make sure we have enough room on the GPU -- doing it this way prevents us from allocating every frame for different update queue sizes
+		/*
+		bool need_new_alloc = false;
+		while (AllocSize < UpdateQueue.size()) {
+			AllocSize += COLLISION_EXPAND_SIZE;
+			need_new_alloc = true;
+		}
+		if (need_new_alloc || !allocated) {
+			AllocCUDA(AllocSize);
+		}
+		*/
+		AllocCUDA(UpdateQueue.size());
+		GameObjectCUDA* objs = new GameObjectCUDA[UpdateQueue.size()];
+		//copy to
+		MakeStructs(objs, UpdateQueue);
+		cudaMemcpy(objsGPU, objs, sizeof(GameObjectCUDA) * UpdateQueue.size(), cudaMemcpyHostToDevice);
 
-	//exec
-	GPUCollisionCalc <<< AllocSize, 1024 >>> (objsGPU,AllocSize);
-	//copy from
-	cudaMemcpy(objs, objsGPU, sizeof(GameObjectCUDA) * AllocSize, cudaMemcpyDeviceToHost);
-	UnMakeStructs(UpdateQueue, objs);
-	//free
-	delete[] objs;
-
+		//exec
+		GPUCollisionCalc << < UpdateQueue.size(), 1024 >> > (objsGPU, AllocSize);
+		//copy from
+		cudaMemcpy(objs, objsGPU, sizeof(GameObjectCUDA) * UpdateQueue.size(), cudaMemcpyDeviceToHost);
+		UnMakeStructs(UpdateQueue, objs);
+		//free
+		delete[] objs;
+		FreeCUDA();
+	}
 }

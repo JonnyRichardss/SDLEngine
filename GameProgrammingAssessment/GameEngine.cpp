@@ -42,9 +42,10 @@ void GameEngine::StartLoop()
 {
      GameScene* boidScene = new BoidScene();
      AllScenes.push_back(boidScene);
-     GameScene* eshopScene = new EshopScene();
-     AllScenes.push_back(eshopScene);
-
+     //GameScene* eshopScene = new EshopScene();
+     //AllScenes.push_back(eshopScene);
+     GameScene* collisionScene = new CollisionTestScene();
+     AllScenes.push_back(collisionScene);
 
 
      for (auto Scene : AllScenes) {

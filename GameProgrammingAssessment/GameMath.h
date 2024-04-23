@@ -66,7 +66,7 @@ struct Vector2 {
     static Vector2 RotateAroundPoint(Vector2 point,float angleRAD ,Vector2 centre){
         Vector2 translated = point - centre;
         Vector2 newPos = RotateAroundOrigin(translated,angleRAD);
-        return translated + centre;
+        return newPos + centre;
     }
     float GetMagnitude() {
         return sqrt(pow(x, 2) + pow(y, 2));
@@ -91,12 +91,14 @@ struct JRrect {
         points[2] = c;
         points[3] = d;
     }
+
     static JRrect RotateAroundPoint(JRrect rect,float angleRAD, Vector2 centre) {
         for (int i = 0; i < 4;i++) {
             rect.points[i] = Vector2::RotateAroundPoint(rect.points[i], angleRAD, centre);
         }
         return rect;
     }
+
 };
 long double Lerp(long double a, long double b, long double fac);
 #endif // !USE_GAMEMATH

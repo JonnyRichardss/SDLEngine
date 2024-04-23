@@ -5,4 +5,5 @@
 #include "EshopAnim.h"
 #include "PlayerController.h"
 #include "SpriteSheetTest.h"
+#include "TestCollider.h"
 #endif

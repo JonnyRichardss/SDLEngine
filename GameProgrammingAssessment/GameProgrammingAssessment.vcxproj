@@ -130,6 +130,7 @@
   <ItemGroup>
     <ClCompile Include="AudioEngine.cpp" />
     <ClCompile Include="BoidScene.cpp" />
+    <ClCompile Include="CollisionTestScene.cpp" />
     <ClCompile Include="EshopAnim.cpp" />
     <ClCompile Include="EshopScene.cpp" />
     <ClCompile Include="FPSCounter.cpp" />
@@ -149,12 +150,16 @@
     <ClCompile Include="RenderEngine.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
     <ClCompile Include="SpriteSheetTest.cpp" />
+    <ClCompile Include="TestCollider.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioEngine.h" />
     <ClInclude Include="BoidScene.h" />
-    <ClInclude Include="CollisionCalculator.cuh" />
+    <ClInclude Include="CollisionCalculator.cuh">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="CollisionTestScene.h" />
     <ClInclude Include="ColourRGBA.h" />
     <ClInclude Include="EshopAnim.h" />
     <ClInclude Include="EshopScene.h" />
@@ -177,6 +182,7 @@
     <ClInclude Include="RenderEngine.h" />
     <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="SpriteSheetTest.h" />
+    <ClInclude Include="TestCollider.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -191,7 +197,9 @@
       <FileType>Document</FileType>
     </CudaCompile>
     <ClInclude Include="Boid.cuh" />
-    <CudaCompile Include="CollisionCalculator.cu" />
+    <CudaCompile Include="CollisionCalculator.cu">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </CudaCompile>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
