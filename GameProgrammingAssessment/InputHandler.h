@@ -11,10 +11,7 @@ public:
 	static InputHandler* GetInstance();
 	void PollInput();
 	bool GetActionState(InputActions::Action action);
-	//could do a few things
-	//1 - hardcode actions here
-	//2 - store inputs in inputhandler and access them per-object
-	//3 - use void* to dynamically change action (silly?)
+
 
 private:
 	bool actionStates[InputActions::NumActions];//what if these arent booleans (eg mouse pos) (although maybe mouse pos is just a special case so i can handle it manually)

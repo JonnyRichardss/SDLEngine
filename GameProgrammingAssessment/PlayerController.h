@@ -10,6 +10,7 @@ public:
 protected:
 
 	void Update();
+	void DoMovement(Vector2 MoveVector);
 };
 
 #endif // !USE_PLAYERCONTROLLER

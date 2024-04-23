@@ -1,6 +1,7 @@
 #ifndef USE_GAMEMATH
 #define USE_GAMEMATH
 #include <math.h>
+#include <string>
 struct Vector2 {
     float x;
     float y;
@@ -35,6 +36,12 @@ struct Vector2 {
     }
     friend Vector2 operator* (Vector2 lhs, const float& rhs) {
         return lhs *= rhs;
+    }
+    bool operator== (const Vector2& other) {
+        return (x == other.x && y == other.y);
+    }
+    bool operator!= (const Vector2& other) {
+        return !(*this == other);
     }
     static Vector2 one() {
         return Vector2(1, 1);
@@ -76,6 +83,17 @@ struct Vector2 {
         float _x = x / mag;
         float _y = y / mag;
         return Vector2(_x, _y);
+    }
+    Vector2 Clamp(float magnitude) {
+        if (GetMagnitude() >= magnitude) {
+            return (Normalise() * magnitude);
+        }
+        else {
+            return (*this);
+        }
+    }
+    std::string ToString() {
+        return ("(" + std::to_string(x) + "," + std::to_string(y) + ")");
     }
 };
 struct JRrect {

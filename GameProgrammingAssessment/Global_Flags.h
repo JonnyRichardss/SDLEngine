@@ -41,8 +41,8 @@ constexpr int TEST_COLLIDER_SIZE = 90;
 
 constexpr int MUSIC_TEMPO = 192;
 constexpr int MUSIC_START_OFFSET = 0;
-constexpr int MUSIC_VOLUME = 0;
-constexpr int MASTER_VOLUME = 0;
+constexpr int MUSIC_VOLUME = 1;
+constexpr int MASTER_VOLUME = 1;
 enum WaitMethods {WM_BUSY,WM_SDL,WM_THREAD};
 static constexpr WaitMethods GF_WAIT_METHOD = WM_BUSY; //SDL seems to under-sleep and THREAD seems to over-sleep
 #endif // !USE_GAMEGLOBALS

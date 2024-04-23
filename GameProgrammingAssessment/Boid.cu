@@ -10,7 +10,7 @@
 static constexpr float BOID_SIZE = 10.0f;
 static constexpr float BOID_SPEED = 4.0f;
 
-static constexpr int NEIGHBOUR_STORAGE_DIV = 1; //divisor to reduce size of neighbour array - deemed unnecessary as it *appears* that memcpy has O(n) like performance (maybe not but at a glance there is no benefit to copying less data)
+static constexpr int NEIGHBOUR_STORAGE_DIV = 1; //divisor to reduce size of neighbour array - deemed unnecessary as it *appears* that memcpy has O(1) like performance (maybe not but at a glance there is no benefit to copying less data at this scale)
 static constexpr float BOID_VISION_DISTANCE = 45.0f;
 static constexpr float BOID_AVOID_DISTANCE = BOID_VISION_DISTANCE;// will try change later
 static constexpr float BOID_VISION_ANGLE = 3.141592653589;
