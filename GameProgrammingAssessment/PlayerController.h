@@ -6,6 +6,7 @@ class PlayerController : public GameObject
 public:
 	//things
 	void Init();
+	void InitVisuals();
 protected:
 
 	void Update();

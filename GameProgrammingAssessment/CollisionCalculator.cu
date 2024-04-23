@@ -161,7 +161,7 @@ namespace JRCollision {
 			AllocCUDA(AllocSize);
 		}
 		*/
-		AllocCUDA(UpdateQueue.size());
+		AllocCUDA(UpdateQueue.size()); // NOTE TO SELF  -- THIS WANTS FIXING -- MAYBE WONT IMPACT PERFORMANCE BUT IT ANNOYS ME
 		GameObjectCUDA* objs = new GameObjectCUDA[UpdateQueue.size()];
 		//copy to
 		MakeStructs(objs, UpdateQueue);

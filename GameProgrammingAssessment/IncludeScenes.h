@@ -3,4 +3,5 @@
 #include "EshopScene.h"
 #include "BoidScene.h"
 #include "CollisionTestScene.h"
+#include "MainScene.h"
 #endif

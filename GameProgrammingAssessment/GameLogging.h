@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include "Global_Flags.h"
+//TODO -- REWRITE THIS WHOLE THINGS AS A BACKEND FOR SDL_LOG -- IT HAS LOTS OF FEATURES BUILT IN
 class GameLogging
 {
 public:

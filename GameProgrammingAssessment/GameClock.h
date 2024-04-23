@@ -3,7 +3,7 @@
 #include <chrono>
 #include "GameLogging.h"
 using namespace std::chrono_literals;
-enum ProfilerPhases {START,INPUT,UPDATE,RENDER};
+enum ProfilerPhases {PROFILING_STARTFRAME,PROFILING_INPUT,PROFILING_UPDATE,PROFILING_RENDER};
 class GameClock
 {
 public:

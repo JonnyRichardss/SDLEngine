@@ -39,21 +39,22 @@ void GameClock::Tick()
 	EnforceLimit();
 	frametime_ns = TimeSinceLastFrame();
 	last_frame_tp = std::chrono::high_resolution_clock::now();
-	std::string logString = "Frame ";
-	logString.append(std::to_string(GetFrameCount()) + " - ");
-	logString.append(std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(frameProcessTime).count()) + "ms - ");
-	//logString.append(std::to_string(GetFPS()) + " - ");
-	logString.append(std::to_string((int)(GetBudgetPercent())) + "% ");
-	
-	logging->Log(logString);
-	if (DO_PROFILING) {
-		std::string profileLog = "Profiling:\n";
-		profileLog.append("INPUT - "+std::to_string(std::chrono::duration_cast<std::chrono::microseconds>(input_tp - frame_start_tp).count())+"\u00B5s\n");
-		profileLog.append("UPDATE - " + std::to_string(std::chrono::duration_cast<std::chrono::microseconds>(update_tp - input_tp).count()) + "\u00B5s\n");
-		profileLog.append("RENDER - " + std::to_string(std::chrono::duration_cast<std::chrono::microseconds>(render_tp - update_tp).count()) + "\u00B5s\n");
-		logging->Log(profileLog);
+	if (DEBUG_FRAMETIME_LOG) {
+		std::string logString = "Frame ";
+		logString.append(std::to_string(GetFrameCount()) + " - ");
+		logString.append(std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(frameProcessTime).count()) + "ms - ");
+		//logString.append(std::to_string(GetFPS()) + " - ");
+		logString.append(std::to_string((int)(GetBudgetPercent())) + "% ");
+
+		logging->Log(logString);
+		if (DEBUG_DO_PROFILING) {
+			std::string profileLog = "Profiling:\n";
+			profileLog.append("INPUT - " + std::to_string(std::chrono::duration_cast<std::chrono::microseconds>(input_tp - frame_start_tp).count()) + "\u00B5s\n");
+			profileLog.append("UPDATE - " + std::to_string(std::chrono::duration_cast<std::chrono::microseconds>(update_tp - input_tp).count()) + "\u00B5s\n");
+			profileLog.append("RENDER - " + std::to_string(std::chrono::duration_cast<std::chrono::microseconds>(render_tp - update_tp).count()) + "\u00B5s\n");
+			logging->Log(profileLog);
+		}
 	}
-	
 }
 
 std::chrono::nanoseconds GameClock::GetFrametime()
@@ -94,20 +95,20 @@ int GameClock::GetFPS()
 
 void GameClock::TickProfiling(ProfilerPhases phase)
 {
-	if (!DO_PROFILING)
+	if (!DEBUG_DO_PROFILING)
 		return;
 	auto TP = std::chrono::high_resolution_clock::now();
 	switch (phase) {
-		case START:
+		case PROFILING_STARTFRAME:
 			frame_start_tp = TP;
 			break;
-		case INPUT:
+		case PROFILING_INPUT:
 			input_tp = TP;
 			break;
-		case UPDATE:
+		case PROFILING_UPDATE:
 			update_tp = TP;
 			break;
-		case RENDER:
+		case PROFILING_RENDER:
 			render_tp = TP;
 			break;
 		default:
@@ -142,13 +143,13 @@ std::chrono::nanoseconds GameClock::TimeSinceLastFrame()
 void GameClock::WaitFor(std::chrono::nanoseconds wait_ns)
 {
 	switch (GF_WAIT_METHOD) {
-	case SDL:
+	case WM_SDL:
 		SDL_Delay(std::chrono::duration_cast<std::chrono::milliseconds>(wait_ns).count());
 		break;
-	case THREAD:
+	case WM_THREAD:
 		std::this_thread::sleep_for(wait_ns);
 		break;
-	case BUSY:
+	case WM_BUSY:
 	{
 		auto wait_until = std::chrono::high_resolution_clock::now() + wait_ns;
 		while (std::chrono::high_resolution_clock::now() < wait_until) {

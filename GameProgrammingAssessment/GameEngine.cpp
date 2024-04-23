@@ -91,6 +91,7 @@ void GameEngine::ProcessEvents()
 {
     SDL_Event event;
     while (SDL_PollEvent(&event) != 0) {
+        //I was going to part this out to input handler but these are all special case inputs so i'm leaving them here to separate them
         if (event.type == SDL_KEYDOWN) {
             switch (event.key.keysym.sym) {
             case SDLK_F11:
@@ -124,17 +125,22 @@ void GameEngine::FPSUpdate() {
 
 void GameEngine::GameLoop() {
     while (!ENGINE_QUIT_FLAG) {
-        clock->TickProfiling(START);
+        clock->TickProfiling(PROFILING_STARTFRAME);
+        input->PollInput();
         ProcessEvents();
-        clock->TickProfiling(INPUT);
+
+        clock->TickProfiling(PROFILING_INPUT);
         ActiveScene->Update();
         FPSUpdate();
-        clock->TickProfiling(UPDATE);
+
+        clock->TickProfiling(PROFILING_UPDATE);
         renderer->RenderFrame();
         if (DEBUG_DRAW_BB)
            ActiveScene->DrawBBs();
-        clock->TickProfiling(RENDER);
+
+        clock->TickProfiling(PROFILING_RENDER);
         clock->Tick();
+
         if (DO_BATCH_LOGGING)
             logging->SaveLogFile();
     }

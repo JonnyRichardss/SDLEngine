@@ -20,13 +20,15 @@ static const char* SPRITE_INFO_FORMAT = ".spritedims";
 
 constexpr bool DEBUG_DRAW_BB = false; //this doesnt work anymore since the scaling and rotation assumptions it worked from are no longer valid
 constexpr bool DEBUG_EXTRA_LOGGING = true; //designed for when using print debugging so I can (possibly) leave the logs in
+constexpr bool DEBUG_FRAMETIME_LOG = false;//also disables profiling if its on or not
+		constexpr bool DEBUG_DO_PROFILING = true;
 
 constexpr bool CONSOLE_LOG_DEFAULT = true;
 constexpr bool DO_FILE_LOGGING = true;
 constexpr bool DO_BATCH_LOGGING = true;
 constexpr bool VERBOSE_CONSOLE = false;
 
-constexpr bool DO_PROFILING = true;
+
 
 constexpr bool AUDIO_FAILURE_FATAL = true;
 
@@ -41,6 +43,6 @@ constexpr int MUSIC_TEMPO = 192;
 constexpr int MUSIC_START_OFFSET = 0;
 constexpr int MUSIC_VOLUME = 0;
 constexpr int MASTER_VOLUME = 0;
-enum WaitMethods {BUSY,SDL,THREAD};
-static constexpr WaitMethods GF_WAIT_METHOD = BUSY; //SDL seems to under-sleep and THREAD seems to over-sleep
+enum WaitMethods {WM_BUSY,WM_SDL,WM_THREAD};
+static constexpr WaitMethods GF_WAIT_METHOD = WM_BUSY; //SDL seems to under-sleep and THREAD seems to over-sleep
 #endif // !USE_GAMEGLOBALS
