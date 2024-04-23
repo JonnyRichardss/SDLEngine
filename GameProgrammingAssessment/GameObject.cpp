@@ -10,6 +10,7 @@ GameObject::GameObject()
 	logging = GameLogging::GetInstance();
 	window = renderer->GetWindow();
 	renderContext = renderer->GetRenderContext();
+	input = InputHandler::GetInstance();
 	GetWindowParams();
 	velocity = Vector2::zero();
 	position = Vector2::zero();

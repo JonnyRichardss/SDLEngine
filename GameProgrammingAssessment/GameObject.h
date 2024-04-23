@@ -5,6 +5,7 @@
 #include "GameMath.h"
 #include "GameClock.h"
 #include "ColourRGBA.h"
+#include "InputHandler.h"
 #include <string>
 #include <vector>
 class GameEngine; //forward definition to prevent circular includes in header
@@ -51,6 +52,7 @@ protected:
 	GameLogging* logging;
 	RenderEngine* renderer;
 	//GameEngine* engine;
+	InputHandler* input;
 	GameScene* scene;
 	GameClock* clock;
 	SDL_Window* window;

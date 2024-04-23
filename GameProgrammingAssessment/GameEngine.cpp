@@ -44,9 +44,10 @@ void GameEngine::StartLoop()
      AllScenes.push_back(boidScene);
      //GameScene* eshopScene = new EshopScene();
      //AllScenes.push_back(eshopScene);
-     GameScene* collisionScene = new CollisionTestScene();
-     AllScenes.push_back(collisionScene);
-
+     //GameScene* collisionScene = new CollisionTestScene();
+     //AllScenes.push_back(collisionScene);
+     GameScene* mainScene = new MainScene();
+     AllScenes.push_back(mainScene);
 
      for (auto Scene : AllScenes) {
          Scene->CreateObjects();
