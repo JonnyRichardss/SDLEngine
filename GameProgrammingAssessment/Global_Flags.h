@@ -18,7 +18,7 @@ static const char* LOGFILE_NAME = "latest.log";
 static const char* BASE_ASSET_PATH = "Assets/";
 static const char* SPRITE_INFO_FORMAT = ".spritedims";
 
-constexpr bool DEBUG_DRAW_BB = false; //this doesnt work anymore since the scaling and rotation assumptions it worked from are no longer valid
+constexpr bool DEBUG_DRAW_BB = true; //this doesnt work anymore since the scaling and rotation assumptions it worked from are no longer valid
 constexpr bool DEBUG_EXTRA_LOGGING = true; //designed for when using print debugging so I can (possibly) leave the logs in
 constexpr bool DEBUG_FRAMETIME_LOG = false;//also disables profiling if its on or not
 		constexpr bool DEBUG_DO_PROFILING = true;

@@ -3,7 +3,7 @@
 #include "Global_Flags.h"
 #include <thread>
 static GameClock* _instance;
-GameClock::GameClock() : ENGINE_START_TP(std::chrono::high_resolution_clock::now())
+GameClock::GameClock() : ENGINE_START_TP(std::chrono::high_resolution_clock::now()), MS_offset_SDL (SDL_GetTicks())
 {
 	logging = GameLogging::GetInstance();
 	last_frame_tp = ENGINE_START_TP;
@@ -115,6 +115,17 @@ void GameClock::TickProfiling(ProfilerPhases phase)
 			throw "Invalid profile phase";
 			//pretty sure the enum prevents invalid values being set but this isnt hurting anyone so
 			break;
+	}
+}
+
+std::chrono::high_resolution_clock::time_point GameClock::SDLToTimePoint(int timestamp)
+{
+	timestamp -= MS_offset_SDL;
+	if (timestamp < 0) {
+		return ENGINE_START_TP;//fallback case - I don't *think* this is possible
+	}
+	else {
+		return ENGINE_START_TP + std::chrono::milliseconds(timestamp);
 	}
 }
 

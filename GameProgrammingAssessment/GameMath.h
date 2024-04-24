@@ -31,11 +31,22 @@ struct Vector2 {
         this->y *= other;
         return *this;
     }
+    Vector2& operator/= (const float& other) {
+        this->x /= other;
+        this->y /= other;
+        return *this;
+    }
     friend Vector2 operator* (const float& lhs, Vector2 rhs) {
         return rhs *= lhs;
     }
     friend Vector2 operator* (Vector2 lhs, const float& rhs) {
         return lhs *= rhs;
+    }
+    friend Vector2 operator/ (const float& lhs, Vector2 rhs) {
+        return rhs /= lhs;
+    }
+    friend Vector2 operator/ (Vector2 lhs, const float& rhs) {
+        return lhs /= rhs;
     }
     bool operator== (const Vector2& other) {
         return (x == other.x && y == other.y);

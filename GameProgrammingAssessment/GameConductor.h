@@ -7,6 +7,7 @@ class GameConductor
 public:
 	static GameConductor* GetInstance();
 	double GetInputTiming(std::chrono::high_resolution_clock::time_point INPUT_TP);
+	void StartMusic();
 private:
 
 	GameConductor();

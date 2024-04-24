@@ -19,9 +19,14 @@ public:
 	void ToggleFullscreen();
 
 	void Enqueue(RenderableComponent* object);
+
 	Vector2 GameToWindowScaling(Vector2 vec);
 	Vector2 GameToWindowTranslation(Vector2 vec);
 	Vector2 GameToWindowCoords(Vector2 vec);
+
+	Vector2 WindowToGameScaling(Vector2 vec);
+	Vector2 WindowToGameTranslation(Vector2 vec);
+	Vector2 WindowToGameCoords(Vector2 vec);
 private:
 	RenderEngine();
 	~RenderEngine();

@@ -9,11 +9,12 @@ class AudioEngine
 public:
 	static AudioEngine* GetInstance();
 	void ToggleTrack();
-	
+	void StartMusic();
 private:
 	bool soloPlaying = false;
 	AudioEngine();
 	~AudioEngine();
+	
 	void SwitchToTrack(Mix_Music* newTrack, Mix_Music* oldTrack);
 	GameLogging* logging;
 	Mix_Music* mainTrack;

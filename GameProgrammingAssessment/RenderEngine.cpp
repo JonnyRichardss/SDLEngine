@@ -100,4 +100,30 @@ Vector2 RenderEngine::GameToWindowCoords(Vector2 vec)
     return vec;
 }
 
+Vector2 RenderEngine::WindowToGameScaling(Vector2 vec)
+{
+    int windowWidth, windowHeight;
+    SDL_GetWindowSize(window, &windowWidth, &windowHeight);
+    vec.x *=  (float)(GAME_MAX_X * 2)/(float)windowWidth ;
+
+    vec.y *= (float)(GAME_MAX_Y * 2)/ (float)windowHeight;
+    return vec;
+}
+
+Vector2 RenderEngine::WindowToGameTranslation(Vector2 vec)
+{
+    
+    vec -= Vector2(GAME_MAX_X, GAME_MAX_Y);
+    vec.y *= -1;
+    return vec;
+}
+
+Vector2 RenderEngine::WindowToGameCoords(Vector2 vec)
+{
+    
+    vec = WindowToGameScaling(vec);
+    vec = WindowToGameTranslation(vec);
+    return vec;
+}
+
 

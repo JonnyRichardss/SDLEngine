@@ -1,6 +1,7 @@
 #include "MainScene.h"
 #include "CollisionCalculator.cuh"
 #include "IncludeGameObjects.h"
+#include "AudioEngine.h"
 MainScene::MainScene()
 {
 	name = "Main Game Scene";
@@ -29,6 +30,7 @@ void MainScene::PostUpdate()
 void MainScene::Load()
 {
 	JRCollision::Init();
+	AudioEngine::GetInstance()->StartMusic();
 }
 
 void MainScene::Unload()

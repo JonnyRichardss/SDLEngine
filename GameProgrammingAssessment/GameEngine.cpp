@@ -93,6 +93,10 @@ void GameEngine::ProcessEvents()
     SDL_Event event;
     while (SDL_PollEvent(&event) != 0) {
         //I was going to part this out to input handler but these are all special case inputs so i'm leaving them here to separate them
+        //Since i'm still processing events here I have to push mouse events back OUT to input so they can be timed
+        if (event.type == SDL_MOUSEBUTTONDOWN) {
+            input->MouseEvent(event);
+        }
         if (event.type == SDL_KEYDOWN) {
             switch (event.key.keysym.sym) {
             case SDLK_F11:

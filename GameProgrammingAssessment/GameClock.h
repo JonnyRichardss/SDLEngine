@@ -15,12 +15,13 @@ public:
 	std::chrono::high_resolution_clock::time_point GetTimePoint();
 	int GetFPS();
 	void TickProfiling(ProfilerPhases phase);
+	std::chrono::high_resolution_clock::time_point SDLToTimePoint(int timestamp);
 private:
 	GameClock();
 	~GameClock();
 	
 	GameLogging* logging;
-
+	const double MS_offset_SDL;
 	const std::chrono::high_resolution_clock::time_point ENGINE_START_TP;
 	std::chrono::high_resolution_clock::time_point last_frame_tp;
 	std::chrono::high_resolution_clock::time_point frame_start_tp;

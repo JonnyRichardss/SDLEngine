@@ -12,13 +12,18 @@ double GameConductor::GetInputTiming(std::chrono::high_resolution_clock::time_po
     std::chrono::high_resolution_clock::duration epoch_duration = inputTP - firstBeat;
     auto modBeatLength = epoch_duration % beatLength;
     if (modBeatLength > beatLength / 2) {
-        return std::chrono::duration_cast<std::chrono::milliseconds>((beatLength - modBeatLength)).count();
+        return std::chrono::duration_cast<std::chrono::microseconds>((beatLength - modBeatLength)).count();
     }
-    return std::chrono::duration_cast<std::chrono::milliseconds>(modBeatLength).count();
+    return std::chrono::duration_cast<std::chrono::microseconds>(modBeatLength).count();
+}
+void GameConductor::StartMusic()
+{
+    firstBeat = std::chrono::high_resolution_clock::now();
 }
 GameConductor::GameConductor()
 {
-    beatLength = std::chrono::duration_cast<std::chrono::nanoseconds>( 1s / MUSIC_TEMPO);
+    beatLength = std::chrono::duration_cast<std::chrono::nanoseconds>(1min);
+    beatLength /= MUSIC_TEMPO;
     firstBeat = std::chrono::high_resolution_clock::now();
 
 }

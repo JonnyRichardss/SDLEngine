@@ -1,5 +1,6 @@
 #include "AudioEngine.h"
 #include <string>
+#include "GameConductor.h"
 static AudioEngine* _instance;
 AudioEngine* AudioEngine::GetInstance()
 {
@@ -47,13 +48,17 @@ AudioEngine::AudioEngine()
     }
     Mix_MasterVolume(MASTER_VOLUME);
     Mix_VolumeMusic(MUSIC_VOLUME);
-    Mix_PlayMusic(mainTrack, 0);
+    
     Mix_SetMusicPosition(MUSIC_START_OFFSET);
     logging->Log("Initialised audio engine.");
 }
 AudioEngine::~AudioEngine()
 {
 
+}
+void AudioEngine::StartMusic() {
+    Mix_PlayMusic(mainTrack, 0);
+    GameConductor::GetInstance()->StartMusic();
 }
 void AudioEngine::ToggleTrack()
 {
