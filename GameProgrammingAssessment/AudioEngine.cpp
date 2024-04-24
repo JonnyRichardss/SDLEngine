@@ -60,6 +60,11 @@ void AudioEngine::StartMusic() {
     Mix_PlayMusic(mainTrack, 0);
     GameConductor::GetInstance()->StartMusic();
 }
+double AudioEngine::GetTrackPos()
+{
+    Mix_Music* track = soloPlaying ? soloTrack : mainTrack;
+    return (Mix_GetMusicPosition(track)*1000);
+}
 void AudioEngine::ToggleTrack()
 {
     SwitchToTrack(soloPlaying ? mainTrack : soloTrack, soloPlaying ? soloTrack: mainTrack);

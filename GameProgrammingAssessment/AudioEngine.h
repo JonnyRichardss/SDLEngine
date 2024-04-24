@@ -10,6 +10,7 @@ public:
 	static AudioEngine* GetInstance();
 	void ToggleTrack();
 	void StartMusic();
+	double GetTrackPos();
 private:
 	bool soloPlaying = false;
 	AudioEngine();

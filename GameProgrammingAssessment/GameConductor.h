@@ -1,6 +1,7 @@
 #ifndef USE_CONDUCTOR
 #define USE_CONDUCTOR
 #include "GameClock.h"
+
 #include <chrono>
 class GameConductor
 {
@@ -14,7 +15,9 @@ private:
 	~GameConductor();
 	std::chrono::high_resolution_clock::time_point firstBeat;
 	GameClock* clock = GameClock::GetInstance();
-	std::chrono::nanoseconds beatLength;
+	std::chrono::milliseconds beatLength;
+	GameLogging* logging;
+
 };
 
 #endif // !USE_CONDUCTOR

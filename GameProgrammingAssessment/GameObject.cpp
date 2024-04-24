@@ -11,6 +11,7 @@ GameObject::GameObject()
 	window = renderer->GetWindow();
 	renderContext = renderer->GetRenderContext();
 	input = InputHandler::GetInstance();
+	audio = AudioEngine::GetInstance();
 	GetWindowParams();
 	velocity = Vector2::zero();
 	position = Vector2::zero();

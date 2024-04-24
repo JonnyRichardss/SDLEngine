@@ -6,6 +6,7 @@
 #include "GameClock.h"
 #include "ColourRGBA.h"
 #include "InputHandler.h"
+#include "AudioEngine.h"
 #include <string>
 #include <vector>
 class GameEngine; //forward definition to prevent circular includes in header
@@ -58,6 +59,7 @@ protected:
 	SDL_Window* window;
 	SDL_Renderer* renderContext;
 	RenderableComponent* visuals;
+	AudioEngine* audio;
 };
 #endif // !USE_GAMEOBJECT
 

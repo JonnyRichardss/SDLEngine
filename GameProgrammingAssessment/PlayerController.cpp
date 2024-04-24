@@ -1,13 +1,20 @@
 #include "PlayerController.h"
+#include "Timer.h"
+#include <chrono>
+using namespace std::chrono_literals;
 //technically these could go in global flags but they will require iterating and i dont want to recomp the whole project every time
 static constexpr int maxSpeed = 10;
 static constexpr float acceleration = 0.75;
 static constexpr float deceleration = 0.5;
+static Timer timer;
+static GameConductor* conductor;
 void PlayerController::Init()
 {
 	BoundingBox = Vector2(TEST_COLLIDER_SIZE);
 	shown = true;
 	is_static = false;
+	timer.Start();
+	conductor = GameConductor::GetInstance();
 }
 
 void PlayerController::InitVisuals()
@@ -39,6 +46,7 @@ void PlayerController::Update()
 	}
 	//logging->DebugLog(input->GetMousePos().ToString());
 	position = renderer->WindowToGameCoords(input->GetMousePos());
+
 }
 void PlayerController::DoMovement(Vector2 MoveVector) {
 	//not entirely happy with how this is but i *think* i can play with the consts tofix it

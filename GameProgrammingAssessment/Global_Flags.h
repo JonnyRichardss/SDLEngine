@@ -21,13 +21,12 @@ static const char* SPRITE_INFO_FORMAT = ".spritedims";
 constexpr bool DEBUG_DRAW_BB = true; //this doesnt work anymore since the scaling and rotation assumptions it worked from are no longer valid
 constexpr bool DEBUG_EXTRA_LOGGING = true; //designed for when using print debugging so I can (possibly) leave the logs in
 constexpr bool DEBUG_FRAMETIME_LOG = false;//also disables profiling if its on or not
-		constexpr bool DEBUG_DO_PROFILING = true;
+		constexpr bool DEBUG_DO_PROFILING = false;
 
 constexpr bool CONSOLE_LOG_DEFAULT = true;
 constexpr bool DO_FILE_LOGGING = true;
 constexpr bool DO_BATCH_LOGGING = true;
 constexpr bool VERBOSE_CONSOLE = false;
-
 
 
 constexpr bool AUDIO_FAILURE_FATAL = true;
