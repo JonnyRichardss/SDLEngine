@@ -12,7 +12,7 @@ protected:
 	void ToggleColour();
 	void DoMovement(Vector2 MoveVector);
 	void DoAttacks();
-	bool attack1, attack2;
+	bool a1waiting, a2waiting;
 	double a1Timing, a2Timing;
 };
 

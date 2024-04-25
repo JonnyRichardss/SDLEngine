@@ -18,8 +18,8 @@ void PlayerController::Init()
 	collisionTags.push_back("Player");
 	shown = true;
 	is_static = false;
-	attack1 = false;
-	attack2 = false;
+	a1waiting = false;
+	a2waiting = false;
 	a1Timing = 0;
 	a2Timing = 0;
 	timer.Start();
@@ -43,12 +43,12 @@ bool PlayerController::Update()
 	MoveVector.x -= input->GetActionState(InputActions::LEFT);
 	MoveVector.x += input->GetActionState(InputActions::RIGHT);
 	//the attack bools are actually waiting flags so only update them if we are not waiting
-	if (!attack1) {
-		attack1 = input->GetActionState(InputActions::ATTACK1);
+	if (!a1waiting) {
+		a1waiting = input->GetActionState(InputActions::ATTACK1);
 		a1Timing = input->GetActionTiming(InputActions::ATTACK1);
 	}
-	if (!attack2) {
-		attack2 = input->GetActionState(InputActions::ATTACK2);
+	if (!a2waiting) {
+		a2waiting = input->GetActionState(InputActions::ATTACK2);
 		a2Timing = input->GetActionTiming(InputActions::ATTACK2);
 	}
 	Vector2 mousePos = renderer->WindowToGameCoords(input->GetMousePos());
@@ -109,17 +109,17 @@ void PlayerController::DoAttacks()
 	//alternative to measuring timing could just be to count the # of frames between the input being queued and actually being executed
 	//this sounds like a better idea tbh
 	if (conductor->PollBeat()) {
-		if (attack1) {
+		if (a1waiting) {
 			logging->DebugLog("Attack1  "+std::to_string(a1Timing));
-			MeleeCollider* atk = new MeleeCollider(this, "Player Light Attack", TEST_COLLIDER_SIZE, 10, 10, 1, 0);
+			MeleeCollider* atk = new MeleeCollider(this, "Player Light Attack", TEST_COLLIDER_SIZE, 30, 10, 1, 0);
 			scene->DeferredRegister(atk);
-			attack1 = false;
+			a1waiting = false;
 		}
-		if (attack2) {
+		if (a2waiting) {
 			logging->DebugLog("Attack2  "+std::to_string(a2Timing));
-			MeleeCollider* atk = new MeleeCollider(this, "Player Heavy Attack", TEST_COLLIDER_SIZE, 10, 20, 1, 0);
+			MeleeCollider* atk = new MeleeCollider(this, "Player Heavy Attack", TEST_COLLIDER_SIZE, 50, 20, 1, 0);
 			scene->DeferredRegister(atk);
-			attack2 = false;
+			a2waiting = false;
 		}
 	}
 }

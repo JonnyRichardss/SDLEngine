@@ -22,7 +22,13 @@ void MeleeCollider::Init()
 
 void MeleeCollider::InitVisuals()
 {
-	//no visuals
+	if (DEBUG_DRAW_MELEES) {
+		visuals->LoadTexture("MeleeDebug", ".png");
+		SDL_Texture* Tex = visuals->GetTexture();
+		SDL_Rect DefaultRect = BBtoDestRect();
+		visuals->UpdateDestPos(&DefaultRect);
+		shown = true;
+	}
 }
 
 float MeleeCollider::GetDamage()
