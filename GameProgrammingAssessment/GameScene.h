@@ -19,6 +19,7 @@ public:
 	virtual ~GameScene();
 	virtual void CreateObjects() = 0;
 	void Update();
+	void DoDeferredRegsitration();
 	virtual void PreUpdate() = 0;
 	virtual void PostUpdate() = 0;
 	//technically they can have any implementation but the intent is that Load() only has to be called AFTER Unload()
@@ -26,8 +27,12 @@ public:
 	virtual void Unload()=0;
 	void Delete();
 	void MoveStatics();
+	//PLEASE DON'T REGISTER OBJECTS INSIDE UPDATE - DO DeferredRegister INSTEAD
 	void RegisterObject(GameObject* obj);
+	void DeferredRegister(GameObject* obj);
+	//PLEASE DON'T DEREGISTER OBJECTS INSIDE UPDATE - DO DeferredDeregister INSTEAD
 	void DeregisterObject(GameObject* obj);
+	void DeferredDeregister(GameObject* obj);
 	void DrawBBs();
 	std::string GetName();
 	GameLogging* logging;
@@ -38,6 +43,8 @@ protected:
 	void Init();
 	void DestroyObjects();
 	std::vector<GameObject*> UpdateQueue;
+	std::vector<GameObject*> RegisterQueue;
+	std::vector<GameObject*> DeregisterQueue;
 	std::string name;
 };
 #endif // !USE_GAMESCENE

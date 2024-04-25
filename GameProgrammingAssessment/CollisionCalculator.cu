@@ -142,6 +142,7 @@ void AllocCUDA(int size) {
 }
 namespace JRCollision {
 	void Init() {
+		//current state has this immediately reallocated
 		AllocCUDA(AllocSize);
 	}
 	void Free()

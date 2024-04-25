@@ -17,7 +17,7 @@ RenderEngine::RenderEngine()
     clock = GameClock::GetInstance();
     logging = GameLogging::GetInstance();
     SDL_GetDesktopDisplayMode(0, &mode);
-    window = SDL_CreateWindow("Jonathan Richards -- 26541501", mode.w /4, mode.h / 4, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("Jonathan Richards -- 26541501", (mode.w - WINDOW_WIDTH) / 2, (mode.h - WINDOW_HEIGHT) / 2, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
     renderContext = SDL_CreateRenderer(window, -1, 0);
     TTF_Init();
     logging->Log("Initialised render engine.");

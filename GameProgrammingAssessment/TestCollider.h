@@ -9,7 +9,7 @@ public:
 	void InitVisuals();
 	void SetName(int num); //from boid lol
 protected:
-	void Update();
+	bool Update();
 	//taken direct from boid -- i think i need to robustify (thats a word) rotating things
 	void DoRotation();
 	void ScreenWrap();

@@ -45,6 +45,23 @@ void GameScene::Update()
         }
     }
     PostUpdate();
+    DoDeferredRegsitration();
+}
+
+void GameScene::DoDeferredRegsitration()
+{
+    if (!RegisterQueue.empty()) {
+        for (GameObject* g : RegisterQueue) {
+            RegisterObject(g);
+        }
+        RegisterQueue.clear();
+    }
+    if (!DeregisterQueue.empty()) {
+        for (GameObject* g : DeregisterQueue) {
+            DeregisterObject(g);
+        }
+        DeregisterQueue.clear();
+    }
 }
 
 void GameScene::Delete()
@@ -65,7 +82,13 @@ void GameScene::RegisterObject(GameObject* obj)
     UpdateQueue.push_back(obj);
     obj->Init();
     obj->InitVisuals();
+    obj->SetOwner(this);
     logging->Log("Scene " + name + ": registered object: "+obj->GetName());
+}
+
+void GameScene::DeferredRegister(GameObject* obj)
+{
+    RegisterQueue.push_back(obj);
 }
 
 void GameScene::DeregisterObject(GameObject* g)
@@ -85,6 +108,11 @@ void GameScene::DeregisterObject(GameObject* g)
     }
     else
         logging->Log("Scene " + name + " failed to deregister object: " + g->GetName());
+}
+
+void GameScene::DeferredDeregister(GameObject* obj)
+{
+    DeregisterQueue.push_back(obj);
 }
 
 void GameScene::DrawBBs()

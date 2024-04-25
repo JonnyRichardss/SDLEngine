@@ -59,7 +59,7 @@ void TestCollider::SetName(int num)
 	name = "Box " + std::to_string(num);
 }
 
-void TestCollider::Update()
+bool TestCollider::Update()
 {
 	ScreenWrap();
 	DoRotation();
@@ -70,4 +70,5 @@ void TestCollider::Update()
 	else {
 		SetRed();
 	}
+	return true;
 }

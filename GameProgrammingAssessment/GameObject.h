@@ -34,12 +34,14 @@ public:
 	Vector2 GetVelo();
 	Vector2 GetBB();
 	JRrect GetCorners();
+	bool CompareTag(std::string tag);
 	std::vector<GameObject*> colliders;
 protected:
-	virtual void Update() = 0;
+	virtual bool Update() = 0;
 	
 	int windowWidth, windowHeight;
 	std::string name;
+	std::vector<std::string> collisionTags;
 	float facing;
 	Vector2 position;
 	Vector2 velocity;
@@ -48,7 +50,7 @@ protected:
 	SDL_Rect BBtoDestRect();
 	JRrect BBtoGameRect();
 	void GetWindowParams();
-	bool shown;
+	bool shown = false;
 	bool is_static = false;
 	GameLogging* logging;
 	RenderEngine* renderer;

@@ -1,23 +1,23 @@
 #ifndef USE_CONDUCTOR
 #define USE_CONDUCTOR
-#include "GameClock.h"
-
+#include "AudioEngine.h"
 #include <chrono>
 class GameConductor
 {
 public:
 	static GameConductor* GetInstance();
-	double GetInputTiming(std::chrono::high_resolution_clock::time_point INPUT_TP);
-	void StartMusic();
+	double GetInputTiming();
+	double GetInputTiming(int timestamp);
+	void StartMusic(int ticks);
+	bool PollBeat();
 private:
 
 	GameConductor();
 	~GameConductor();
-	std::chrono::high_resolution_clock::time_point firstBeat;
-	GameClock* clock = GameClock::GetInstance();
-	std::chrono::milliseconds beatLength;
+	double prevBeatTime;
 	GameLogging* logging;
-
+	AudioEngine* audio;
+	int SDLoffset;
 };
 
 #endif // !USE_CONDUCTOR

@@ -1,4 +1,5 @@
 #include "GameConductor.h"
+
 using namespace std::chrono_literals;
 static GameConductor* _instance;
 GameConductor* GameConductor::GetInstance()
@@ -7,28 +8,43 @@ GameConductor* GameConductor::GetInstance()
         _instance = new GameConductor();
     return _instance;
 }
-double GameConductor::GetInputTiming(std::chrono::high_resolution_clock::time_point inputTP)
-{
-    std::chrono::high_resolution_clock::duration durationSinceStart = inputTP  - firstBeat;
-    std::chrono::milliseconds msSinceStart = std::chrono::duration_cast<std::chrono::milliseconds>(durationSinceStart);
-    std::chrono::milliseconds modBeatLength = msSinceStart % beatLength;
-
-    if (modBeatLength > beatLength / 2) {
-        return std::chrono::duration_cast<std::chrono::milliseconds>((beatLength - modBeatLength)).count();
+double GameConductor::GetInputTiming() {
+    double modBeatLength = audio->MSsinceLastBeat();
+    if (modBeatLength > MS_PER_BEAT / 2) {
+        return MS_PER_BEAT - modBeatLength;
     }
-    return std::chrono::duration_cast<std::chrono::milliseconds>(modBeatLength).count();
+    return modBeatLength;
 }
-void GameConductor::StartMusic()
+double GameConductor::GetInputTiming(int timestamp) {
+    timestamp -= SDLoffset;
+    //now timestamp is the number of MS between song start and input
+    double modBeatLength = fmod(timestamp, MS_PER_BEAT);
+    if (modBeatLength > MS_PER_BEAT / 2) {
+        return MS_PER_BEAT - modBeatLength;
+    }
+    return modBeatLength;
+}
+void GameConductor::StartMusic(int ticks)
 {
-    firstBeat = std::chrono::high_resolution_clock::now();
+    SDLoffset = ticks;
+    prevBeatTime = MS_PER_BEAT;
+}
+bool GameConductor::PollBeat()
+{
+    bool output = false;
+    double ThisBeatTime = audio->MSsinceLastBeat();
+    if (ThisBeatTime < prevBeatTime) { 
+        output = true;
+    }
+    prevBeatTime = ThisBeatTime;
+    return output;
 }
 GameConductor::GameConductor()
 {
     logging = GameLogging::GetInstance();
-    beatLength = std::chrono::duration_cast<std::chrono::milliseconds>(1min);
-    beatLength /= MUSIC_TEMPO;
-    beatLength += std::chrono::duration_cast < std::chrono::milliseconds>(5800us);
-    firstBeat = std::chrono::high_resolution_clock::now();
+    audio = AudioEngine::GetInstance();
+    SDLoffset = 0;
+    prevBeatTime = MS_PER_BEAT;
     logging->Log("Initialised conductor.");
 }
 GameConductor::~GameConductor()

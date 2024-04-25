@@ -89,6 +89,6 @@ void InputHandler::MouseEvent(SDL_Event event)
     }
 
     actionStates[action] = true;
-    actionTimings[action] = conductor->GetInputTiming(inputTP);
+    actionTimings[action] = conductor->GetInputTiming();
 }
 

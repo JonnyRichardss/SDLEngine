@@ -49,7 +49,7 @@ void Boid::InitVisuals()
 
 }
 
-void Boid::Update()
+bool Boid::Update()
 {
 	numNeighbours = Neighbours.size();
 	steerTarget = Vector2::zero();
@@ -58,6 +58,7 @@ void Boid::Update()
 	ScreenWrap();
 	DoRotation();
 	Neighbours.clear();
+	return true;
 }
 
 void Boid::DoRotation()

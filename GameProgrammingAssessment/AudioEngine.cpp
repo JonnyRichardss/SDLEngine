@@ -1,6 +1,7 @@
 #include "AudioEngine.h"
 #include <string>
 #include "GameConductor.h"
+#include "GameUtils.h"
 static AudioEngine* _instance;
 AudioEngine* AudioEngine::GetInstance()
 {
@@ -46,6 +47,7 @@ AudioEngine::AudioEngine()
         logging->DebugLog(Mix_GetError());
         logging->Log("Failed to load file Assets/music_solo.mp3");
     }
+    LoadAllSounds();
     Mix_MasterVolume(MASTER_VOLUME);
     Mix_VolumeMusic(MUSIC_VOLUME);
     
@@ -54,16 +56,28 @@ AudioEngine::AudioEngine()
 }
 AudioEngine::~AudioEngine()
 {
-
+    FreeAll();
 }
 void AudioEngine::StartMusic() {
     Mix_PlayMusic(mainTrack, 0);
-    GameConductor::GetInstance()->StartMusic();
+    GameConductor::GetInstance()->StartMusic(SDL_GetTicks());
 }
 double AudioEngine::GetTrackPos()
 {
     Mix_Music* track = soloPlaying ? soloTrack : mainTrack;
     return (Mix_GetMusicPosition(track)*1000);
+}
+double AudioEngine::MSsinceLastBeat()
+{
+    return fmod(GetTrackPos(),MS_PER_BEAT);
+}
+void AudioEngine::PlaySound(int index)
+{
+    if (index >= allSounds.size() || index < 0) {
+        logging->Log("Tried to play sound with invalid index!");
+        return;
+    }
+    Mix_PlayChannel(-1, allSounds[index], 0);
 }
 void AudioEngine::ToggleTrack()
 {
@@ -78,4 +92,31 @@ void AudioEngine::SwitchToTrack(Mix_Music* newTrack, Mix_Music* oldTrack) {
     double trackPos = Mix_GetMusicPosition(oldTrack);
     Mix_PlayMusic(newTrack, 0);
     Mix_SetMusicPosition(trackPos);
+}
+
+void AudioEngine::LoadAllSounds()
+{
+    std::vector<std::string> allPaths;
+    if (!ReadFile("Assets/SoundPaths.txt", allPaths)) {
+        logging->Log("Failed to load sound locations!");
+        return;
+    }
+    for (std::string filePath : allPaths) {
+        Mix_Chunk* sound;
+        sound = Mix_LoadWAV(filePath.c_str());
+        if (sound == nullptr) {
+            logging->Log("Failed to load sound with path: " + filePath);
+            continue;
+        }
+        allSounds.push_back(sound);
+    }
+}
+
+void AudioEngine::FreeAll()
+{
+    for (Mix_Chunk* sound : allSounds) {
+        Mix_FreeChunk(sound);
+    }
+    Mix_FreeMusic(mainTrack);
+    Mix_FreeMusic(soloTrack);
 }

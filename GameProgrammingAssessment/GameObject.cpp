@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "GameEngine.h"
+
 GameObject::GameObject()
 {
 	shown = true;
@@ -46,7 +47,9 @@ void GameObject::GetWindowParams()
 }
 bool GameObject::UpdateAndRender(RenderableComponent*& render)
 {
-	Update();
+	if (!Update())
+		//this is silly that I have to do this but if an object deletes itself in its own update, UpdateAndRender returns true, putting a trailing RenderableComponent nullptr on the render queue
+		return false;
 	if (!is_static)//now i'm back looking at this im not entirely sure specifing static objects is necessary but ig it can stay as an artefact from pong
 		position += velocity;
 	if (shown) {
@@ -115,6 +118,15 @@ Vector2 GameObject::GetBB()
 JRrect GameObject::GetCorners()
 {
 	return BBtoGameRect();
+}
+
+bool GameObject::CompareTag(std::string tag)
+{
+	for (std::string otherTag : collisionTags) {
+		if (tag == otherTag)
+			return true;
+	}
+	return false;
 }
 
 void GameObject::MoveVisuals()

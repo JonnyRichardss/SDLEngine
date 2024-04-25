@@ -15,7 +15,7 @@ public:
 	void Init();
 protected:
 	
-	void Update();
+	bool Update();
 	void InitVisuals();
 	
 private:

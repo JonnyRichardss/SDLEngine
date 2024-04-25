@@ -8,12 +8,13 @@ void EshopAnim::Init()
 	
 }
 
-void EshopAnim::Update()
+bool EshopAnim::Update()
 {
 	GetWindowParams();
 	MoveName();
 	UpdateColours();
 	Animate();
+	return true;
 }
 void EshopAnim::InitVisuals()
 {

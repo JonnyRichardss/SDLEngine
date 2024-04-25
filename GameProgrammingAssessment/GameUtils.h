@@ -5,6 +5,7 @@
 #include <string>
 
 std::vector<std::string> StringSplit(std::string input, char delim);
+//returns true if file is successfully read
 bool ReadFile(std::string filePath, std::vector<std::string>& output);
 /*
 Watch out for this function - it's almost entirely useless apart from renaming log files to the first line of them LMAO

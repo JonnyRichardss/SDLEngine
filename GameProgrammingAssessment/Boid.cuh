@@ -17,7 +17,7 @@ protected:
 	void DoAlignment(Vector2 vec);
 	void DoCohesion(Vector2 vec);
 	int numNeighbours = 0;
-	void Update();
+	bool Update();
 	void DoRotation();
 	void ScreenWrap();
 	void CalcTarget();

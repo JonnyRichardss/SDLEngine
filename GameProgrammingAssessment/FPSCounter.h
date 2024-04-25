@@ -19,7 +19,7 @@ protected:
 	int nextFrameCount = 0;
 	float nextBudgetTotal = 0;
 	Timer timer;
-	void Update();
+	bool Update();
 	TTF_Font* FPSfont;
 
 };

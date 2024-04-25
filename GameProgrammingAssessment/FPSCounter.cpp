@@ -18,11 +18,11 @@ void FPSCounter::InitVisuals()
     visuals->UpdateLayer(100);
 }
 
-void FPSCounter::Update()
+bool FPSCounter::Update()
 {
    
     if (FPSfont == nullptr || !shown)
-        return;
+        return true;
     nextFrameCount++;
     nextBudgetTotal += clock->GetBudgetPercent();
     if (timer.GetTimeElapsed() > 1s) {
@@ -39,5 +39,5 @@ void FPSCounter::Update()
     SDL_Rect counterLocation = { 0, 0, 25 * (log10(fps) + 1),72 };
     visuals->UpdateTexture( fpsTexture);
     visuals->UpdateDestPos(&counterLocation);
-    
+    return true;
 }

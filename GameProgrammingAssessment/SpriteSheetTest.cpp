@@ -26,6 +26,7 @@ void SpriteSheetTest::NextSprite()
 		Sprites->SetSpriteIndex(++index);
 }
 
-void SpriteSheetTest::Update()
+bool SpriteSheetTest::Update()
 {
+	return true;
 }

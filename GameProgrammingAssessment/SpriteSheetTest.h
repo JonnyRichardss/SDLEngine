@@ -9,7 +9,7 @@ public:
 	void InitVisuals();
 	void NextSprite();
 protected:
-	void Update();
+	bool Update();
 	SpriteSheet* Sprites;
 };
 #endif // !USE_TESTSS

@@ -15,7 +15,7 @@ MainScene::~MainScene()
 void MainScene::CreateObjects()
 {
 	PlayerController* player = new PlayerController();
-	UpdateQueue.push_back(player);
+	RegisterObject(player);
 }
 
 void MainScene::PreUpdate()
