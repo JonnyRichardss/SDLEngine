@@ -25,7 +25,6 @@ void GameConductor::StartMusic()
 GameConductor::GameConductor()
 {
     logging = GameLogging::GetInstance();
-    audio = AudioEngine::GetInstance();
     beatLength = std::chrono::duration_cast<std::chrono::milliseconds>(1min);
     beatLength /= MUSIC_TEMPO;
     beatLength += std::chrono::duration_cast < std::chrono::milliseconds>(5800us);

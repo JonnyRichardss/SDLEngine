@@ -27,9 +27,9 @@ SDL_Rect GameObject::BBtoDestRect()
 {
 	Vector2 TransformedBB = renderer->GameToWindowScaling(BoundingBox);
 	Vector2 TransformedPos = renderer->GameToWindowScaling(position);
-	TransformedPos -= (TransformedBB*0.5f);
-	TransformedPos = renderer->GameToWindowTranslation(TransformedPos);
 	
+	TransformedPos = renderer->GameToWindowTranslation(TransformedPos);
+	TransformedPos -= (TransformedBB / 2);
 	SDL_Rect dest = { TransformedPos.x,TransformedPos.y,TransformedBB.x,TransformedBB.y };
 	return dest;
 }
