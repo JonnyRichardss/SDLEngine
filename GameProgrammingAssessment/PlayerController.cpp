@@ -24,52 +24,59 @@ void PlayerController::Init()
 
 void PlayerController::InitVisuals()
 {
-
-	SDL_Surface* Surf = ColourRGBA::White().ColouredSurface();
-	SDL_Texture* Tex = SDL_CreateTextureFromSurface(renderContext, Surf);
-
-	SDL_FreeSurface(Surf);
-	visuals->UpdateTexture(Tex);
-
+	visuals->LoadTexture("boid", ".png");
+	SDL_Texture* Tex = visuals->GetTexture();
 	SDL_Rect DefaultRect = BBtoDestRect();
 	visuals->UpdateDestPos(&DefaultRect);
 }
-
+static int framecounter=0;
 bool PlayerController::Update()
 {
+	framecounter++;
+	//grab inputs
 	Vector2 MoveVector;//see i could have done this with IFs but this takes up less characters and is harder to understand which is obviously more important
 	MoveVector.y += input->GetActionState(InputActions::UP);
 	MoveVector.y -= input->GetActionState(InputActions::DOWN);
 	MoveVector.x -= input->GetActionState(InputActions::LEFT);
 	MoveVector.x += input->GetActionState(InputActions::RIGHT);
+	Vector2 mousePos = renderer->WindowToGameCoords(input->GetMousePos());
+	
+	Vector2 mouseDirection = position - mousePos;
+	mouseDirection.y *= -1;//this is very odd - I'm 100% sure its something to do with windowToGameCoords but setting the pos directly worked so idk man
+	float mouseDirFacing = Vector2::AngleBetweenRAD(Vector2::up(), mouseDirection.Normalise());
+	//movement
+	facing = mouseDirFacing;
 	DoMovement(MoveVector);
-
+	
+	//attacks
 	if (input->GetActionState(InputActions::ATTACK1)) {
 		logging->DebugLog(std::to_string(input->GetActionTiming(InputActions::ATTACK1)));
-		MeleeCollider* atk = new MeleeCollider(this,"Player Light Attack", Vector2::up() * TEST_COLLIDER_SIZE, 10, 10, 4, 0);
+		MeleeCollider* atk = new MeleeCollider(this,"Player Light Attack", TEST_COLLIDER_SIZE, 10, 10, 4, 0);
 		scene->DeferredRegister(atk);
 	}
 	if (input->GetActionState(InputActions::ATTACK2)) {
 		logging->DebugLog(std::to_string(input->GetActionTiming(InputActions::ATTACK2)));
 	}
-	
+	//beat test
 	if (conductor->PollBeat()) {
 		ToggleColour();
 		audio->PlaySound(0);
-		//logging->DebugLog(std::to_string(conductor->GetInputTiming()));
+		
 	}
-	position = renderer->WindowToGameCoords(input->GetMousePos());
+	
 	return true;
 }
 static bool is_red = false;
 void PlayerController::ToggleColour() {
-
-	SDL_Surface* Surf = is_red ? ColourRGBA(255, 0, 0, 255).ColouredSurface() : ColourRGBA::White().ColouredSurface();
+	SDL_Texture* Tex = visuals->GetTexture();
+	if (is_red) {
+		SDL_SetTextureColorMod(Tex, 255, 255, 255);
+	}
+	else {
+		SDL_SetTextureColorMod(Tex, 255, 0, 0);
+	}
 	is_red = is_red ? false : true;
-	SDL_Texture* Tex = SDL_CreateTextureFromSurface(renderContext, Surf);
 
-	SDL_FreeSurface(Surf);
-	visuals->UpdateTexture(Tex);
 }
 void PlayerController::DoMovement(Vector2 MoveVector) {
 	//not entirely happy with how this is but i *think* i can play with the consts tofix it

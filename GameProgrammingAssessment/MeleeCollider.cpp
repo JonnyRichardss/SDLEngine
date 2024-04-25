@@ -1,15 +1,15 @@
 #include "MeleeCollider.h"
 #include "GameScene.h"
 int MeleeCollider::currentID = 0;
-MeleeCollider::MeleeCollider(GameObject* _parent,std::string _name,Vector2 _offset, int w, int h, float lifetimeSeconds,float _damage)
+MeleeCollider::MeleeCollider(GameObject* _parent,std::string _name,float _offset, int w, int h, float lifetimeSeconds,float _damage)
 {
 	parent = _parent;
 	name = _name;
+	facing = parent->GetFacing();
 	offset = _offset;
-	position = parent->GetPos() + offset;
+	position = parent->GetPos() + Vector2::RotateAroundOrigin(Vector2::up(), facing);
 	BoundingBox = Vector2(w, h);
 	lifetime = FRAME_CAP * lifetimeSeconds;
-	facing = parent->GetFacing();
 	damage = _damage;
 	ID = currentID++;
 }
@@ -46,6 +46,9 @@ bool MeleeCollider::Update()
 		return false;
 	}
 	//else exist
-	position = parent->GetPos() + offset;
+	facing = parent->GetFacing();
+	Vector2 offsetVec = Vector2::RotateAroundOrigin(Vector2::up(), facing) * offset;
+	offsetVec.x *= -1;
+	position = parent->GetPos() + offsetVec;
 	return true;
 }

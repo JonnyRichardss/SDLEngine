@@ -4,7 +4,7 @@
 class MeleeCollider : public GameObject
 {
 public:
-	MeleeCollider(GameObject* _parent,std::string _name,Vector2 _offset, int w, int h,float lifetimeSeconds,float _damage);
+	MeleeCollider(GameObject* _parent,std::string _name,float _offset, int w, int h,float lifetimeSeconds,float _damage);
 	void Init();
 	void InitVisuals();
 	float GetDamage();
@@ -13,7 +13,7 @@ protected:
 	static int currentID;
 	int ID;
 	GameObject* parent;
-	Vector2 offset;
+	float offset;
 	float damage;
 	int lifetime;
 	bool Update();
