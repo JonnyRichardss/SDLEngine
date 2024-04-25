@@ -17,7 +17,10 @@ private:
 	double prevBeatTime;
 	GameLogging* logging;
 	AudioEngine* audio;
+	GameClock* clock;
 	int SDLoffset;
+	long long lastPolledFrame;
+	bool prevBeatPoll;
 };
 
 #endif // !USE_CONDUCTOR

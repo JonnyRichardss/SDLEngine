@@ -31,20 +31,29 @@ void GameConductor::StartMusic(int ticks)
 }
 bool GameConductor::PollBeat()
 {
+    if (lastPolledFrame == clock->GetFrameCount()) {
+        //condition so that only the first poll across the program will execute on each frame
+        return prevBeatPoll;
+    }
+    lastPolledFrame = clock->GetFrameCount();
     bool output = false;
     double ThisBeatTime = audio->MSsinceLastBeat();
     if (ThisBeatTime < prevBeatTime) { 
         output = true;
     }
     prevBeatTime = ThisBeatTime;
+    prevBeatPoll = output;
     return output;
 }
 GameConductor::GameConductor()
 {
     logging = GameLogging::GetInstance();
     audio = AudioEngine::GetInstance();
+    clock = GameClock::GetInstance();
     SDLoffset = 0;
     prevBeatTime = MS_PER_BEAT;
+    lastPolledFrame = 0;
+    prevBeatPoll = false;
     logging->Log("Initialised conductor.");
 }
 GameConductor::~GameConductor()

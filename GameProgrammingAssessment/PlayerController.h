@@ -11,6 +11,9 @@ protected:
 	bool Update();
 	void ToggleColour();
 	void DoMovement(Vector2 MoveVector);
+	void DoAttacks();
+	bool attack1, attack2;
+	double a1Timing, a2Timing;
 };
 
 #endif // !USE_PLAYERCONTROLLER
