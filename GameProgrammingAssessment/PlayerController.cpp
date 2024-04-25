@@ -2,6 +2,7 @@
 #include "Timer.h"
 #include "GameConductor.h"
 #include "MeleeCollider.h"
+#include "Projectile.h"
 #include "GameScene.h"
 #include <chrono>
 using namespace std::chrono_literals;
@@ -111,13 +112,13 @@ void PlayerController::DoAttacks()
 	if (conductor->PollBeat()) {
 		if (a1waiting) {
 			logging->DebugLog("Attack1  "+std::to_string(a1Timing));
-			MeleeCollider* atk = new MeleeCollider(this, "Player Light Attack", TEST_COLLIDER_SIZE, 30, 10, 1, 0);
+			MeleeCollider* atk = new MeleeCollider(this, "Player Light Attack", TEST_COLLIDER_SIZE, 30, 10, 0.2, 0);
 			scene->DeferredRegister(atk);
 			a1waiting = false;
 		}
 		if (a2waiting) {
 			logging->DebugLog("Attack2  "+std::to_string(a2Timing));
-			MeleeCollider* atk = new MeleeCollider(this, "Player Heavy Attack", TEST_COLLIDER_SIZE, 50, 20, 1, 0);
+			Projectile* atk = new Projectile(this, "Player Projectile",3 , TEST_COLLIDER_SIZE, 5, 0);
 			scene->DeferredRegister(atk);
 			a2waiting = false;
 		}

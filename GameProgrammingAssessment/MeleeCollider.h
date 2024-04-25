@@ -10,7 +10,7 @@ public:
 	float GetDamage();
 	int GetID();
 protected:
-	static int currentID;
+	static int nextID;
 	int ID;
 	GameObject* parent;
 	float offset;

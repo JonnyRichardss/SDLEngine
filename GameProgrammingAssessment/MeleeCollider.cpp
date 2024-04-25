@@ -1,6 +1,6 @@
 #include "MeleeCollider.h"
 #include "GameScene.h"
-int MeleeCollider::currentID = 0;
+int MeleeCollider::nextID = 0;
 MeleeCollider::MeleeCollider(GameObject* _parent,std::string _name,float _offset, int w, int h, float lifetimeSeconds,float _damage)
 {
 	parent = _parent;
@@ -11,7 +11,7 @@ MeleeCollider::MeleeCollider(GameObject* _parent,std::string _name,float _offset
 	BoundingBox = Vector2(w, h);
 	lifetime = FRAME_CAP * lifetimeSeconds;
 	damage = _damage;
-	ID = currentID++;
+	ID = nextID++;
 }
 
 void MeleeCollider::Init()
@@ -48,7 +48,7 @@ bool MeleeCollider::Update()
 	//not likely to be important but it WILL register collision on the frame that it is destroyed since collision is in preupdate (for mainscene)
 	if (lifetime-- <= 0) {
 		//this very well may crash idk what happens if an object calls code that deletes it
-		scene->DeregisterObject(this);
+		scene->DeferredDeregister(this);
 		return false;
 	}
 	//else exist

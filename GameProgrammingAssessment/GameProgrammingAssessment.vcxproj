@@ -131,6 +131,7 @@
     <ClCompile Include="AudioEngine.cpp" />
     <ClCompile Include="BoidScene.cpp" />
     <ClCompile Include="CollisionTestScene.cpp" />
+    <ClCompile Include="EnemyController.cpp" />
     <ClCompile Include="EshopAnim.cpp" />
     <ClCompile Include="EshopScene.cpp" />
     <ClCompile Include="FPSCounter.cpp" />
@@ -148,6 +149,7 @@
     <ClCompile Include="MainScene.cpp" />
     <ClCompile Include="MeleeCollider.cpp" />
     <ClCompile Include="PlayerController.cpp" />
+    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="RenderableComponent.cpp" />
     <ClCompile Include="RenderEngine.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
@@ -163,6 +165,7 @@
     </ClInclude>
     <ClInclude Include="CollisionTestScene.h" />
     <ClInclude Include="ColourRGBA.h" />
+    <ClInclude Include="EnemyController.h" />
     <ClInclude Include="EshopAnim.h" />
     <ClInclude Include="EshopScene.h" />
     <ClInclude Include="FPSCounter.h" />
@@ -182,6 +185,7 @@
     <ClInclude Include="MainScene.h" />
     <ClInclude Include="MeleeCollider.h" />
     <ClInclude Include="PlayerController.h" />
+    <ClInclude Include="Projectile.h" />
     <ClInclude Include="RenderableComponent.h" />
     <ClInclude Include="RenderEngine.h" />
     <ClInclude Include="SpriteSheet.h" />
