@@ -69,7 +69,7 @@ bool PlayerController::Update()
 		audio->PlaySound(0);
 		
 	}
-	
+	CheckDamage();
 	return true;
 }
 static bool is_red = false;
@@ -83,6 +83,13 @@ void PlayerController::ToggleColour() {
 	}
 	is_red = is_red ? false : true;
 
+}
+bool PlayerController::IsIDUsed(std::vector<int>& vec, int ID)
+{
+	for (int i : vec) {
+		if (i == ID) return true;
+	}
+	return false;
 }
 void PlayerController::DoMovement(Vector2 MoveVector) {
 	//not entirely happy with how this is but i *think* i can play with the consts tofix it
@@ -123,4 +130,53 @@ void PlayerController::DoAttacks()
 			a2waiting = false;
 		}
 	}
+}
+
+void PlayerController::CheckDamage()
+{
+	CheckMeleeDamage();
+	CheckProjectileDamage();
+}
+
+void PlayerController::CheckMeleeDamage()
+{
+	if (colliders.empty()) return;
+	for (GameObject* c : colliders) {
+		if (!(c->CompareTag("MeleeAttack"))) continue;
+		MeleeCollider* collider = dynamic_cast<MeleeCollider*>(c);
+		if (c == nullptr) {
+			logging->Log("Tried to cast non-meleeattack to meleeattack!");
+			continue;
+		}
+		if (collider->GetParent() == this) continue;
+		int id = collider->GetID();
+		if (!(IsIDUsed(prevMelees,id))) {
+			prevMelees.push_back(id);
+			TakeDamage(collider->GetDamage());
+		}
+	}
+}
+void PlayerController::CheckProjectileDamage()
+{
+	if (colliders.empty()) return;
+	for (GameObject* c : colliders) {
+		if (!(c->CompareTag("Projectile"))) continue;
+		Projectile* collider = dynamic_cast<Projectile*>(c);
+		if (c == nullptr) {
+			logging->Log("Tried to cast non-projectile to projectile!");
+			continue;
+		}
+		if (collider->GetParent() == this) continue;
+		int id = collider->GetID();
+		if (!(IsIDUsed(prevProjectiles, id))) {
+			prevProjectiles.push_back(id);
+			TakeDamage(collider->GetDamage());
+			collider->HasHit();
+		}
+	}
+}
+void PlayerController::TakeDamage(float damage)
+{
+	health -= damage;
+	logging->DebugLog("Player damage taken - new health: " + std::to_string(health));
 }

@@ -8,15 +8,21 @@ Projectile::Projectile(GameObject* _parent, std::string _name, float _speed, flo
 	speed = _speed;
 	facing = parent->GetFacing();
 	velocity = Vector2::RotateAroundOrigin(Vector2::up(), facing);
+	velocity.x *= -1;
 	position = parent->GetPos() + velocity * (parent->GetBB().x);
 	BoundingBox = Vector2(size);
 	velocity *= speed;
 	lifetime = FRAME_CAP * lifetimeSeconds;
 	damage = _damage;
+	ID = nextID++;
 }
 
 void Projectile::Init()
 {
+	shown = true;
+	is_static = false;
+	alive = true;
+	collisionTags.push_back("Projectile");
 }
 
 void Projectile::InitVisuals()
@@ -27,9 +33,34 @@ void Projectile::InitVisuals()
 	visuals->UpdateDestPos(&DefaultRect);
 }
 
+bool Projectile::IsAlive()
+{
+	return alive;
+}
+
+void Projectile::HasHit()
+{
+	alive = false;
+}
+
+GameObject* Projectile::GetParent()
+{
+	return parent;
+}
+
+float Projectile::GetDamage()
+{
+	return damage;
+}
+
+int Projectile::GetID()
+{
+	return ID;
+}
+
 bool Projectile::Update()
 {
-	if (lifetime-- <= 0) {
+	if (lifetime-- <= 0 || !alive) {
 		//this very well may crash idk what happens if an object calls code that deletes it
 		scene->DeferredDeregister(this);
 		return false;

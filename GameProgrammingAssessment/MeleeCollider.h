@@ -7,6 +7,7 @@ public:
 	MeleeCollider(GameObject* _parent,std::string _name,float _offset, int w, int h,float lifetimeSeconds,float _damage);
 	void Init();
 	void InitVisuals();
+	GameObject* GetParent();
 	float GetDamage();
 	int GetID();
 protected:

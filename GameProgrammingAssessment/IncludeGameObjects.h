@@ -6,4 +6,7 @@
 #include "PlayerController.h"
 #include "SpriteSheetTest.h"
 #include "TestCollider.h"
+#include "EnemyController.h"
+#include "Projectile.h"
+#include "MeleeCollider.h"
 #endif

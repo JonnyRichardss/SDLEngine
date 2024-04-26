@@ -31,6 +31,11 @@ void MeleeCollider::InitVisuals()
 	}
 }
 
+GameObject* MeleeCollider::GetParent()
+{
+	return parent;
+}
+
 float MeleeCollider::GetDamage()
 {
 	return damage;

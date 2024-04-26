@@ -16,6 +16,8 @@ void MainScene::CreateObjects()
 {
 	PlayerController* player = new PlayerController();
 	RegisterObject(player);
+	EnemyController* enemy = new EnemyController(player,EnemyTypes::BRAVO,{50,50});
+	RegisterObject(enemy);
 }
 
 void MainScene::PreUpdate()
