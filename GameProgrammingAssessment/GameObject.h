@@ -7,6 +7,7 @@
 #include "ColourRGBA.h"
 #include "InputHandler.h"
 #include "AudioEngine.h"
+#include "GameConductor.h"
 #include <string>
 #include <vector>
 class GameEngine; //forward definition to prevent circular includes in header
@@ -41,6 +42,9 @@ public:
 protected:
 	virtual bool Update() = 0;
 	bool has_friction;
+	float acceleration;
+	float deceleration;
+	float maxSpeed;
 	int windowWidth, windowHeight;
 	std::string name;
 	std::vector<std::string> collisionTags;
@@ -50,6 +54,7 @@ protected:
 	Vector2 BoundingBox;
 	void Reflect(Vector2 SurfaceNormal);
 	void SolidCollision();
+	void DoMovement(Vector2 MoveVector);
 	SDL_Rect BBtoDestRect();
 	JRrect BBtoGameRect();
 	void GetWindowParams();
@@ -61,6 +66,7 @@ protected:
 	InputHandler* input;
 	GameScene* scene;
 	GameClock* clock;
+	GameConductor* conductor;
 	SDL_Window* window;
 	SDL_Renderer* renderContext;
 	RenderableComponent* visuals;

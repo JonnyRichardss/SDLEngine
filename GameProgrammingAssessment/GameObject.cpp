@@ -14,6 +14,7 @@ GameObject::GameObject()
 	renderContext = renderer->GetRenderContext();
 	input = InputHandler::GetInstance();
 	audio = AudioEngine::GetInstance();
+	conductor = GameConductor::GetInstance();
 	GetWindowParams();
 	velocity = Vector2::zero();
 	position = Vector2::zero();
@@ -67,7 +68,7 @@ bool GameObject::UpdateAndRender(RenderableComponent*& render)
 		return false;
 	}
 	if (!is_static) {//now i'm back looking at this im not entirely sure specifing static objects is necessary but ig it can stay as an artefact from pong -- NO it def is cos walls exist 
-		if (has_friction) velocity -= velocity * BASE_FRICTION;
+		//if (has_friction) velocity -= velocity * BASE_FRICTION; removing friction for now since everything that needs it *should* have clamped speed
 		position += velocity;
 	}
 	if (shown) {
@@ -206,6 +207,24 @@ void GameObject::SolidCollision() {
 		Reflect(collisionVector);
 		position += collisionVector ;
 		debugVecidx = i;
+	}
+}
+
+void GameObject::DoMovement(Vector2 MoveVector) {
+
+	if (MoveVector != Vector2::zero()) {
+		//accelerate
+		velocity += MoveVector.Normalise() * acceleration;
+		velocity = velocity.Clamp(maxSpeed);
+	}
+	else {
+		//brake
+		if (velocity.GetMagnitude() < 0.0001) {
+			velocity = Vector2::zero();
+		}
+		else {
+			velocity -= velocity * deceleration;
+		}
 	}
 }
 

@@ -13,6 +13,11 @@ void EnemyController::Init()
 	BoundingBox = { 20,20 };
 	collisionTags.push_back("Enemy");
 	collisionTags.push_back("Solid");
+	acceleration = 0.5;
+	deceleration = 0.1;//relying on just base friction
+	maxSpeed = ENEMY_SPEED;
+	
+	GoalPosition = target->GetPos();
 }
 
 void EnemyController::InitVisuals()
@@ -22,12 +27,21 @@ void EnemyController::InitVisuals()
 	SDL_SetTextureColorMod(Tex, 255, 0, 255);
 	SDL_Rect DefaultRect = BBtoDestRect();
 	visuals->UpdateDestPos(&DefaultRect);
+	visuals->UpdateLayer(1);
 }
-
+static float stepwidth = 50;
 bool EnemyController::Update()
 {
+	if (conductor->PollBeat()) {
+		GoalPosition = target->GetPos();
+		Vector2 offset = (GoalPosition - position);
+		position += offset.Normalise() * stepwidth;
+		facing = -Vector2::AngleBetweenRAD(Vector2::up(), offset);
+	}
+	//DoMovement(GoalPosition-position);
 	//SolidCollision();
 	CheckDamage();
+
 	return true;
 }
 bool EnemyController::IsIDUsed(std::vector<int>& vec, int ID)

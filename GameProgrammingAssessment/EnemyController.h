@@ -12,6 +12,7 @@ public:
 	void InitVisuals();
 protected:
 	GameObject* target;
+	Vector2 GoalPosition;
 	EnemyTypes::Type type;
 	float health;
 	std::vector<int> prevMelees;

@@ -21,7 +21,7 @@ static const char* BASE_ASSET_PATH = "Assets/";
 static const char* SPRITE_INFO_FORMAT = ".spritedims";
 
 constexpr bool DEBUG_DRAW_MELEES = true;
-constexpr bool DEBUG_DRAW_BB = true; 
+constexpr bool DEBUG_DRAW_BB = false; 
 constexpr bool DEBUG_EXTRA_LOGGING = true; //designed for when using print debugging so I can (possibly) leave the logs in
 constexpr bool DEBUG_FRAMETIME_LOG = false;//also disables profiling if its on or not
 		constexpr bool DEBUG_DO_PROFILING = false;
@@ -37,8 +37,10 @@ constexpr bool AUDIO_FAILURE_FATAL = true;
 static bool ENGINE_QUIT_FLAG = false;//be aware this doesn't work the way you think it does
 
 constexpr float BASE_PUSH_FACTOR = 0.01;
-constexpr float BASE_FRICTION = 0.05;
+constexpr float BASE_FRICTION = 0.25;
 
+constexpr float PLAYER_SPEED = 10;
+constexpr float ENEMY_SPEED = 8;
 
 constexpr int NUM_BOIDS = 1024;
 

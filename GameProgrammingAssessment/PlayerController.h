@@ -13,7 +13,6 @@ protected:
 	bool Update();
 	void ToggleColour();
 	bool IsIDUsed(std::vector<int>& vec, int ID);
-	void DoMovement(Vector2 MoveVector);
 	void DoAttacks();
 	void CheckDamage();
 	void CheckMeleeDamage();
