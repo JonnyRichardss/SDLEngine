@@ -20,6 +20,7 @@ struct GameObjectCUDA {
 	float2 points[4];
 	float2 centre;
 	int colliders[MAX_COLLISIONS];
+	float2 collisionVecs[MAX_COLLISIONS];
 	unsigned int currentIdx = 0;
 };
 static GameObjectCUDA* objsGPU;
@@ -50,48 +51,67 @@ __device__ inline float2 MinMaxProjectionOnAxis(float2 points[4],float2 axis) {
 	}
 	return make_float2(min, max);
 }
-__device__ inline bool SATCheck(GameObjectCUDA* object, GameObjectCUDA* other) {
+__device__ inline float Magnitude(float2 vec) {
+	return sqrt((vec.x * vec.x)+(vec.y * vec.y));
+}
+__device__ inline bool SATCheck(GameObjectCUDA* object, GameObjectCUDA* other,float2& vec,float& vecMag) {
 	//TRUE IS A COLLISION
 	//Last step -- implement actual alg
 	//we are assuming boxes so we only need up normal and right normal for both
-	float2 normals[4];
+	float2 normals[8];
 	normals[0] = CalcNormalAxis(object->points[0], object->points[1]);
 	normals[1] = CalcNormalAxis(object->points[1], object->points[3]);
-	normals[2] = CalcNormalAxis(other->points[0], other->points[1]);
-	normals[3] = CalcNormalAxis(other->points[1], other->points[3]);
+	normals[2] = CalcNormalAxis(object->points[0], object->points[2]);
+	normals[3] = CalcNormalAxis(object->points[2], object->points[3]);
+	normals[4] = CalcNormalAxis(other->points[0], other->points[1]);
+	normals[5] = CalcNormalAxis(other->points[1], other->points[3]);
+	normals[6] = CalcNormalAxis(other->points[0], other->points[2]);
+	normals[7] = CalcNormalAxis(other->points[2], other->points[3]);
+	float minOverlap = FLT_MAX;
 	for (int i = 0; i < 4; i++) {
 		float2 objectProjection = MinMaxProjectionOnAxis(object->points, normals[i]);
 		float2 otherProjection = MinMaxProjectionOnAxis(other->points, normals[i]);
-		if (objectProjection.x > otherProjection.y || otherProjection.x > objectProjection.y) {
+		float2 overlap = make_float2(otherProjection.y - objectProjection.x , objectProjection.y-otherProjection.x);
+		if (overlap.x < 0 ||overlap.y < 0) {
+			//there is no overlap
 			return false;
 		}
+
+		float mag = (overlap.x < overlap.y) ? overlap.x : overlap.y;
+		if (mag < minOverlap) {
+			vec = normals[i];
+			vecMag = mag;
+		}
 	}
+
 	return true;
 }
-__device__ inline float SqrDistance(float2 p1, float2 p2) {
-	float2 offset = make_float2(p1.x - p2.x, p1.y - p2.y);
-	return (offset.x * offset.x) + (offset.y * offset.y);
-}
-__device__ inline bool SphereCheck(GameObjectCUDA* object, GameObjectCUDA* other) {
-	float SQRradius = fmaxf(SqrDistance(object->centre,object->points[0]), SqrDistance(other->centre,other->points[0]));
-
-	return SqrDistance(object->centre, other->centre) < SQRradius;
+__device__ float dot(float2 a, float2 b) {
+	return (a.x * b.x) + (a.y * b.y);
 }
 __global__ void GPUCollisionCalc(GameObjectCUDA* objs, int size) {
 	int i = blockIdx.x;
 	if (i > size) return;//think this is never true but oh well
 	for (int j = threadIdx.x; j < size; j += blockDim.x) {
+		if (i == j) continue;
 		GameObjectCUDA* object = &objs[i];
 		GameObjectCUDA* other = &objs[j];
 		//TRUE IS A COLLISION
-		//if (!SphereCheck(object, other)) //simple sphere check to see if they are in range of each other
-		//	continue;
-		//full SAT to see if they actually collide
+
 		//if collision found add to j.id to colliders
-		if (SATCheck(object, other)) {
+		float2 collisionVec;
+		float collisionVecMag;
+		if (SATCheck(object, other,collisionVec,collisionVecMag)) {
 			unsigned int index = atomicInc(&objs[i].currentIdx, (MAX_COLLISIONS));//atomic inc prevents race conditions - each thread *should* always have its own unique index to access
-			
 			objs[i].colliders[index] = objs[j].id;
+			float2 offset = make_float2(other->centre.x - object->centre.x, other->centre.y - object->centre.y);
+			collisionVec = make_float2(collisionVec.x * collisionVecMag,collisionVec.y * collisionVecMag);
+			if (dot(offset, collisionVec) > 0) {
+				objs[i].collisionVecs[index] = make_float2(0 - collisionVec.x, 0 - collisionVec.y);
+			}
+			else {
+				objs[i].collisionVecs[index] = collisionVec;
+			}
 		}
 	}
 }
@@ -109,6 +129,7 @@ void MakeStructs(GameObjectCUDA* output, std::vector<GameObject*>& input) {
 		output[i].centre = make_float2(pos.x,pos.y);
 		MakePoints(input[i]->GetCorners(), output[i]);
 		input[i]->colliders.clear();
+		input[i]->collisionVectors.clear();
 	}
 }
 void UnMakeStructs(std::vector<GameObject*>& output, GameObjectCUDA* input) {
@@ -126,6 +147,9 @@ void UnMakeStructs(std::vector<GameObject*>& output, GameObjectCUDA* input) {
 			}
 
 			output[i]->colliders.push_back(output[outID]);
+			float2 CollisionVec = input[i].collisionVecs[j];
+			Vector2 CollisionVec2 = Vector2(CollisionVec.x, CollisionVec.y);
+			output[i]->collisionVectors.push_back(CollisionVec2);
 		}
 	}
 }
@@ -169,7 +193,7 @@ namespace JRCollision {
 		cudaMemcpy(objsGPU, objs, sizeof(GameObjectCUDA) * UpdateQueue.size(), cudaMemcpyHostToDevice);
 
 		//exec
-		GPUCollisionCalc << < UpdateQueue.size(), 1024 >> > (objsGPU, AllocSize);
+		GPUCollisionCalc << < UpdateQueue.size(), 1024 >> > (objsGPU, UpdateQueue.size());
 		//copy from
 		cudaMemcpy(objs, objsGPU, sizeof(GameObjectCUDA) * UpdateQueue.size(), cudaMemcpyDeviceToHost);
 		UnMakeStructs(UpdateQueue, objs);

@@ -86,7 +86,7 @@ Vector2 RenderEngine::GameToWindowTranslation(Vector2 vec)
 {
     //this function assumes you have already scaled - not much i can do about that save for combining the transforms but the way BBs work ATM i need scaling separate
     //INVERT Y AXIS
-    vec.y *= -1;
+    //vec.y *= -1;
     //TRANSFORM VECTOR INTO +VE +VE
     vec += GameToWindowScaling(Vector2(GAME_MAX_X, GAME_MAX_Y));
 
@@ -114,7 +114,7 @@ Vector2 RenderEngine::WindowToGameTranslation(Vector2 vec)
 {
     
     vec -= Vector2(GAME_MAX_X, GAME_MAX_Y);
-    vec.y *= -1;
+    //vec.y *= -1;
     return vec;
 }
 

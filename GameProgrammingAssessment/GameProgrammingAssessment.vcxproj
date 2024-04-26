@@ -156,6 +156,7 @@
     <ClCompile Include="SpriteSheetTest.cpp" />
     <ClCompile Include="TestCollider.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioEngine.h" />
@@ -192,6 +193,7 @@
     <ClInclude Include="SpriteSheetTest.h" />
     <ClInclude Include="TestCollider.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="Wall.h" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="cour.ttf" />

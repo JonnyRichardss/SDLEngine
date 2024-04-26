@@ -46,8 +46,8 @@ void GameEngine::StartLoop()
      //GameScene* eshopScene = new EshopScene();
      //AllScenes.push_back(eshopScene);
      
-   /*  GameScene* collisionScene = new CollisionTestScene();
-     AllScenes.push_back(collisionScene);*/
+     //GameScene* collisionScene = new CollisionTestScene();
+    // AllScenes.push_back(collisionScene);
       
      GameScene* mainScene = new MainScene();
      AllScenes.push_back(mainScene);

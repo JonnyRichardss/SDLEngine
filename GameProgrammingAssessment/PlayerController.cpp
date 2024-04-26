@@ -14,9 +14,11 @@ static Timer timer;
 static GameConductor* conductor;
 void PlayerController::Init()
 {
+	position = Vector2(0, 10);
 	name = "Player";
 	BoundingBox = Vector2(TEST_COLLIDER_SIZE);
 	collisionTags.push_back("Player");
+	collisionTags.push_back("Solid");
 	shown = true;
 	is_static = false;
 	a1waiting = false;
@@ -29,18 +31,25 @@ void PlayerController::Init()
 
 void PlayerController::InitVisuals()
 {
-	visuals->LoadTexture("boid", ".png");
-	SDL_Texture* Tex = visuals->GetTexture();
+	SDL_Surface* Surf = ColourRGBA::White().ColouredSurface();
+	SDL_Texture* Tex = SDL_CreateTextureFromSurface(renderContext, Surf);
+
+	SDL_FreeSurface(Surf);
+	visuals->UpdateTexture(Tex);
 	SDL_Rect DefaultRect = BBtoDestRect();
 	visuals->UpdateDestPos(&DefaultRect);
+	//visuals->LoadTexture("boid", ".png");
+	//SDL_Texture* Tex = visuals->GetTexture();
+	//SDL_Rect DefaultRect = BBtoDestRect();
+	//visuals->UpdateDestPos(&DefaultRect);
 }
 
 bool PlayerController::Update()
 {
 	//grab inputs
 	Vector2 MoveVector;//see i could have done this with IFs but this takes up less characters and is harder to understand which is obviously more important
-	MoveVector.y += input->GetActionState(InputActions::UP);
-	MoveVector.y -= input->GetActionState(InputActions::DOWN);
+	MoveVector.y -= input->GetActionState(InputActions::UP);
+	MoveVector.y += input->GetActionState(InputActions::DOWN);
 	MoveVector.x -= input->GetActionState(InputActions::LEFT);
 	MoveVector.x += input->GetActionState(InputActions::RIGHT);
 	//the attack bools are actually waiting flags so only update them if we are not waiting
@@ -55,12 +64,12 @@ bool PlayerController::Update()
 	Vector2 mousePos = renderer->WindowToGameCoords(input->GetMousePos());
 	
 	Vector2 mouseDirection = position - mousePos;
-	mouseDirection.y *= -1;//this is very odd - I'm 100% sure its something to do with windowToGameCoords but setting the pos directly worked so idk man
+	//mouseDirection.y *= -1;//this is very odd - I'm 100% sure its something to do with windowToGameCoords but setting the pos directly worked so idk man
 	float mouseDirFacing = Vector2::AngleBetweenRAD(Vector2::up(), mouseDirection.Normalise());
 	//movement
 	facing = mouseDirFacing;
 	DoMovement(MoveVector);
-	
+	//SolidCollision();
 	//attacks
 	DoAttacks();
 	//beat test
@@ -142,7 +151,7 @@ void PlayerController::CheckMeleeDamage()
 {
 	if (colliders.empty()) return;
 	for (GameObject* c : colliders) {
-		if (!(c->CompareTag("MeleeAttack"))) continue;
+		if (!(c->CompareTag("MeleeAttack")) || c == this) continue;
 		MeleeCollider* collider = dynamic_cast<MeleeCollider*>(c);
 		if (c == nullptr) {
 			logging->Log("Tried to cast non-meleeattack to meleeattack!");
@@ -160,7 +169,7 @@ void PlayerController::CheckProjectileDamage()
 {
 	if (colliders.empty()) return;
 	for (GameObject* c : colliders) {
-		if (!(c->CompareTag("Projectile"))) continue;
+		if (!(c->CompareTag("Projectile")) || c == this) continue;
 		Projectile* collider = dynamic_cast<Projectile*>(c);
 		if (c == nullptr) {
 			logging->Log("Tried to cast non-projectile to projectile!");

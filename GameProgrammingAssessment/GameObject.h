@@ -30,15 +30,17 @@ public:
 	bool GetStaticStatus();
 	void MoveVisuals();
 	std::string GetName();
+	
 	Vector2 GetPos();
 	Vector2 GetVelo();
 	Vector2 GetBB();
 	JRrect GetCorners();
 	bool CompareTag(std::string tag);
 	std::vector<GameObject*> colliders;
+	std::vector<Vector2> collisionVectors;
 protected:
 	virtual bool Update() = 0;
-	
+	bool has_friction;
 	int windowWidth, windowHeight;
 	std::string name;
 	std::vector<std::string> collisionTags;
@@ -46,7 +48,8 @@ protected:
 	Vector2 position;
 	Vector2 velocity;
 	Vector2 BoundingBox;
-	JRrect corners;
+	void Reflect(Vector2 SurfaceNormal);
+	void SolidCollision();
 	SDL_Rect BBtoDestRect();
 	JRrect BBtoGameRect();
 	void GetWindowParams();

@@ -8,7 +8,7 @@ Projectile::Projectile(GameObject* _parent, std::string _name, float _speed, flo
 	speed = _speed;
 	facing = parent->GetFacing();
 	velocity = Vector2::RotateAroundOrigin(Vector2::up(), facing);
-	velocity.x *= -1;
+	velocity *= -1;
 	position = parent->GetPos() + velocity * (parent->GetBB().x);
 	BoundingBox = Vector2(size);
 	velocity *= speed;
@@ -22,6 +22,7 @@ void Projectile::Init()
 	shown = true;
 	is_static = false;
 	alive = true;
+	has_friction = false;
 	collisionTags.push_back("Projectile");
 }
 

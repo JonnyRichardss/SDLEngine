@@ -4,6 +4,7 @@
 GameObject::GameObject()
 {
 	shown = true;
+	has_friction = true;
 	visuals = new RenderableComponent();
 	renderer = RenderEngine::GetInstance();
 	//engine = GameEngine::GetInstance();
@@ -36,7 +37,21 @@ SDL_Rect GameObject::BBtoDestRect()
 }
 JRrect GameObject::BBtoGameRect()
 {
-	JRrect GameRect = JRrect((position - (BoundingBox * 0.5f)), {position.x + (BoundingBox.x*0.5f),position.y - (BoundingBox.y * 0.5f)}, (position + (BoundingBox * 0.5f)), { position.x - (BoundingBox.x * 0.5f),position.y + (BoundingBox.y * 0.5f) });
+	/*
+	* points MUST be fed as
+	* (technically order doesnt matter but 0 and 3 must be opposite)
+	0-------1
+	|       |
+	|   .   |
+	|       |
+	2-------3
+	*/
+	Vector2 point0,point1,point2,point3;
+	point0 = (position - (BoundingBox * 0.5f));
+	point1 = {position.x - (BoundingBox.x * 0.5f),position.y + (BoundingBox.y * 0.5f) };
+	point2 = {position.x + (BoundingBox.x * 0.5f), position.y - (BoundingBox.y * 0.5f) };
+	point3 = (position + (BoundingBox * 0.5f));
+	JRrect GameRect = JRrect(point0,point1 ,point2 ,point3 );
 	
 	return JRrect::RotateAroundPoint(GameRect,facing, position);
 
@@ -51,8 +66,10 @@ bool GameObject::UpdateAndRender(RenderableComponent*& render)
 		//this is silly that I have to do this but if an object deletes itself in its own update, UpdateAndRender returns true, putting a trailing RenderableComponent nullptr on the render queue
 		return false;
 	}
-	if (!is_static)//now i'm back looking at this im not entirely sure specifing static objects is necessary but ig it can stay as an artefact from pong
+	if (!is_static) {//now i'm back looking at this im not entirely sure specifing static objects is necessary but ig it can stay as an artefact from pong -- NO it def is cos walls exist 
+		if (has_friction) velocity -= velocity * BASE_FRICTION;
 		position += velocity;
+	}
 	if (shown) {
 		if (!is_static)
 			MoveVisuals();
@@ -82,15 +99,42 @@ void GameObject::SetOwner(GameScene* owner)
 {
 	scene = owner;
 }
+static int debugVecidx=0;
 void GameObject::DrawBoundingBox()
 {
-
-	SDL_Rect BBrect = BBtoDestRect();
-	Vector2 WindowPos = renderer ->GameToWindowCoords(position);
-	//SDL_Rect PosRect = {WindowPos.x,WindowPos.y,5,5};
-	SDL_RenderDrawRect(renderContext, &BBrect);
-	//SDL_RenderDrawRect(renderContext, &PosRect);
-	SDL_RenderDrawPoint(renderContext, WindowPos.x, WindowPos.y);
+	/*
+	0-------1
+	|       |
+	|   .   |
+	|       |
+	2-------3
+	*/
+	
+	Vector2 WindowPos = renderer->GameToWindowCoords(position);
+	
+	
+	JRrect corners = BBtoGameRect();
+	SDL_Point* points = new SDL_Point[5];
+	for (int i = 0; i < 4;i++) {
+		Vector2 vec = corners.points[i];
+		vec = renderer->GameToWindowCoords(vec);
+		points[i] = vec.ToSDLPoint();
+	}
+	SDL_Point temp = points[0];
+	points[0] = points[1];
+	points[1] = temp;
+	points[4] = points[0];
+	SDL_RenderDrawPoint(renderContext,WindowPos.x,WindowPos.y);
+	SDL_RenderDrawLines(renderContext, points, 5);
+	SDL_SetRenderDrawColor(renderContext, 0, 255, 0, 255);
+	if (!collisionVectors.empty()) {
+		Vector2 debugVec = collisionVectors[debugVecidx];
+		debugVec += position;
+		debugVec = renderer->GameToWindowCoords(debugVec);
+		SDL_RenderDrawLine(renderContext, WindowPos.x, WindowPos.y, debugVec.x, debugVec.y);
+	}
+	SDL_SetRenderDrawColor(renderContext,  255,0, 0, 255);
+	delete[] points;
 }
 float GameObject::GetFacing()
 {
@@ -142,5 +186,26 @@ void GameObject::MoveVisuals()
 std::string GameObject::GetName()
 {
 	return name;
+}
+void GameObject::Reflect(Vector2 SurfaceNormal) {
+	SurfaceNormal = SurfaceNormal.Normalise();
+	velocity -= 2 * SurfaceNormal * Vector2::dot(velocity, SurfaceNormal);
+}
+void GameObject::SolidCollision() {
+	if (colliders.empty()) return;
+	for (int i = 0; i < colliders.size(); i++) {
+		GameObject* c = colliders[i];
+		if (!(c->CompareTag("Solid")) || c == this) continue;
+		Vector2 offset = c->GetPos() - position;
+		float shortestOffset = (abs(offset.x) < abs(offset.y)) ? offset.x : offset.y;
+		shortestOffset = abs(shortestOffset);
+		if (shortestOffset == 0) {
+			shortestOffset = 0.000001;
+		}
+		Vector2 collisionVector = collisionVectors[i];
+		Reflect(collisionVector);
+		position += collisionVector ;
+		debugVecidx = i;
+	}
 }
 

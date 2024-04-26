@@ -9,4 +9,5 @@
 #include "EnemyController.h"
 #include "Projectile.h"
 #include "MeleeCollider.h"
+#include "Wall.h"
 #endif

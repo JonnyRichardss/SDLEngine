@@ -11,6 +11,8 @@ void EnemyController::Init()
 {
 	shown = true;
 	BoundingBox = { 20,20 };
+	collisionTags.push_back("Enemy");
+	collisionTags.push_back("Solid");
 }
 
 void EnemyController::InitVisuals()
@@ -24,7 +26,7 @@ void EnemyController::InitVisuals()
 
 bool EnemyController::Update()
 {
-
+	//SolidCollision();
 	CheckDamage();
 	return true;
 }
@@ -45,7 +47,7 @@ void EnemyController::CheckMeleeDamage()
 {
 	if (colliders.empty()) return;
 	for (GameObject* c : colliders) {
-		if (!(c->CompareTag("MeleeAttack"))) continue;
+		if (!(c->CompareTag("MeleeAttack")) || c == this) continue;
 		MeleeCollider* collider = dynamic_cast<MeleeCollider*>(c);
 		if (c == nullptr) {
 			logging->Log("Tried to cast non-meleeattack to meleeattack!");
@@ -63,7 +65,7 @@ void EnemyController::CheckProjectileDamage()
 {
 	if (colliders.empty()) return;
 	for (GameObject* c : colliders) {
-		if (!(c->CompareTag("Projectile"))) continue;
+		if (!(c->CompareTag("Projectile")) || c == this) continue;
 		Projectile* collider = dynamic_cast<Projectile*>(c);
 		if (c == nullptr) {
 			logging->Log("Tried to cast non-projectile to projectile!");

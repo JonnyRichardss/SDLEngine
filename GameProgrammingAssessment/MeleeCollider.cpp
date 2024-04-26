@@ -59,7 +59,6 @@ bool MeleeCollider::Update()
 	//else exist
 	facing = parent->GetFacing();
 	Vector2 offsetVec = Vector2::RotateAroundOrigin(Vector2::up(), facing) * offset;
-	offsetVec.x *= -1;
-	position = parent->GetPos() + offsetVec;
+	position = parent->GetPos() - offsetVec;
 	return true;
 }

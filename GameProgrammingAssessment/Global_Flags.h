@@ -21,7 +21,7 @@ static const char* BASE_ASSET_PATH = "Assets/";
 static const char* SPRITE_INFO_FORMAT = ".spritedims";
 
 constexpr bool DEBUG_DRAW_MELEES = true;
-constexpr bool DEBUG_DRAW_BB = false; //this doesnt work (properly) anymore since the rotation assumptions it worked from are no longer valid
+constexpr bool DEBUG_DRAW_BB = true; 
 constexpr bool DEBUG_EXTRA_LOGGING = true; //designed for when using print debugging so I can (possibly) leave the logs in
 constexpr bool DEBUG_FRAMETIME_LOG = false;//also disables profiling if its on or not
 		constexpr bool DEBUG_DO_PROFILING = false;
@@ -36,11 +36,15 @@ constexpr bool AUDIO_FAILURE_FATAL = true;
 
 static bool ENGINE_QUIT_FLAG = false;//be aware this doesn't work the way you think it does
 
+constexpr float BASE_PUSH_FACTOR = 0.01;
+constexpr float BASE_FRICTION = 0.05;
+
+
 constexpr int NUM_BOIDS = 1024;
 
-constexpr int NUM_TEST_COLLIDERS = 100;
+constexpr int NUM_TEST_COLLIDERS = 500;
 constexpr int MAX_COLLISIONS = 100;//length of "colliders" array - not entirely sure this is necessary at the scales we can reasonably reach
-constexpr int TEST_COLLIDER_SIZE = 50;
+constexpr int TEST_COLLIDER_SIZE = 25;
 
 constexpr int MUSIC_TEMPO = 184;
 constexpr double MS_PER_BEAT = 60000.0f / (float)MUSIC_TEMPO;

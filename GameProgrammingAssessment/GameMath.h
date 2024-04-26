@@ -2,6 +2,7 @@
 #define USE_GAMEMATH
 #include <math.h>
 #include <string>
+#include "SDL.h"
 struct Vector2 {
     float x;
     float y;
@@ -91,6 +92,7 @@ struct Vector2 {
     }
     Vector2 Normalise() {
         float mag = GetMagnitude();
+        if (mag == 0) return Vector2(0, 0);
         float _x = x / mag;
         float _y = y / mag;
         return Vector2(_x, _y);
@@ -105,6 +107,10 @@ struct Vector2 {
     }
     std::string ToString() {
         return ("(" + std::to_string(x) + "," + std::to_string(y) + ")");
+    }
+    SDL_Point ToSDLPoint() {
+        SDL_Point output = { x,y };
+        return output;
     }
 };
 struct JRrect {
