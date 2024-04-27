@@ -98,7 +98,7 @@ void GameEngine::ProcessEvents()
         //I was going to part this out to input handler but these are all special case inputs so i'm leaving them here to separate them
         //Since i'm still processing events here I have to push mouse events back OUT to input so they can be timed
         if (event.type == SDL_MOUSEBUTTONDOWN) {
-            input->MouseEvent(event);
+            input->HandleEvent(event);
         }
         if (event.type == SDL_KEYDOWN) {
             switch (event.key.keysym.sym) {
@@ -112,8 +112,11 @@ void GameEngine::ProcessEvents()
             case SDLK_F8:
                 FPS->ToggleVisibility();
                 break;
-            case SDLK_SPACE:
+            case SDLK_F4:
                 audio->ToggleTrack();
+                break;
+            case SDLK_SPACE:
+                input->HandleEvent(event);
                 break;
             }
         }

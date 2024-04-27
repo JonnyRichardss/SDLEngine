@@ -19,10 +19,9 @@ void PlayerController::Init()
 	collisionTags.push_back("Solid");
 	shown = true;
 	is_static = false;
-	a1waiting = false;
-	a2waiting = false;
-	a1Timing = 0;
-	a2Timing = 0;
+	a1Used = a2Used = dashUsed = false;
+	a1Timing = a2Timing = dashTiming = 0;
+
 	acceleration = 1;
 	deceleration = 0.25;
 	
@@ -51,30 +50,17 @@ void PlayerController::InitVisuals()
 
 bool PlayerController::Update()
 {
-	//grab inputs
-	Vector2 MoveVector;//see i could have done this with IFs but this takes up less characters and is harder to understand which is obviously more important
-	MoveVector.y -= input->GetActionState(InputActions::UP);
-	MoveVector.y += input->GetActionState(InputActions::DOWN);
-	MoveVector.x -= input->GetActionState(InputActions::LEFT);
-	MoveVector.x += input->GetActionState(InputActions::RIGHT);
-	//the attack bools are actually waiting flags so only update them if we are not waiting
-	if (!a1waiting) {
-		a1waiting = input->GetActionState(InputActions::ATTACK1);
-		a1Timing = input->GetActionTiming(InputActions::ATTACK1);
-	}
-	if (!a2waiting) {
-		a2waiting = input->GetActionState(InputActions::ATTACK2);
-		a2Timing = input->GetActionTiming(InputActions::ATTACK2);
-	}
-	Vector2 mousePos = renderer->WindowToGameCoords(input->GetMousePos());
+	Vector2 MoveVector;
+	Vector2 mousePos;
+	GetInput(MoveVector, mousePos);
 	
 	Vector2 mouseDirection = position - mousePos;
-	//mouseDirection.y *= -1;//this is very odd - I'm 100% sure its something to do with windowToGameCoords but setting the pos directly worked so idk man
 	float mouseDirFacing = Vector2::AngleBetweenRAD(Vector2::up(), mouseDirection.Normalise());
+
 	//movement
 	facing = mouseDirFacing;
 	DoMovement(MoveVector);
-	//SolidCollision();
+
 	//attacks
 	DoAttacks();
 	//beat test
@@ -84,7 +70,30 @@ bool PlayerController::Update()
 		
 	}
 	CheckDamage();
+	DecrementCooldowns();
 	return true;
+}
+void PlayerController::GetInput(Vector2& MoveVector, Vector2& mousePos)
+{
+	MoveVector.y -= input->GetActionState(InputActions::UP);
+	MoveVector.y += input->GetActionState(InputActions::DOWN);
+	MoveVector.x -= input->GetActionState(InputActions::LEFT);
+	MoveVector.x += input->GetActionState(InputActions::RIGHT);
+
+	mousePos = renderer->WindowToGameCoords(input->GetMousePos());
+	//only update actions if they are off cooldown
+	if (a1CoolDown == 0) {
+		a1Used = input->GetActionState(InputActions::ATTACK1);
+		a1Timing = input->GetActionTiming(InputActions::ATTACK1);
+	}
+	if (a2CoolDown == 0) {
+		a2Used = input->GetActionState(InputActions::ATTACK2);
+		a2Timing = input->GetActionTiming(InputActions::ATTACK2);
+	}
+	if (dashCoolDown == 0) {
+		dashUsed = input->GetActionState(InputActions::DASH);
+		dashTiming = input->GetActionTiming(InputActions::DASH);
+	}
 }
 static bool is_red = false;
 void PlayerController::ToggleColour() {
@@ -109,22 +118,46 @@ bool PlayerController::IsIDUsed(std::vector<int>& vec, int ID)
 
 void PlayerController::DoAttacks()
 {
-	//alternative to measuring timing could just be to count the # of frames between the input being queued and actually being executed
-	//this sounds like a better idea tbh
-	if (conductor->PollBeat()) {
-		if (a1waiting) {
-			logging->DebugLog("Attack1  "+std::to_string(a1Timing));
-			MeleeCollider* atk = new MeleeCollider(this, "Player Light Attack", TEST_COLLIDER_SIZE, 30, 10, 0.2, 0);
-			scene->DeferredRegister(atk);
-			a1waiting = false;
-		}
-		if (a2waiting) {
-			logging->DebugLog("Attack2  "+std::to_string(a2Timing));
-			Projectile* atk = new Projectile(this, "Player Projectile",3 , TEST_COLLIDER_SIZE, 5, 0);
-			scene->DeferredRegister(atk);
-			a2waiting = false;
-		}
+
+	if (a1Used) {
+		logging->DebugLog("Attack1  " + std::to_string(a1Timing));
+		MeleeCollider* atk = new MeleeCollider(this, "Player Light Attack", TEST_COLLIDER_SIZE, 30, 10, 0.2, 0);
+		scene->DeferredRegister(atk);
+		a1Used = false;
+		a1CoolDown = (1 * MS_PER_BEAT)/1100;
 	}
+	if (a2Used) {
+		logging->DebugLog("Attack2  " + std::to_string(a2Timing));
+		Projectile* atk = new Projectile(this, "Player Projectile", 3, TEST_COLLIDER_SIZE, 5, 0);
+		scene->DeferredRegister(atk);
+		a2Used = false;
+		a2CoolDown = (1 *  MS_PER_BEAT)/1100;
+	}
+	if (dashUsed) {
+		logging->DebugLog("Dash!");
+		position += velocity.Normalise() * DASH_DISTANCE;
+		audio->PlaySound(1);
+		dashUsed = false;
+		dashCoolDown = (1 * MS_PER_BEAT)/1200;
+	}
+}
+
+void PlayerController::DecrementCooldowns()
+{
+	DecrementCooldown(a1CoolDown);
+	DecrementCooldown(a2CoolDown);
+	DecrementCooldown(dashCoolDown);
+}
+static int frame = 0;
+void PlayerController::DecrementCooldown(float& cooldown)
+{
+ 	frame++;
+	if (cooldown < ((float)1 / FRAME_CAP)) {
+		cooldown = 0;
+		return;
+	}
+	double elapsedsecs = clock->GetFrametime().count() / (float)1000000000;
+	cooldown -= elapsedsecs;
 }
 
 void PlayerController::CheckDamage()

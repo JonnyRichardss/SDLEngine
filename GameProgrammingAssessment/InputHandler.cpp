@@ -40,8 +40,10 @@ void InputHandler::PollInput()
     if (keyStates[SDL_SCANCODE_S] || keyStates[SDL_SCANCODE_DOWN]) actionStates[InputActions::DOWN] = true;
     if (keyStates[SDL_SCANCODE_A] || keyStates[SDL_SCANCODE_LEFT]) actionStates[InputActions::LEFT] = true;
     if (keyStates[SDL_SCANCODE_D] || keyStates[SDL_SCANCODE_RIGHT]) actionStates[InputActions::RIGHT] = true;
+    
     /*
     * these are handled by events
+    * if (keyStates[SDL_SCANCODE_SPACE]) actionStates[InputActions::DASH] = true;
     if (mouseState & SDL_BUTTON(1)) actionStates[InputActions::ATTACK1] = true;
     if (mouseState & SDL_BUTTON(3)) actionStates[InputActions::ATTACK2] = true;
     */
@@ -64,17 +66,32 @@ Vector2 InputHandler::GetMousePos()
     return MousePos;
 }
 
-void InputHandler::MouseEvent(SDL_Event event)
+void InputHandler::HandleEvent(SDL_Event event)
 {
     //no need to check for state since this function only receives button down events
     //also InputHandler runs BEFORE PollEvents so the relevent actions are definitely reset here
-    int SDLtimestamp = event.button.timestamp;
-    uint8_t mouseButton = event.button.button;
-
-    std::chrono::high_resolution_clock::time_point inputTP = clock->SDLToTimePoint(SDLtimestamp);
-
+    int SDLtimestamp;
+    
     InputActions::Action action;
-    switch (mouseButton){
+    if (event.type == SDL_KEYDOWN) {
+        if (event.key.repeat == 0)
+        {
+            SDLtimestamp = event.key.timestamp;
+            if (event.key.keysym.sym == SDLK_SPACE) {
+                logging->DebugLog("Space");
+                action = InputActions::DASH;
+            }
+            else {
+                logging->Log("Unhandled keyboard event passed to inputHandler!");
+                return;
+            }
+
+        }
+    }
+    else if (event.type = SDL_MOUSEBUTTONDOWN) {
+        SDLtimestamp = event.button.timestamp;
+        uint8_t mouseButton = event.button.button;
+        switch (mouseButton) {
     case 1:
         logging->DebugLog("Mouse1");
         action = InputActions::ATTACK1;
@@ -87,7 +104,7 @@ void InputHandler::MouseEvent(SDL_Event event)
         logging->DebugLog("Unregistered mouse button pressed!");
         return;
     }
-
+}
     actionStates[action] = true;
     actionTimings[action] = conductor->GetInputTiming(SDLtimestamp);
 }

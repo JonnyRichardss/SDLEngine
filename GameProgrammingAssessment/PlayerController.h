@@ -11,15 +11,19 @@ protected:
 	std::vector<int> prevMelees;
 	std::vector<int> prevProjectiles;
 	bool Update();
+	void GetInput(Vector2& MoveVector, Vector2& mousePos);
 	void ToggleColour();
 	bool IsIDUsed(std::vector<int>& vec, int ID);
 	void DoAttacks();
+	void DecrementCooldowns();
+	void DecrementCooldown(float& cooldown);
 	void CheckDamage();
 	void CheckMeleeDamage();
 	void CheckProjectileDamage();
 	void TakeDamage(float damage);
-	bool a1waiting, a2waiting;
-	double a1Timing, a2Timing;
+	bool a1Used, a2Used, dashUsed;
+	float a1CoolDown, a2CoolDown, dashCoolDown;
+	double a1Timing, a2Timing, dashTiming;
 };
 
 #endif // !USE_PLAYERCONTROLLER
