@@ -1,2 +1,3 @@
 Assets/MetroTick.wav
 Assets/Dash.wav
+Assets/PlayerAttack.wav

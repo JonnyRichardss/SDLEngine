@@ -19,7 +19,7 @@ void PlayerController::Init()
 	collisionTags.push_back("Solid");
 	shown = true;
 	is_static = false;
-	a1Used = a2Used = dashUsed = false;
+	a1Scheduled = a2Scheduled = dashScheduled = false;
 	a1Timing = a2Timing = dashTiming = 0;
 
 	acceleration = 1;
@@ -32,14 +32,6 @@ void PlayerController::Init()
 
 void PlayerController::InitVisuals()
 {
-	/*SDL_Surface* Surf = ColourRGBA::White().ColouredSurface();
-	SDL_Texture* Tex = SDL_CreateTextureFromSurface(renderContext, Surf);
-
-	SDL_FreeSurface(Surf);
-	visuals->UpdateTexture(Tex);
-	SDL_Rect DefaultRect = BBtoDestRect();
-	visuals->UpdateDestPos(&DefaultRect);*/
-	
 	visuals->LoadTexture("boid", ".png");
 	SDL_Texture* Tex = visuals->GetTexture();
 	SDL_Rect DefaultRect = BBtoDestRect();
@@ -52,25 +44,23 @@ bool PlayerController::Update()
 {
 	Vector2 MoveVector;
 	Vector2 mousePos;
-	GetInput(MoveVector, mousePos);
-	
 	Vector2 mouseDirection = position - mousePos;
 	float mouseDirFacing = Vector2::AngleBetweenRAD(Vector2::up(), mouseDirection.Normalise());
-
+	GetInput(MoveVector, mousePos);
+	
 	//movement
 	facing = mouseDirFacing;
 	DoMovement(MoveVector);
 
-	//attacks
-	DoAttacks();
-	//beat test
+	//actions for on beat
 	if (conductor->PollBeat()) {
+		//logging->DebugLog(std::to_string(conductor->GetInputTiming()));
 		ToggleColour();
-		audio->PlaySound(0);
-		
+		//audio->PlaySound(0);
+		DoBeatAttacks();
 	}
+
 	CheckDamage();
-	DecrementCooldowns();
 	return true;
 }
 void PlayerController::GetInput(Vector2& MoveVector, Vector2& mousePos)
@@ -81,19 +71,10 @@ void PlayerController::GetInput(Vector2& MoveVector, Vector2& mousePos)
 	MoveVector.x += input->GetActionState(InputActions::RIGHT);
 
 	mousePos = renderer->WindowToGameCoords(input->GetMousePos());
-	//only update actions if they are off cooldown
-	if (a1CoolDown == 0) {
-		a1Used = input->GetActionState(InputActions::ATTACK1);
-		a1Timing = input->GetActionTiming(InputActions::ATTACK1);
-	}
-	if (a2CoolDown == 0) {
-		a2Used = input->GetActionState(InputActions::ATTACK2);
-		a2Timing = input->GetActionTiming(InputActions::ATTACK2);
-	}
-	if (dashCoolDown == 0) {
-		dashUsed = input->GetActionState(InputActions::DASH);
-		dashTiming = input->GetActionTiming(InputActions::DASH);
-	}
+
+	ActionInput(InputActions::ATTACK1, a1Scheduled, a1Timing);
+	ActionInput(InputActions::ATTACK2, a2Scheduled , a2Timing);
+	ActionInput(InputActions::DASH, dashScheduled, dashTiming);
 }
 static bool is_red = false;
 void PlayerController::ToggleColour() {
@@ -116,50 +97,103 @@ bool PlayerController::IsIDUsed(std::vector<int>& vec, int ID)
 }
 
 
-void PlayerController::DoAttacks()
+void PlayerController::DoBeatAttacks()
 {
-
-	if (a1Used) {
-		logging->DebugLog("Attack1  " + std::to_string(a1Timing));
-		MeleeCollider* atk = new MeleeCollider(this, "Player Light Attack", TEST_COLLIDER_SIZE, 30, 10, 0.2, 0);
-		scene->DeferredRegister(atk);
-		a1Used = false;
-		a1CoolDown = (1 * MS_PER_BEAT)/1100;
+	//actions negate their own bools so they can run across multiple beats if they need to
+	if (a1Scheduled) {
+		DoAttack1();
 	}
-	if (a2Used) {
-		logging->DebugLog("Attack2  " + std::to_string(a2Timing));
-		Projectile* atk = new Projectile(this, "Player Projectile", 3, TEST_COLLIDER_SIZE, 5, 0);
-		scene->DeferredRegister(atk);
-		a2Used = false;
-		a2CoolDown = (1 *  MS_PER_BEAT)/1100;
+	if (a2Scheduled) {
+		DoAttack2();
 	}
-	if (dashUsed) {
-		logging->DebugLog("Dash!");
-		position += velocity.Normalise() * DASH_DISTANCE;
-		audio->PlaySound(1);
-		dashUsed = false;
-		dashCoolDown = (1 * MS_PER_BEAT)/1200;
+	if (dashScheduled) {
+		DoDash();
 	}
 }
+//this has become a DRY moment but ill wait to see because i think these functionalities will diverge
+void PlayerController::ActionInput(InputActions::Action action, bool& scheduled, double& timing)
+{
+	bool used = input->GetActionState(action);
+	if (!used) return;
 
-void PlayerController::DecrementCooldowns()
-{
-	DecrementCooldown(a1CoolDown);
-	DecrementCooldown(a2CoolDown);
-	DecrementCooldown(dashCoolDown);
-}
-static int frame = 0;
-void PlayerController::DecrementCooldown(float& cooldown)
-{
- 	frame++;
-	if (cooldown < ((float)1 / FRAME_CAP)) {
-		cooldown = 0;
+	
+	if (scheduled) {
+		logging->DebugLog("Action already scheduled! Cancelling!");
 		return;
 	}
-	double elapsedsecs = clock->GetFrametime().count() / (float)1000000000;
-	cooldown -= elapsedsecs;
+	timing = input->GetActionTiming(action);
+	if (conductor->PollBeat()) {
+		logging->DebugLog("Action perfectly timed! Scheduling!");
+		scheduled = true;
+	}
+	else if (timing > MS_PER_BEAT * ((TIMING_LENIENCY - 1) / TIMING_LENIENCY)) {
+		logging->DebugLog("Action early! Scheduling for on-beat!");
+		scheduled = true;
+	}
+	else if (timing < MS_PER_BEAT / TIMING_LENIENCY) {
+		logging->DebugLog("Action late! Performing immediately!");
+		DoAction(action);
+	}
+	else {
+		logging->DebugLog("Action out of time! Cancelling!");
+	}
 }
 
+void PlayerController::DoAction(InputActions::Action action)
+{
+	switch (action) {
+	case (InputActions::ATTACK1):
+		DoAttack1();
+		return;
+	case (InputActions::ATTACK2):
+		DoAttack2();
+		return;
+	case (InputActions::DASH):
+		DoDash();
+		return;
+	default:
+		logging->Log("Invalid action passed to AttackInput()!");
+		return;
+	}
+}
+
+void PlayerController::DoDash()
+{
+	logging->DebugLog("Dash!");
+	position += velocity.Normalise() * DASH_DISTANCE;
+	audio->PlaySound(1);
+	dashScheduled = false;
+}
+
+void PlayerController::DoAttack1()
+{
+	switch (a1Beats) {
+		case 0:
+			audio->PlaySound(0);
+			logging->DebugLog("Attack1 used! " + std::to_string(a1Timing));
+			a1Scheduled = true;
+			a1Beats++;
+			return;
+		case 1:
+			logging->DebugLog("Attack1 landing!");
+			{	MeleeCollider* atk = new MeleeCollider(this, "Player Light Attack", TEST_COLLIDER_SIZE, 30, 10, 0.2, 0);
+				scene->DeferredRegister(atk); }
+			a1Scheduled = false;
+			audio->PlaySound(2);
+			a1Beats = 0;
+			return;
+		default:
+			logging->Log("Invalid value of a1Beats found!");
+			return;
+	}	
+}
+void PlayerController::DoAttack2() {
+	logging->DebugLog("Attack2  " + std::to_string(a2Timing));
+	Projectile* atk2 = new Projectile(this, "Player Projectile", 3, TEST_COLLIDER_SIZE, 5, 0);
+	scene->DeferredRegister(atk2);
+	a2Scheduled = false;
+	audio->PlaySound(2);
+}
 void PlayerController::CheckDamage()
 {
 	CheckMeleeDamage();

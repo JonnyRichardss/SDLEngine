@@ -1,6 +1,7 @@
 #include "GameLogging.h"
 #include <iostream>
 #include "GameUtils.h"
+
 #include <cstdio>
 #include <ctime>
 static GameLogging* _instance;
@@ -16,6 +17,7 @@ GameLogging::GameLogging()
     LogPath = std::string(LOG_FOLDER_PATH) + std::string(LOGFILE_NAME);
     RenameLastLogFile();
     MakeNewLogFile();
+  
     Log("Initialised logging.");
 }
 
@@ -25,6 +27,14 @@ GameLogging::~GameLogging()
 
 void GameLogging::Log(std::string logText)
 {
+    if (CONSOLE_SHOW_TIME) {
+        char timeString[40];
+        time_t timeNow = time(0);
+        tm tmNow;
+        localtime_s(&tmNow, &timeNow);
+        strftime(timeString, 40, "[%F-%H-%M-%S]: ", &tmNow);
+        logText = timeString + logText;
+    }
     FileLog(logText);
     if (consoleLogEnabled && !VERBOSE_CONSOLE)//VERBOSE_CONSOLE flag allows me to access logs that are sent straight to a file (to declutter console)
         std::cout << logText<<"\n";
@@ -89,11 +99,11 @@ void GameLogging::RenameLastLogFile()
 
 void GameLogging::MakeNewLogFile()
 {
-    char* timeString = new char[20];
+    char* timeString = new char[30];
     time_t timeNow = time(0);
     tm tmNow;
     localtime_s(&tmNow, &timeNow);
-    strftime(timeString, 20, "%F-%H-%M-%S",&tmNow);
+    strftime(timeString, 30, "%F-%H-%M-%S",&tmNow);
     logBuffer.insert(logBuffer.begin(), timeString);
     delete[20] timeString;
     if (WriteFile(LogPath, logBuffer)) {

@@ -8,26 +8,24 @@ GameConductor* GameConductor::GetInstance()
         _instance = new GameConductor();
     return _instance;
 }
+int GameConductor::GetBeat() {
+    //dividing 2 doubles so round
+    return floor(audio->GetTrackPos() / MS_PER_BEAT);
+}
 double GameConductor::GetInputTiming() {
-    double modBeatLength = audio->MSsinceLastBeat();
-    if (modBeatLength > MS_PER_BEAT / 2) {
-        return MS_PER_BEAT - modBeatLength;
-    }
-    return modBeatLength;
+
+    return audio->MSsinceLastBeat();
 }
 double GameConductor::GetInputTiming(int timestamp) {
     timestamp -= SDLoffset;
     //now timestamp is the number of MS between song start and input
     double modBeatLength = fmod(timestamp, MS_PER_BEAT);
-    if (modBeatLength > MS_PER_BEAT / 2) {
-        return MS_PER_BEAT - modBeatLength;
-    }
     return modBeatLength;
 }
 void GameConductor::StartMusic(int ticks)
 {
     SDLoffset = ticks;
-    prevBeatTime = MS_PER_BEAT;
+    prevBeatNo = -1;
 }
 bool GameConductor::PollBeat()
 {
@@ -37,11 +35,11 @@ bool GameConductor::PollBeat()
     }
     lastPolledFrame = clock->GetFrameCount();
     bool output = false;
-    double ThisBeatTime = audio->MSsinceLastBeat();
-    if (ThisBeatTime < prevBeatTime) { 
+    int ThisBeatNo = GetBeat();
+    if (ThisBeatNo > prevBeatNo) {
         output = true;
-    }
-    prevBeatTime = ThisBeatTime;
+        prevBeatNo = ThisBeatNo;
+    } 
     prevBeatPoll = output;
     return output;
 }
@@ -51,7 +49,6 @@ GameConductor::GameConductor()
     audio = AudioEngine::GetInstance();
     clock = GameClock::GetInstance();
     SDLoffset = 0;
-    prevBeatTime = MS_PER_BEAT;
     lastPolledFrame = 0;
     prevBeatPoll = false;
     logging->Log("Initialised conductor.");

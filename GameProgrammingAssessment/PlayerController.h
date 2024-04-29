@@ -14,15 +14,18 @@ protected:
 	void GetInput(Vector2& MoveVector, Vector2& mousePos);
 	void ToggleColour();
 	bool IsIDUsed(std::vector<int>& vec, int ID);
-	void DoAttacks();
-	void DecrementCooldowns();
-	void DecrementCooldown(float& cooldown);
+	void DoBeatAttacks();
+	void ActionInput(InputActions::Action attack, bool& scheduled, double& timing);
+	void DoAction(InputActions::Action action);
+	void DoDash();
+	void DoAttack1();
+	void DoAttack2();
 	void CheckDamage();
 	void CheckMeleeDamage();
 	void CheckProjectileDamage();
 	void TakeDamage(float damage);
-	bool a1Used, a2Used, dashUsed;
-	float a1CoolDown, a2CoolDown, dashCoolDown;
+	bool a1Scheduled, a2Scheduled, dashScheduled;
+	int a1Beats, a2Beats;
 	double a1Timing, a2Timing, dashTiming;
 };
 

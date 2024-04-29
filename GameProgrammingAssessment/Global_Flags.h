@@ -26,10 +26,12 @@ constexpr bool DEBUG_EXTRA_LOGGING = true; //designed for when using print debug
 constexpr bool DEBUG_FRAMETIME_LOG = false;//also disables profiling if its on or not
 		constexpr bool DEBUG_DO_PROFILING = false;
 
+		
 constexpr bool CONSOLE_LOG_DEFAULT = true;
 constexpr bool DO_FILE_LOGGING = true;
 constexpr bool DO_BATCH_LOGGING = true;
 constexpr bool VERBOSE_CONSOLE = false;
+constexpr bool CONSOLE_SHOW_TIME = false;
 
 
 constexpr bool AUDIO_FAILURE_FATAL = true;
@@ -49,6 +51,7 @@ constexpr int NUM_TEST_COLLIDERS = 500;
 constexpr int MAX_COLLISIONS = 100;//length of "colliders" array - not entirely sure this is necessary at the scales we can reasonably reach
 constexpr int TEST_COLLIDER_SIZE = 25;
 
+constexpr float TIMING_LENIENCY = 2.0; //higher = smaller timing window, values <2 will cause problems (this assumes whole number values but i think decimals will be ok too (stored as float to prevent casting))
 constexpr int MUSIC_TEMPO = 184;
 constexpr double MS_PER_BEAT = 60000.0f / (float)MUSIC_TEMPO;
 constexpr int MUSIC_START_OFFSET = 0;
