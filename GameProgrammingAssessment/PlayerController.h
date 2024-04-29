@@ -15,7 +15,7 @@ protected:
 	void ToggleColour();
 	bool IsIDUsed(std::vector<int>& vec, int ID);
 	void DoBeatAttacks();
-	void ActionInput(InputActions::Action attack, bool& scheduled, double& timing);
+	void ActionInput(InputActions::Action attack, bool& scheduled, bool& used, double& timing, int& comboCounter, int maxCombo);
 	void DoAction(InputActions::Action action);
 	void DoDash();
 	void DoAttack1();
@@ -23,10 +23,15 @@ protected:
 	void CheckDamage();
 	void CheckMeleeDamage();
 	void CheckProjectileDamage();
+	void ResetCombos();
+	void ResetSingleCombo(bool& used, int& combo, int cooldown, int max);
 	void TakeDamage(float damage);
+	bool offBeatPassed;
 	bool a1Scheduled, a2Scheduled, dashScheduled;
+	bool a1Used, a2Used, dashUsed;
 	int a1Beats, a2Beats;
 	double a1Timing, a2Timing, dashTiming;
+	int a1Combo, a2Combo, dashCombo;
 };
 
 #endif // !USE_PLAYERCONTROLLER

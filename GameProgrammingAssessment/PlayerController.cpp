@@ -21,7 +21,7 @@ void PlayerController::Init()
 	is_static = false;
 	a1Scheduled = a2Scheduled = dashScheduled = false;
 	a1Timing = a2Timing = dashTiming = 0;
-
+	a1Combo = a2Combo = dashCombo = 0;
 	acceleration = 1;
 	deceleration = 0.25;
 	
@@ -54,10 +54,15 @@ bool PlayerController::Update()
 
 	//actions for on beat
 	if (conductor->PollBeat()) {
-		//logging->DebugLog(std::to_string(conductor->GetInputTiming()));
+		offBeatPassed = false;
+		logging->DebugLog(std::to_string(conductor->GetBeat()));
 		ToggleColour();
-		//audio->PlaySound(0);
+		audio->PlaySound(0);
 		DoBeatAttacks();
+	}
+	else if (conductor->GetInputTiming() > MS_PER_BEAT * ((TIMING_LENIENCY - 1) / TIMING_LENIENCY) && !offBeatPassed) {
+		ResetCombos();
+		offBeatPassed = true;
 	}
 
 	CheckDamage();
@@ -72,9 +77,9 @@ void PlayerController::GetInput(Vector2& MoveVector, Vector2& mousePos)
 
 	mousePos = renderer->WindowToGameCoords(input->GetMousePos());
 
-	ActionInput(InputActions::ATTACK1, a1Scheduled, a1Timing);
-	ActionInput(InputActions::ATTACK2, a2Scheduled , a2Timing);
-	ActionInput(InputActions::DASH, dashScheduled, dashTiming);
+	ActionInput(InputActions::ATTACK1, a1Scheduled,a1Used, a1Timing,a1Combo,ATTACK1_COMBO_LENGTH);
+	ActionInput(InputActions::ATTACK2, a2Scheduled, a2Used, a2Timing,a2Combo,ATTACK2_COMBO_LENGTH);
+	ActionInput(InputActions::DASH, dashScheduled, dashUsed, dashTiming,dashCombo,DASH_COMBO_LENGTH);
 }
 static bool is_red = false;
 void PlayerController::ToggleColour() {
@@ -99,44 +104,57 @@ bool PlayerController::IsIDUsed(std::vector<int>& vec, int ID)
 
 void PlayerController::DoBeatAttacks()
 {
-	//actions negate their own bools so they can run across multiple beats if they need to
+	//actions negate their own schedule bools so they can run across multiple beats if they need to
 	if (a1Scheduled) {
+		
 		DoAttack1();
 	}
 	if (a2Scheduled) {
+		
 		DoAttack2();
 	}
 	if (dashScheduled) {
+		
 		DoDash();
 	}
 }
-//this has become a DRY moment but ill wait to see because i think these functionalities will diverge
-void PlayerController::ActionInput(InputActions::Action action, bool& scheduled, double& timing)
-{
-	bool used = input->GetActionState(action);
-	if (!used) return;
 
-	
-	if (scheduled) {
-		logging->DebugLog("Action already scheduled! Cancelling!");
-		return;
-	}
-	timing = input->GetActionTiming(action);
-	if (conductor->PollBeat()) {
-		logging->DebugLog("Action perfectly timed! Scheduling!");
-		scheduled = true;
-	}
-	else if (timing > MS_PER_BEAT * ((TIMING_LENIENCY - 1) / TIMING_LENIENCY)) {
-		logging->DebugLog("Action early! Scheduling for on-beat!");
-		scheduled = true;
-	}
-	else if (timing < MS_PER_BEAT / TIMING_LENIENCY) {
-		logging->DebugLog("Action late! Performing immediately!");
-		DoAction(action);
+void PlayerController::ActionInput(InputActions::Action action, bool& scheduled,bool& used, double& timing,int& comboCounter,int maxCombo)
+{
+	bool inputUsed = input->GetActionState(action);
+	if (!inputUsed) return;
+
+	if (comboCounter >= 0 && comboCounter < maxCombo) {
+		if (scheduled) {
+			logging->DebugLog("Action already scheduled! Skipping!");
+			return;
+		}
+		timing = input->GetActionTiming(action);
+		if (conductor->PollBeat()) {
+			logging->DebugLog("Action perfectly timed! Scheduling for this beat!");
+			scheduled = true;
+		}
+		else if (timing > MS_PER_BEAT * ((TIMING_LENIENCY - 1) / TIMING_LENIENCY)) {
+			logging->DebugLog("Action early! Scheduling for next beat!");
+			scheduled = true;
+		}
+		else if (timing < MS_PER_BEAT / TIMING_LENIENCY) {
+			if (!used) {
+				logging->DebugLog("Action late! Performing immediately!");
+				DoAction(action);
+			}
+			else {
+				logging->DebugLog("Duplicate late action for beat! Skipping!");
+			}
+		}
+		else {
+			logging->DebugLog("Action out of time! Cancelling!");
+		}
 	}
 	else {
-		logging->DebugLog("Action out of time! Cancelling!");
+		logging->DebugLog("Action combo expired! Skipping!");
 	}
+
 }
 
 void PlayerController::DoAction(InputActions::Action action)
@@ -144,34 +162,42 @@ void PlayerController::DoAction(InputActions::Action action)
 	switch (action) {
 	case (InputActions::ATTACK1):
 		DoAttack1();
-		return;
+		break;
 	case (InputActions::ATTACK2):
 		DoAttack2();
-		return;
+		break;
 	case (InputActions::DASH):
 		DoDash();
-		return;
+		break;
 	default:
 		logging->Log("Invalid action passed to AttackInput()!");
-		return;
+		break;
 	}
 }
 
 void PlayerController::DoDash()
 {
-	logging->DebugLog("Dash!");
+	logging->DebugLog("Dash! Combo: "+std::to_string(dashCombo));
 	position += velocity.Normalise() * DASH_DISTANCE;
 	audio->PlaySound(1);
 	dashScheduled = false;
+	dashUsed = true;
+	dashCombo++;
 }
-
+//whats happening is the attack is landing
+//being registered as late on the same beat
+//so then a1Beats == 1 on the next beat
+//we need bloody cooldowns back
+//well think about how to add combos first
+constexpr static int comboIdx = 3;
 void PlayerController::DoAttack1()
 {
 	switch (a1Beats) {
 		case 0:
-			audio->PlaySound(0);
-			logging->DebugLog("Attack1 used! " + std::to_string(a1Timing));
+			audio->PlaySound(comboIdx+a1Combo);
+			logging->DebugLog("Attack1 used! Combo: " + std::to_string(a1Combo));
 			a1Scheduled = true;
+			a1Used = true;
 			a1Beats++;
 			return;
 		case 1:
@@ -181,6 +207,7 @@ void PlayerController::DoAttack1()
 			a1Scheduled = false;
 			audio->PlaySound(2);
 			a1Beats = 0;
+			a1Combo++;
 			return;
 		default:
 			logging->Log("Invalid value of a1Beats found!");
@@ -188,6 +215,7 @@ void PlayerController::DoAttack1()
 	}	
 }
 void PlayerController::DoAttack2() {
+	a2Used = true;
 	logging->DebugLog("Attack2  " + std::to_string(a2Timing));
 	Projectile* atk2 = new Projectile(this, "Player Projectile", 3, TEST_COLLIDER_SIZE, 5, 0);
 	scene->DeferredRegister(atk2);
@@ -236,6 +264,25 @@ void PlayerController::CheckProjectileDamage()
 			collider->HasHit();
 		}
 	}
+}
+void PlayerController::ResetCombos()
+{
+	ResetSingleCombo(a1Used, a1Combo, ATTACK1_COMBO_COOLDOWN, ATTACK1_COMBO_LENGTH);
+	ResetSingleCombo(a2Used, a2Combo, ATTACK2_COMBO_COOLDOWN, ATTACK2_COMBO_LENGTH);
+	ResetSingleCombo(dashUsed, dashCombo, DASH_COMBO_COOLDOWN, DASH_COMBO_LENGTH);
+}
+
+void PlayerController::ResetSingleCombo(bool& used, int& combo, int cooldown, int max) {
+	if (combo >= max) {
+		combo = 0 - cooldown;
+	}
+	if (combo < 0) {
+		combo++;
+	}
+	if (combo >0 && !used) {
+		combo = -1;
+	}
+	used = false;
 }
 void PlayerController::TakeDamage(float damage)
 {

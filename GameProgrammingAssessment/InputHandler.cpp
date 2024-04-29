@@ -87,24 +87,31 @@ void InputHandler::HandleEvent(SDL_Event event)
             }
 
         }
+        else {
+            logging->DebugLog("Keyboard repeat event passed to inputHandler!");
+            return;
+        }
     }
     else if (event.type = SDL_MOUSEBUTTONDOWN) {
         SDLtimestamp = event.button.timestamp;
         uint8_t mouseButton = event.button.button;
         switch (mouseButton) {
-    case 1:
-        logging->DebugLog("Mouse1");
-        action = InputActions::ATTACK1;
-        break;
-    case 3:
-        logging->DebugLog("Mouse2");
-        action = InputActions::ATTACK2;
-        break;
-    default:
-        logging->DebugLog("Unregistered mouse button pressed!");
+            case 1:
+                logging->DebugLog("Mouse1");
+                action = InputActions::ATTACK1;
+                break;
+            case 3:
+                logging->DebugLog("Mouse2");
+                action = InputActions::ATTACK2;
+                break;
+            default:
+                logging->DebugLog("Unregistered mouse button pressed!");
+                return;
+            }
+    }
+    else {
         return;
     }
-}
     actionStates[action] = true;
     actionTimings[action] = conductor->GetInputTiming(SDLtimestamp);
 }

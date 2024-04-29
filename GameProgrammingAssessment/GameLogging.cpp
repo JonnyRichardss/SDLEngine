@@ -1,7 +1,6 @@
 #include "GameLogging.h"
 #include <iostream>
 #include "GameUtils.h"
-
 #include <cstdio>
 #include <ctime>
 static GameLogging* _instance;
@@ -27,22 +26,15 @@ GameLogging::~GameLogging()
 
 void GameLogging::Log(std::string logText)
 {
-    if (CONSOLE_SHOW_TIME) {
-        char timeString[40];
-        time_t timeNow = time(0);
-        tm tmNow;
-        localtime_s(&tmNow, &timeNow);
-        strftime(timeString, 40, "[%F-%H-%M-%S]: ", &tmNow);
-        logText = timeString + logText;
-    }
     FileLog(logText);
     if (consoleLogEnabled && !VERBOSE_CONSOLE)//VERBOSE_CONSOLE flag allows me to access logs that are sent straight to a file (to declutter console)
+        AddTime(logText);//tecnically not ideal - this will add the time twice once for filelog and once here but fuck it its just a debug option
         std::cout << logText<<"\n";
 }
 
 void GameLogging::FileLog(std::string logText)
 {
-    // it REALLY doesn't matter but i do wonder (since these are const bools defined in code) if these branches will compile out or not
+    AddTime(logText);
     if (VERBOSE_CONSOLE)
         std::cout << logText << "\n";
     if (DO_FILE_LOGGING) {
@@ -78,6 +70,18 @@ void GameLogging::SaveLogFile()
         Log("SaveLogFile() write failed!"); 
     }
     
+}
+
+void GameLogging::AddTime(std::string& logText)
+{
+    if (CONSOLE_SHOW_TIME) {
+        char timeString[40];
+        time_t timeNow = time(0);
+        tm tmNow;
+        localtime_s(&tmNow, &timeNow);
+        strftime(timeString, 40, "[%F-%H-%M-%S]: ", &tmNow);
+        logText = timeString + logText;
+    }
 }
 
 void GameLogging::RenameLastLogFile()

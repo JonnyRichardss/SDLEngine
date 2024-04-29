@@ -1,3 +1,6 @@
 Assets/MetroTick.wav
 Assets/Dash.wav
 Assets/PlayerAttack.wav
+Assets/AttackCombo1.wav
+Assets/AttackCombo2.wav
+Assets/AttackCombo3.wav

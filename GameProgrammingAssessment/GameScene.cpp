@@ -83,7 +83,7 @@ void GameScene::RegisterObject(GameObject* obj)
     obj->Init();
     obj->InitVisuals();
     obj->SetOwner(this);
-    logging->Log("Scene " + name + ": registered object: "+obj->GetName());
+    logging->FileLog("Scene " + name + ": registered object: "+obj->GetName());
 }
 
 void GameScene::DeferredRegister(GameObject* obj)
@@ -103,7 +103,7 @@ void GameScene::DeregisterObject(GameObject* g)
         }
     }
     if (found) {
-        logging->Log("Scene " + name + " deregistered object: " + g->GetName());
+        logging->FileLog("Scene " + name + " deregistered object: " + g->GetName());
         delete g;
     }
     else

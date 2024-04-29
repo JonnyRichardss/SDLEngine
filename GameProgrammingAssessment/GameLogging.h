@@ -20,7 +20,7 @@ private:
 	bool fileExists=false;
 	std::string LogPath;
 	std::vector<std::string> logBuffer;
-	
+	void AddTime(std::string& logText);
 	void RenameLastLogFile();
 	void MakeNewLogFile();
 };
