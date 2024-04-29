@@ -12,6 +12,7 @@ using namespace std::chrono_literals;
 static Timer timer;
 void PlayerController::Init()
 {
+	alive = true;
 	position = Vector2(0, 100);
 	name = "Player";
 	BoundingBox = Vector2(TEST_COLLIDER_SIZE);
@@ -66,6 +67,7 @@ bool PlayerController::Update()
 	}
 
 	CheckDamage();
+	DeathCheck();
 	return true;
 }
 void PlayerController::GetInput(Vector2& MoveVector, Vector2& mousePos)
@@ -202,7 +204,7 @@ void PlayerController::DoAttack1()
 			return;
 		case 1:
 			logging->DebugLog("Attack1 landing!");
-			{	MeleeCollider* atk = new MeleeCollider(this, "Player Light Attack", TEST_COLLIDER_SIZE, 30, 10, 0.2, 0);
+			{	MeleeCollider* atk = new MeleeCollider(this, "Player Light Attack", TEST_COLLIDER_SIZE, 90, 40, 0.2, 10);
 				scene->DeferredRegister(atk); }
 			a1Scheduled = false;
 			audio->PlaySound(2);
@@ -221,6 +223,12 @@ void PlayerController::DoAttack2() {
 	scene->DeferredRegister(atk2);
 	a2Scheduled = false;
 	audio->PlaySound(2);
+}
+void PlayerController::DeathCheck()
+{
+	if (!alive) {
+		//dostuff
+	}
 }
 void PlayerController::CheckDamage()
 {

@@ -10,6 +10,7 @@ EnemyController::EnemyController(GameObject* _target, EnemyTypes::Type _enemyTyp
 void EnemyController::Init()
 {
 	shown = true;
+	alive = true;
 	BoundingBox = { 20,20 };
 	collisionTags.push_back("Enemy");
 	collisionTags.push_back("Solid");
@@ -41,8 +42,8 @@ bool EnemyController::Update()
 	//DoMovement(GoalPosition-position);
 	//SolidCollision();
 	CheckDamage();
-
-	return true;
+	DeathCheck();
+	return alive;
 }
 bool EnemyController::IsIDUsed(std::vector<int>& vec, int ID)
 {
@@ -51,9 +52,16 @@ bool EnemyController::IsIDUsed(std::vector<int>& vec, int ID)
 	}
 	return false;
 }
+void EnemyController::DeathCheck()
+{
+	if (!alive) {
+		//dostuff
+	}
+}
 void EnemyController::CheckDamage()
 {
 	CheckMeleeDamage();
+	if (!alive) return; //early return so projectiles dont hit bodies
 	CheckProjectileDamage();
 }
 
@@ -98,5 +106,6 @@ void EnemyController::CheckProjectileDamage()
 void EnemyController::TakeDamage(float damage)
 {
 	health -= damage;
+	if (health <= 0) alive = false;//die
 	logging->DebugLog("Enemy damage taken - new health: " + std::to_string(health));
 }

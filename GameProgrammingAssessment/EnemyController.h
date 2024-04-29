@@ -14,11 +14,13 @@ protected:
 	GameObject* target;
 	Vector2 GoalPosition;
 	EnemyTypes::Type type;
+	bool alive;
 	float health;
 	std::vector<int> prevMelees;
 	std::vector<int> prevProjectiles;
 	bool Update();
 	bool IsIDUsed(std::vector<int>& vec, int ID);
+	void DeathCheck();
 	void CheckDamage();
 	void CheckMeleeDamage();
 	void CheckProjectileDamage();

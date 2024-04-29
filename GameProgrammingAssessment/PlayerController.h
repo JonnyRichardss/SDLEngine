@@ -7,6 +7,7 @@ public:
 	void Init();
 	void InitVisuals();
 protected:
+	bool alive;
 	float health;
 	std::vector<int> prevMelees;
 	std::vector<int> prevProjectiles;
@@ -20,6 +21,7 @@ protected:
 	void DoDash();
 	void DoAttack1();
 	void DoAttack2();
+	void DeathCheck();
 	void CheckDamage();
 	void CheckMeleeDamage();
 	void CheckProjectileDamage();
