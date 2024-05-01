@@ -39,7 +39,7 @@ void PlayerController::Init()
 	TimeLeft = new IntegerDisplay(Vector2(SCORE_POS_X + 25, (SCORE_POS_Y + (3 * SCORE_FONT_PTSIZE))), "Time Left", SCORE_FONT_PATH, SCORE_FONT_PTSIZE);
 	TimeLeft->SetValue(0);
 	scene->DeferredRegister(TimeLeft);
-	HpDisplay = new IntegerDisplay(Vector2(SCORE_POS_X + 20, (SCORE_POS_Y + (6 * SCORE_FONT_PTSIZE))), "Health", SCORE_FONT_PATH, SCORE_FONT_PTSIZE);
+	HpDisplay = new IntegerDisplay(Vector2(SCORE_POS_X + 25, (SCORE_POS_Y + (6 * SCORE_FONT_PTSIZE))), "Health", SCORE_FONT_PATH, SCORE_FONT_PTSIZE);
 	HpDisplay->SetValue(health);
 	scene->DeferredRegister(HpDisplay);
 	GameTimer.Start();
@@ -75,16 +75,19 @@ bool PlayerController::Update()
 	if (score->GetValue() > BONUS_MODE_SCORE_THRESHOLD && !BonusModeActive) {
 		audio->ToggleTrack();
 		BonusModeActive = true;
+		score->SetColour(ColourRGBA(0,255,0,255));
 		logging->Log("Score threshold hit! Bonus time will activate!");
 	}
 	TimeLeft->SetValue(std::chrono::duration_cast<std::chrono::seconds>(60s - GameTimer.GetTimeElapsed()).count());
 	if (GameTimer.GetTimeElapsed() >= 60s) {
 		if (BonusModeActive) {
 			if (!BonusModeApplied) {//inital apply
-				health *= 100;
+				HpDisplay->HideNumber();
+				HpDisplay->SetName("INFINITE HEALTH!");
 				a1Damage *= 3;
 				a2Damage *= 3;
 				TimeLeft->SetName("Bonus Time");
+				iFrames = 9999999;
 				//send out msgs
 			}
 			//do every time its active
@@ -292,27 +295,16 @@ void PlayerController::DoDash()
 constexpr static int comboIdx = 3;
 void PlayerController::DoAttack1()
 {
-	switch (a1Beats) {
-		case 0:
-			audio->PlaySound(comboIdx+a1Combo);
-			logging->DebugLog("Attack1 used! Combo: " + std::to_string(a1Combo));
-			a1Scheduled = true;
-			a1Used = true;
-			a1Beats++;
-			return;
-		case 1:
-			logging->DebugLog("Attack1 landing!");
-			{MeleeCollider* atk = new MeleeCollider(this, "Player Light Attack", TEST_COLLIDER_SIZE, 90, 40, 0.2, 10, a1Timing);
-			scene->DeferredRegister(atk); }
-			a1Scheduled = false;
-			audio->PlaySound(2);
-			a1Beats = 0;
-			a1Combo++;
-			return;
-		default:
-			logging->Log("Invalid value of a1Beats found!");
-			return;
-	}	
+	audio->PlaySound(comboIdx + a1Combo);
+	logging->DebugLog("Attack1 used! Combo: " + std::to_string(a1Combo));
+	{MeleeCollider* atk = new MeleeCollider(this, "Player Light Attack", TEST_COLLIDER_SIZE, 90, 40, 0.2, 10, a1Timing);
+	scene->DeferredRegister(atk); }
+	a1Scheduled = false;
+	audio->PlaySound(2);
+	a1Beats = 0;
+	a1Combo++;
+
+		
 }
 void PlayerController::DoAttack2() {
 	a2Used = true;

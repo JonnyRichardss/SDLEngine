@@ -12,8 +12,11 @@ public:
 	int GetValue();
 	void AddValue(int newVal);
 	void SetPos(Vector2 newPos);
+	void SetColour(ColourRGBA col);
 	void SetName(std::string newName);
+	void HideNumber();
 protected:
+	bool hidden;
 	ColourRGBA colour;
 	std::string fontPath;
 	int ptSize;
