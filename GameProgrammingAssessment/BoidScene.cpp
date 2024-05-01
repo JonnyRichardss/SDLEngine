@@ -6,6 +6,7 @@
 BoidScene::BoidScene()
 {
 	name = "Boids Scene";
+	countdownSpawned = false;
 }
 
 BoidScene::~BoidScene()
@@ -23,6 +24,7 @@ void BoidScene::CreateObjects()
 		boid->SetOwner(this);
 		boid->SetName(i);
 	}
+	UpdateQueue.push_back(new TextDisplay("Controls:\nWASD - move\nMouse 1 - Melee Attack\nMouse 2 - Projectile Attack\nMouse Pointer - Aim\nESC - Exit", { -580,0 }, SCORE_FONT_PATH, 4,8));
 }
 
 void BoidScene::PreUpdate()
@@ -33,9 +35,15 @@ void BoidScene::PreUpdate()
 
 void BoidScene::PostUpdate()
 {
-	if (audio->GetTrackPos() > SPLASH_SCREEN_DURATION) {
+	double TrackPos = audio->GetTrackPos();
+	if (TrackPos > SPLASH_SCREEN_DURATION) {
 		Delete();
 		//the way DeleteScene is implemented it goes to scene 0
+	}
+	else if (TrackPos > SPLASH_SCREEN_DURATION - (MS_PER_BEAT * 3.2) && !countdownSpawned) {
+		CountdownTimer* countdown = new CountdownTimer({0,0},SCORE_FONT_PATH,72,4);
+		RegisterObject(countdown);
+		countdownSpawned = true;
 	}
 }
 

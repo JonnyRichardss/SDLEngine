@@ -127,7 +127,7 @@ void PlayerController::ShowEndScreen()
 {
 	EndScreen* endScreen = new EndScreen();
 	scene->DeferredRegister(endScreen);
-	TextDisplay* text = new TextDisplay("Game Over!", { 0,-150 }, SCORE_FONT_PATH, 72);
+	TextDisplay* text = new TextDisplay("Game Over!", { 0,-150 }, SCORE_FONT_PATH, 72,4);
 	scene->DeferredRegister(text);
 	endScreenShown = true;
 	score->SetPos(Vector2::zero());

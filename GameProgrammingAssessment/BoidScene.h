@@ -12,7 +12,7 @@ public:
 	void Load();
 	void Unload();
 private:
-
+	bool countdownSpawned;
 };
 
 #endif // !USE_BOIDSCENE

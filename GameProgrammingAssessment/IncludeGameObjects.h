@@ -12,4 +12,7 @@
 #include "Wall.h"
 #include "EnemySpawner.h"
 #include "IntegerDisplay.h"
+#include "EndScreen.h"
+#include "TextDisplay.h"
+#include "CountdownTimer.h"
 #endif
