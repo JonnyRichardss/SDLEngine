@@ -41,7 +41,7 @@ void MainScene::PostUpdate()
 void MainScene::Load()
 {
 	JRCollision::Init();
-	AudioEngine::GetInstance()->StartMusic();
+	//AudioEngine::GetInstance()->StartMusic();
 }
 
 void MainScene::Unload()

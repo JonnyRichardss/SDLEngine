@@ -12,7 +12,8 @@ constexpr int COLLISION_EXPAND_SIZE = 10;
 //not used - the reallcoation was buggy
 //allocing every frame *might* get laggy but who knows
 
-constexpr int SPLASH_SCREEN_DURATION = 1;
+constexpr int SPLASH_SCREEN_DURATION = 13040;
+constexpr int MAIN_SONG_DURATION = 73040;
 
 static const char* LOG_FOLDER_PATH = "Logs/";
 static const char* LOGFILE_NAME = "latest.log";
@@ -25,6 +26,7 @@ constexpr int SCORE_FONT_PTSIZE = 18;
 constexpr int SCORE_POS_X = -700;
 constexpr int SCORE_POS_Y = -400;
 
+constexpr int BONUS_MODE_SCORE_THRESHOLD = 10;
 
 constexpr bool DEBUG_DRAW_MELEES = true;
 constexpr bool DEBUG_DRAW_BB = false; 
@@ -52,9 +54,11 @@ constexpr float PLAYER_SPEED = 10;
 constexpr float ENEMY_SPEED = 8;
 
 //if i have time ill look into extending timing window for mid-combo specifically
+constexpr float ATTACK1_DAMAGE = 10;
 constexpr int ATTACK1_COMBO_LENGTH = 3;
 constexpr int ATTACK1_COMBO_COOLDOWN = 2;
 
+constexpr float ATTACK2_DAMAGE = 10;
 constexpr int ATTACK2_COMBO_LENGTH = 3;
 constexpr int ATTACK2_COMBO_COOLDOWN = 2;
 

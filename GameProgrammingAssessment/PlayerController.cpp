@@ -13,7 +13,7 @@ using namespace std::chrono_literals;
 
 void PlayerController::Init()
 {
-	
+	GameRunning = true;
 	alive = true;
 	position = Vector2(0, 100);
 	name = "Player";
@@ -31,7 +31,7 @@ void PlayerController::Init()
 	score = new IntegerDisplay(Vector2(SCORE_POS_X, SCORE_POS_Y),"Score", SCORE_FONT_PATH, SCORE_FONT_PTSIZE);
 	score->SetValue(0);
 	scene->DeferredRegister(score);
-	
+	GameTimer.Start();
 }
 
 void PlayerController::InitVisuals()
@@ -51,11 +51,41 @@ void PlayerController::AddScore(int numToAdd)
 
 bool PlayerController::Update()
 {
+	if (!GameRunning) {
+		//show end screen?
+		return true; 
+	}
+	if (score->GetValue() > BONUS_MODE_SCORE_THRESHOLD && !BonusModeActive) {
+		audio->ToggleTrack();
+		BonusModeActive = true;
+		logging->Log("Score threshold hit! Bonus time will activate!");
+	}
+	if (GameTimer.GetTimeElapsed() >= 60s) {
+		if (BonusModeActive) {
+			if (!BonusModeApplied) {
+				health *= 100;
+				a1Damage *= 3;
+				a2Damage *= 3;
+				//send out msgs
+			}
+		}
+		else {
+			GameRunning = false;
+			return true;
+		}
+	}
+	if (GameTimer.GetTimeElapsed() >= 75s) {
+		GameRunning = false;
+		return true;
+	}
+	
 	Vector2 MoveVector;
 	Vector2 mousePos;
+	GetInput(MoveVector, mousePos);
+
 	Vector2 mouseDirection = position - mousePos;
 	float mouseDirFacing = Vector2::AngleBetweenRAD(Vector2::up(), mouseDirection.Normalise());
-	GetInput(MoveVector, mousePos);
+	//logging->DebugLog(mousePos.ToString());
 	
 	//movement
 	facing = mouseDirFacing;
@@ -86,7 +116,7 @@ void PlayerController::GetInput(Vector2& MoveVector, Vector2& mousePos)
 	MoveVector.x += input->GetActionState(InputActions::RIGHT);
 
 	mousePos = renderer->WindowToGameCoords(input->GetMousePos());
-
+	
 	ActionInput(InputActions::ATTACK1, a1Scheduled,a1Used, a1Timing,a1Combo,ATTACK1_COMBO_LENGTH);
 	ActionInput(InputActions::ATTACK2, a2Scheduled, a2Used, a2Timing,a2Combo,ATTACK2_COMBO_LENGTH);
 	ActionInput(InputActions::DASH, dashScheduled, dashUsed, dashTiming,dashCombo,DASH_COMBO_LENGTH);

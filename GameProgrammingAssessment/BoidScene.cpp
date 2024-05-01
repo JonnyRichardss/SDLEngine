@@ -13,9 +13,10 @@ BoidScene::~BoidScene()
 	Unload();
 }
 static Timer SplashTimer;
+static AudioEngine* audio;
 void BoidScene::CreateObjects()
 {
-	SplashTimer.Start();
+	
 	for (int i = 0; i < NUM_BOIDS; i++) {
 		Boid* boid = new Boid();
 		UpdateQueue.push_back(boid);
@@ -32,7 +33,7 @@ void BoidScene::PreUpdate()
 
 void BoidScene::PostUpdate()
 {
-	if (SplashTimer.GetTimeElapsed() > std::chrono::seconds(SPLASH_SCREEN_DURATION)) {
+	if (audio->GetTrackPos() > SPLASH_SCREEN_DURATION) {
 		Delete();
 		//the way DeleteScene is implemented it goes to scene 0
 	}
@@ -41,7 +42,10 @@ void BoidScene::PostUpdate()
 void BoidScene::Load()
 {
 	JRCudaCalc::Alloc(UpdateQueue.size());
+	audio = AudioEngine::GetInstance();
+	audio->StartMusic();
 	loaded = true;
+
 }
 
 void BoidScene::Unload()
