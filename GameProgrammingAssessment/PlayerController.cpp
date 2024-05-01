@@ -1,5 +1,6 @@
 #include "PlayerController.h"
 #include "Timer.h"
+#include "TextDisplay.h"
 #include "GameConductor.h"
 #include "MeleeCollider.h"
 #include "Projectile.h"
@@ -62,12 +63,7 @@ bool PlayerController::Update()
 	HpDisplay->SetValue(health);
 	if (!GameRunning) {
 		if (!endScreenShown) {
-			EndScreen* endScreen = new EndScreen();
-			scene->DeferredRegister(endScreen);
-			endScreenShown = true;
-			score->SetPos(Vector2::zero());
-			TimeLeft->Hide();
-			HpDisplay->Hide();
+			ShowEndScreen();
 		}
 		return true; 
 	}
@@ -119,13 +115,24 @@ bool PlayerController::Update()
 		audio->PlaySound(0);
 		DoBeatAttacks();
 	}
-	else if (conductor->GetInputTiming() > MS_PER_BEAT * ((TIMING_LENIENCY - 1) / TIMING_LENIENCY) && !offBeatPassed) {
+	else if (conductor->GetInputTiming() > MS_PER_BEAT / 2.0 && !offBeatPassed) {
 		ResetCombos();
 		offBeatPassed = true;
 	}
 
 	CheckDamage();
 	return true;
+}
+void PlayerController::ShowEndScreen()
+{
+	EndScreen* endScreen = new EndScreen();
+	scene->DeferredRegister(endScreen);
+	TextDisplay* text = new TextDisplay("Game Over!", { 0,-150 }, SCORE_FONT_PATH, 72);
+	scene->DeferredRegister(text);
+	endScreenShown = true;
+	score->SetPos(Vector2::zero());
+	TimeLeft->Hide();
+	HpDisplay->Hide();
 }
 void PlayerController::GetInput(Vector2& MoveVector, Vector2& mousePos)
 {

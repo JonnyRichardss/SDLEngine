@@ -158,6 +158,7 @@
     <ClCompile Include="SpriteSheet.cpp" />
     <ClCompile Include="SpriteSheetTest.cpp" />
     <ClCompile Include="TestCollider.cpp" />
+    <ClCompile Include="TextDisplay.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Wall.cpp" />
   </ItemGroup>
@@ -198,6 +199,7 @@
     <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="SpriteSheetTest.h" />
     <ClInclude Include="TestCollider.h" />
+    <ClInclude Include="TextDisplay.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Wall.h" />
   </ItemGroup>

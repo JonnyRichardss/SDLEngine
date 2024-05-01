@@ -128,5 +128,6 @@ void EnemyController::AddScore(Projectile* collider)
 void EnemyController::AddScore(float damage, double timing)
 {
 	double ScoreMult = MS_PER_BEAT / (4.0 * timing);
+	if (player->BonusModeApplied) ScoreMult *= 4;
 	player->AddScore(ScoreMult * damage);
 }
