@@ -21,6 +21,7 @@ static constexpr float BOID_COHESION_STRENGTH = 1.0f;
 static constexpr float RAND_WALK_SIZE_RAD = 0.05f;
 void Boid::Init()
 {
+	isBoid = true;
 	BoundingBox = Vector2(BOID_SIZE, BOID_SIZE * 2);
 	shown = true;
 	facing = RNG::randf(0, 2 * M_PI);
@@ -46,6 +47,8 @@ void Boid::InitVisuals()
 	SDL_SetTextureColorMod(Tex, RNG::randi(0, 0), RNG::randi(0, 128), RNG::randi(128, 255));
 	SDL_Rect DefaultRect = BBtoDestRect();
 	visuals->UpdateDestPos(&DefaultRect);
+	//visuals->UpdateLayer(69420);
+	//visuals->UpdateFlip(static_cast<SDL_RendererFlip>(SDL_FLIP_VERTICAL | SDL_FLIP_HORIZONTAL));
 
 }
 
@@ -63,7 +66,7 @@ bool Boid::Update()
 
 void Boid::DoRotation()
 {
-	velocity = Vector2(sin(facing) * BOID_SPEED, cos(facing) * BOID_SPEED);
+	 velocity = Vector2(sin(facing) * BOID_SPEED, cos(facing) * BOID_SPEED);
 }
 
 void Boid::ScreenWrap()

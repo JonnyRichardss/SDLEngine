@@ -15,6 +15,7 @@ void PlayerController::Init()
 {
 	GameRunning = true;
 	alive = true;
+	health = PLAYER_HP;
 	position = Vector2(0, 100);
 	name = "Player";
 	BoundingBox = Vector2(TEST_COLLIDER_SIZE);
@@ -85,7 +86,7 @@ bool PlayerController::Update()
 		GameRunning = false;
 		return true;
 	}
-	
+	DecrementIFrames();
 	Vector2 MoveVector;
 	Vector2 mousePos;
 	GetInput(MoveVector, mousePos);
@@ -112,7 +113,6 @@ bool PlayerController::Update()
 	}
 
 	CheckDamage();
-	DeathCheck();
 	return true;
 }
 void PlayerController::GetInput(Vector2& MoveVector, Vector2& mousePos)
@@ -127,6 +127,14 @@ void PlayerController::GetInput(Vector2& MoveVector, Vector2& mousePos)
 	ActionInput(InputActions::ATTACK1, a1Scheduled,a1Used, a1Timing,a1Combo,ATTACK1_COMBO_LENGTH);
 	ActionInput(InputActions::ATTACK2, a2Scheduled, a2Used, a2Timing,a2Combo,ATTACK2_COMBO_LENGTH);
 	ActionInput(InputActions::DASH, dashScheduled, dashUsed, dashTiming,dashCombo,DASH_COMBO_LENGTH);
+}
+void PlayerController::DecrementIFrames()
+{
+	if (iFrames <= 0) { 
+		iFrames = 0; 
+		return; 
+	}
+	iFrames--;
 }
 static bool is_red = false;
 void PlayerController::ToggleColour() {
@@ -273,55 +281,20 @@ void PlayerController::DoAttack2() {
 	a2Scheduled = false;
 	audio->PlaySound(2);
 }
-void PlayerController::DeathCheck()
-{
-	if (!alive) {
-		//dostuff
-	}
-}
-void PlayerController::CheckDamage()
-{
-	CheckMeleeDamage();
-	CheckProjectileDamage();
-}
 
-void PlayerController::CheckMeleeDamage()
+void PlayerController::CheckDamage()
 {
 	if (colliders.empty()) return;
 	for (GameObject* c : colliders) {
-		if (!(c->CompareTag("MeleeAttack")) || c == this) continue;
-		MeleeCollider* collider = dynamic_cast<MeleeCollider*>(c);
+		if (!(c->CompareTag("Enemy")) || c == this) continue;
 		if (c == nullptr) {
 			logging->Log("Tried to cast non-meleeattack to meleeattack!");
 			continue;
 		}
-		if (collider->GetParent() == this) continue;
-		int id = collider->GetID();
-		if (!(IsIDUsed(prevMelees,id))) {
-			prevMelees.push_back(id);
-			TakeDamage(collider->GetDamage());
-		}
+		TakeDamage(ENEMY_DAMAGE);
 	}
 }
-void PlayerController::CheckProjectileDamage()
-{
-	if (colliders.empty()) return;
-	for (GameObject* c : colliders) {
-		if (!(c->CompareTag("Projectile")) || c == this) continue;
-		Projectile* collider = dynamic_cast<Projectile*>(c);
-		if (c == nullptr) {
-			logging->Log("Tried to cast non-projectile to projectile!");
-			continue;
-		}
-		if (collider->GetParent() == this) continue;
-		int id = collider->GetID();
-		if (!(IsIDUsed(prevProjectiles, id))) {
-			prevProjectiles.push_back(id);
-			TakeDamage(collider->GetDamage());
-			collider->HasHit();
-		}
-	}
-}
+
 void PlayerController::ResetCombos()
 {
 	ResetSingleCombo(a1Used, a1Combo, ATTACK1_COMBO_COOLDOWN, ATTACK1_COMBO_LENGTH);
@@ -343,6 +316,16 @@ void PlayerController::ResetSingleCombo(bool& used, int& combo, int cooldown, in
 }
 void PlayerController::TakeDamage(float damage)
 {
-	health -= damage;
-	logging->DebugLog("Player damage taken - new health: " + std::to_string(health));
+	if (iFrames == 0) {
+		health -= damage;
+		if (health <= 0) {
+			alive = false; 
+			GameRunning = false;
+		}//die
+		logging->DebugLog("Player damage taken - new health: " + std::to_string(health));
+		iFrames = PLAYER_IFRAMES;
+	}
+	else {
+		logging->DebugLog("Player tried to take damage but it was blocked by invincibility frames!");
+	}
 }

@@ -14,7 +14,7 @@ protected:
 	bool alive;
 	float health;
 	Timer GameTimer;
-	
+	int iFrames;
 	bool BonusModeActive,BonusModeApplied;
 	IntegerDisplay* score;
 	IntegerDisplay* TimeLeft;
@@ -22,6 +22,7 @@ protected:
 	std::vector<int> prevProjectiles;
 	bool Update();
 	void GetInput(Vector2& MoveVector, Vector2& mousePos);
+	void DecrementIFrames();
 	void ToggleColour();
 	bool IsIDUsed(std::vector<int>& vec, int ID);
 	void DoBeatAttacks();
@@ -30,10 +31,7 @@ protected:
 	void DoDash();
 	void DoAttack1();
 	void DoAttack2();
-	void DeathCheck();
 	void CheckDamage();
-	void CheckMeleeDamage();
-	void CheckProjectileDamage();
 	void ResetCombos();
 	void ResetSingleCombo(bool& used, int& combo, int cooldown, int max);
 	void TakeDamage(float damage);

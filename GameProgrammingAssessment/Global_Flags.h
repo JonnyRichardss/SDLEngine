@@ -49,6 +49,8 @@ static bool ENGINE_QUIT_FLAG = false;//be aware this doesn't work the way you th
 constexpr float BASE_PUSH_FACTOR = 0.01;
 constexpr float BASE_FRICTION = 0.25;
 
+constexpr float PLAYER_IFRAMES = 5;
+constexpr float PLAYER_HP = 100;
 constexpr float DASH_DISTANCE = 150;
 constexpr float PLAYER_SPEED = 10;
 constexpr float ENEMY_SPEED = 8;
@@ -64,6 +66,9 @@ constexpr int ATTACK2_COMBO_COOLDOWN = 2;
 
 constexpr int DASH_COMBO_LENGTH = 3;
 constexpr int DASH_COMBO_COOLDOWN = 2;
+
+constexpr float ENEMY_DAMAGE = 5;
+constexpr float ENEMY_HP = 20;
 
 constexpr int NUM_BOIDS = 1024;
 

@@ -41,6 +41,7 @@ public:
 	std::vector<Vector2> collisionVectors;
 protected:
 	virtual bool Update() = 0;
+	bool isBoid;
 	bool has_friction;
 	float acceleration;
 	float deceleration;

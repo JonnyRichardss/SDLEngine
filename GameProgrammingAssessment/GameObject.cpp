@@ -18,6 +18,7 @@ GameObject::GameObject()
 	GetWindowParams();
 	velocity = Vector2::zero();
 	position = Vector2::zero();
+	isBoid = false;
 	name = "Default GameObject name";
 }
 
@@ -31,7 +32,7 @@ SDL_Rect GameObject::BBtoDestRect()
 	Vector2 TransformedBB = renderer->GameToWindowScaling(BoundingBox);
 	Vector2 TransformedPos = renderer->GameToWindowScaling(position);
 	
-	TransformedPos = renderer->GameToWindowTranslation(TransformedPos);
+	TransformedPos = renderer->GameToWindowTranslation(TransformedPos,isBoid);
 	TransformedPos -= (TransformedBB / 2);
 	SDL_Rect dest = { TransformedPos.x,TransformedPos.y,TransformedBB.x,TransformedBB.y };
 	return dest;
@@ -111,14 +112,14 @@ void GameObject::DrawBoundingBox()
 	2-------3
 	*/
 	
-	Vector2 WindowPos = renderer->GameToWindowCoords(position);
+	Vector2 WindowPos = renderer->GameToWindowCoords(position,false);
 	
 	
 	JRrect corners = BBtoGameRect();
 	SDL_Point* points = new SDL_Point[5];
 	for (int i = 0; i < 4;i++) {
 		Vector2 vec = corners.points[i];
-		vec = renderer->GameToWindowCoords(vec);
+		vec = renderer->GameToWindowCoords(vec,false);
 		points[i] = vec.ToSDLPoint();
 	}
 	SDL_Point temp = points[0];
@@ -128,12 +129,12 @@ void GameObject::DrawBoundingBox()
 	SDL_RenderDrawPoint(renderContext,WindowPos.x,WindowPos.y);
 	SDL_RenderDrawLines(renderContext, points, 5);
 	SDL_SetRenderDrawColor(renderContext, 0, 255, 0, 255);
-	if (!collisionVectors.empty()) {
-		Vector2 debugVec = collisionVectors[debugVecidx];
+
+		Vector2 debugVec = 20 * Vector2::RotateAroundOrigin(Vector2::up(),facing);
 		debugVec += position;
-		debugVec = renderer->GameToWindowCoords(debugVec);
+		debugVec = renderer->GameToWindowCoords(debugVec,false);
 		SDL_RenderDrawLine(renderContext, WindowPos.x, WindowPos.y, debugVec.x, debugVec.y);
-	}
+	
 	SDL_SetRenderDrawColor(renderContext,  255,0, 0, 255);
 	delete[] points;
 }

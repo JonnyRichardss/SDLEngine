@@ -52,7 +52,10 @@ void RenderEngine::RenderFrame()
     */
     std::sort(RenderQueue.begin(),RenderQueue.end(), [](auto a, auto b){return *a < *b;});
     for (RenderableComponent* c : RenderQueue) {
-        SDL_RenderCopyEx(renderContext, c->GetTexture(), c->GetSourcePos(), c->GetDestPos(), c->GetAngle(), c->GetCentrePoint(), c->GetFlip());
+  
+
+            SDL_RenderCopyEx(renderContext, c->GetTexture(), c->GetSourcePos(), c->GetDestPos(), c->GetAngle(), c->GetCentrePoint(), c->GetFlip());
+
     }
     RenderQueue.clear();
     SDL_RenderPresent(renderContext);
@@ -82,21 +85,22 @@ Vector2 RenderEngine::GameToWindowScaling(Vector2 vec)
     return vec;
 }
 
-Vector2 RenderEngine::GameToWindowTranslation(Vector2 vec)
+Vector2 RenderEngine::GameToWindowTranslation(Vector2 vec,bool BoidHack)
 {
     //this function assumes you have already scaled - not much i can do about that save for combining the transforms but the way BBs work ATM i need scaling separate
     //INVERT Y AXIS
-    //vec.y *= -1;
+    if (BoidHack)
+        vec.y *= -1;
     //TRANSFORM VECTOR INTO +VE +VE
     vec += GameToWindowScaling(Vector2(GAME_MAX_X, GAME_MAX_Y));
 
     return vec;
 }
 
-Vector2 RenderEngine::GameToWindowCoords(Vector2 vec)
+Vector2 RenderEngine::GameToWindowCoords(Vector2 vec,bool BoidHack)
 {
     vec = GameToWindowScaling(vec);
-    vec = GameToWindowTranslation(vec);
+    vec = GameToWindowTranslation(vec,BoidHack);
     return vec;
 }
 
