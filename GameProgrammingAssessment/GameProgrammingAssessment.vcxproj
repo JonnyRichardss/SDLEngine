@@ -132,6 +132,7 @@
     <ClCompile Include="BoidScene.cpp" />
     <ClCompile Include="CollisionTestScene.cpp" />
     <ClCompile Include="EnemyController.cpp" />
+    <ClCompile Include="EnemySpawner.cpp" />
     <ClCompile Include="EshopAnim.cpp" />
     <ClCompile Include="EshopScene.cpp" />
     <ClCompile Include="FPSCounter.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="CollisionTestScene.h" />
     <ClInclude Include="ColourRGBA.h" />
     <ClInclude Include="EnemyController.h" />
+    <ClInclude Include="EnemySpawner.h" />
     <ClInclude Include="EshopAnim.h" />
     <ClInclude Include="EshopScene.h" />
     <ClInclude Include="FPSCounter.h" />

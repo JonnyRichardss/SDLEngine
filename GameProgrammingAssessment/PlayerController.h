@@ -10,14 +10,16 @@ public:
 	void InitVisuals();
 	void AddScore(int numToAdd);
 	bool GameRunning;
+	bool BonusModeActive, BonusModeApplied;
 protected:
 	bool alive;
 	float health;
 	Timer GameTimer;
 	int iFrames;
-	bool BonusModeActive,BonusModeApplied;
+	
 	IntegerDisplay* score;
 	IntegerDisplay* TimeLeft;
+	IntegerDisplay* HpDisplay;
 	std::vector<int> prevMelees;
 	std::vector<int> prevProjectiles;
 	bool Update();
@@ -33,7 +35,7 @@ protected:
 	void DoAttack2();
 	void CheckDamage();
 	void ResetCombos();
-	void ResetSingleCombo(bool& used, int& combo, int cooldown, int max);
+	void ResetSingleCombo(bool& used, bool& scheduled, int& combo, int cooldown, int max);
 	void TakeDamage(float damage);
 	bool offBeatPassed;
 	float a1Damage, a2Damage;

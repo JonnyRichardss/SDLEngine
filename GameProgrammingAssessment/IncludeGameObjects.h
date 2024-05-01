@@ -10,4 +10,6 @@
 #include "Projectile.h"
 #include "MeleeCollider.h"
 #include "Wall.h"
+#include "EnemySpawner.h"
+#include "IntegerDisplay.h"
 #endif

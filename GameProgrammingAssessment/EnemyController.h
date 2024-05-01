@@ -2,21 +2,19 @@
 #define USE_ENEMY
 #include "GameObject.h"
 class MeleeCollider; class Projectile; class PlayerController; //fwd def
-namespace EnemyTypes {
-	enum Type {ALPHA,BRAVO,CHARLIE};
-}
+
 class EnemyController : public GameObject
 {
 public:
-	EnemyController(GameObject* _target,EnemyTypes::Type _enemyType ,Vector2 _pos);
+	EnemyController(GameObject* _target,Vector2 _pos);
 	void Init();
 	void InitVisuals();
 protected:
 	PlayerController* player;
 	Vector2 GoalPosition;
-	EnemyTypes::Type type;
 	bool alive;
 	float health;
+	float stepwidth;
 	std::vector<int> prevMelees;
 	std::vector<int> prevProjectiles;
 	bool Update();

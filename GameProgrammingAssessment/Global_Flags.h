@@ -49,16 +49,16 @@ static bool ENGINE_QUIT_FLAG = false;//be aware this doesn't work the way you th
 constexpr float BASE_PUSH_FACTOR = 0.01;
 constexpr float BASE_FRICTION = 0.25;
 
-constexpr float PLAYER_IFRAMES = 5;
+constexpr float PLAYER_IFRAMES = 30;
 constexpr float PLAYER_HP = 100;
 constexpr float DASH_DISTANCE = 150;
 constexpr float PLAYER_SPEED = 10;
-constexpr float ENEMY_SPEED = 8;
+constexpr float ENEMY_STEP_WIDTH = 20;
 
 //if i have time ill look into extending timing window for mid-combo specifically
 constexpr float ATTACK1_DAMAGE = 10;
 constexpr int ATTACK1_COMBO_LENGTH = 3;
-constexpr int ATTACK1_COMBO_COOLDOWN = 2;
+constexpr int ATTACK1_COMBO_COOLDOWN = 3;
 
 constexpr float ATTACK2_DAMAGE = 10;
 constexpr int ATTACK2_COMBO_LENGTH = 3;

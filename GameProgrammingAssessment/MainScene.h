@@ -13,7 +13,7 @@ public:
 	void Load();
 	void Unload();
 private:
-	void CreateWalls();
+	void CreateSpawners(GameObject* player);
 };
 
 #endif // !USE_MAINSCENE

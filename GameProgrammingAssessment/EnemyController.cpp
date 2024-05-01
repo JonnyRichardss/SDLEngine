@@ -3,10 +3,9 @@
 #include "Projectile.h"
 #include "GameScene.h"
 #include "PlayerController.h"
-EnemyController::EnemyController(GameObject* _player, EnemyTypes::Type _enemyType, Vector2 _pos)
+EnemyController::EnemyController(GameObject* _player, Vector2 _pos)
 {
 	name = "enemy";
-	type = _enemyType;
 	position = _pos;
 	alive = true;
 	player = dynamic_cast<PlayerController*>(_player);
@@ -21,10 +20,7 @@ void EnemyController::Init()
 	BoundingBox = { 20,20 };
 	collisionTags.push_back("Enemy");
 	collisionTags.push_back("Solid");
-	acceleration = 0.5;
-	deceleration = 0.1;//relying on just base friction
-	maxSpeed = ENEMY_SPEED;
-	
+	stepwidth = ENEMY_STEP_WIDTH;
 	GoalPosition = player->GetPos();
 }
 
@@ -37,7 +33,7 @@ void EnemyController::InitVisuals()
 	visuals->UpdateDestPos(&DefaultRect);
 	visuals->UpdateLayer(1);
 }
-static float stepwidth = 50;
+
 bool EnemyController::Update()
 {
 	if (conductor->PollBeat()) {

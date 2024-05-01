@@ -11,22 +11,18 @@ MainScene::~MainScene()
 {
 	Unload();
 }
-void MainScene::CreateWalls() {
-	std::vector<Wall*> allWalls;
-	allWalls.push_back(new Wall(Vector2( 100, 100 ), Vector2(50,50), ColourRGBA(125,125,125,255)));//left
+void MainScene::CreateSpawners(GameObject* player) {
+	std::vector<Vector2> positions = {{-GAME_MAX_X,0},{GAME_MAX_X,0},{0,-GAME_MAX_Y},{0,GAME_MAX_Y}};
 
-
-	for (Wall* w : allWalls) {
-		RegisterObject(w);
+	for (Vector2 p : positions) {
+		UpdateQueue.push_back(new EnemySpawner(p,player));
 	}
 }
 void MainScene::CreateObjects()
 {
-	//CreateWalls();
 	PlayerController* player = new PlayerController();
 	UpdateQueue.push_back(player);
-	EnemyController* enemy = new EnemyController(player,EnemyTypes::BRAVO,{0,0});
-	UpdateQueue.push_back(enemy);
+	CreateSpawners(player);
 }
 
 void MainScene::PreUpdate()

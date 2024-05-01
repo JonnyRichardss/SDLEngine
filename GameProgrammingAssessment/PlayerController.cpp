@@ -35,6 +35,9 @@ void PlayerController::Init()
 	TimeLeft = new IntegerDisplay(Vector2(SCORE_POS_X + 25, (SCORE_POS_Y + (3 * SCORE_FONT_PTSIZE))), "Time Left", SCORE_FONT_PATH, SCORE_FONT_PTSIZE);
 	TimeLeft->SetValue(0);
 	scene->DeferredRegister(TimeLeft);
+	HpDisplay = new IntegerDisplay(Vector2(SCORE_POS_X + 20, (SCORE_POS_Y + (6 * SCORE_FONT_PTSIZE))), "Health", SCORE_FONT_PATH, SCORE_FONT_PTSIZE);
+	HpDisplay->SetValue(health);
+	scene->DeferredRegister(HpDisplay);
 	GameTimer.Start();
 }
 
@@ -65,6 +68,7 @@ bool PlayerController::Update()
 		logging->Log("Score threshold hit! Bonus time will activate!");
 	}
 	TimeLeft->SetValue(std::chrono::duration_cast<std::chrono::seconds>(60s - GameTimer.GetTimeElapsed()).count());
+	HpDisplay->SetValue(health);
 	if (GameTimer.GetTimeElapsed() >= 60s) {
 		if (BonusModeActive) {
 			if (!BonusModeApplied) {//inital apply
@@ -297,12 +301,13 @@ void PlayerController::CheckDamage()
 
 void PlayerController::ResetCombos()
 {
-	ResetSingleCombo(a1Used, a1Combo, ATTACK1_COMBO_COOLDOWN, ATTACK1_COMBO_LENGTH);
-	ResetSingleCombo(a2Used, a2Combo, ATTACK2_COMBO_COOLDOWN, ATTACK2_COMBO_LENGTH);
-	ResetSingleCombo(dashUsed, dashCombo, DASH_COMBO_COOLDOWN, DASH_COMBO_LENGTH);
+	ResetSingleCombo(a1Used, a1Scheduled, a1Combo, ATTACK1_COMBO_COOLDOWN, ATTACK1_COMBO_LENGTH);
+	ResetSingleCombo(a2Used, a2Scheduled, a2Combo, ATTACK2_COMBO_COOLDOWN, ATTACK2_COMBO_LENGTH);
+	ResetSingleCombo(dashUsed, dashScheduled, dashCombo, DASH_COMBO_COOLDOWN, DASH_COMBO_LENGTH);
 }
 
-void PlayerController::ResetSingleCombo(bool& used, int& combo, int cooldown, int max) {
+void PlayerController::ResetSingleCombo(bool& used, bool& scheduled, int& combo, int cooldown, int max) {
+	//if (scheduled) return; honestly its janky but i prefer it the other way
 	if (combo >= max) {
 		combo = 0 - cooldown;
 	}
@@ -326,6 +331,6 @@ void PlayerController::TakeDamage(float damage)
 		iFrames = PLAYER_IFRAMES;
 	}
 	else {
-		logging->DebugLog("Player tried to take damage but it was blocked by invincibility frames!");
+		//logging->DebugLog("Player tried to take damage but it was blocked by invincibility frames!"); spammy lol
 	}
 }
