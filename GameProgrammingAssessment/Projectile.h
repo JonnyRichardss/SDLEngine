@@ -1,6 +1,7 @@
 #ifndef USE_PROJECTILE
 #define USE_PROJECTILE
 #include "GameObject.h"
+#include "Spritesheet.h"
 class Projectile : public GameObject
 {
 public:
@@ -14,6 +15,8 @@ public:
 	double GetTiming();
 	int GetID();
 protected:
+	SpriteSheet* sprites;
+	bool spriteFrame;
 	bool alive;
 	static int nextID;
 	int ID;

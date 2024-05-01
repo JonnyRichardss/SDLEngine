@@ -32,7 +32,11 @@ void Projectile::Init()
 
 void Projectile::InitVisuals()
 {
-	visuals->LoadTexture("Projectile", ".png");
+	spriteFrame = false;
+	delete visuals;
+	sprites = new SpriteSheet();
+	visuals = sprites;
+	sprites->InitSprites("Projectile", ".png");
 	SDL_Texture* Tex = visuals->GetTexture();
 	SDL_Rect DefaultRect = BBtoDestRect();
 	visuals->UpdateDestPos(&DefaultRect);
@@ -74,6 +78,10 @@ bool Projectile::Update()
 		//this very well may crash idk what happens if an object calls code that deletes it
 		scene->DeferredDeregister(this);
 		return false;
+	}
+	if (conductor->PollBeat()) {
+		spriteFrame = spriteFrame ? false : true;
+		sprites->SetSpriteIndex(spriteFrame);
 	}
 	return true;
 }

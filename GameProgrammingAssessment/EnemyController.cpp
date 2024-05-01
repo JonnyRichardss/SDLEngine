@@ -26,9 +26,13 @@ void EnemyController::Init()
 
 void EnemyController::InitVisuals()
 {
-	visuals->LoadTexture("boid", ".png");
+	spriteFrame = false;
+	delete visuals;
+	sprites = new SpriteSheet();
+	visuals = sprites;
+	sprites->InitSprites("enemy", ".png");
 	SDL_Texture* Tex = visuals->GetTexture();
-	SDL_SetTextureColorMod(Tex, 255, 0, 255);
+	//SDL_SetTextureColorMod(Tex, 255, 0, 255);
 	SDL_Rect DefaultRect = BBtoDestRect();
 	visuals->UpdateDestPos(&DefaultRect);
 	visuals->UpdateLayer(1);
@@ -40,7 +44,9 @@ bool EnemyController::Update()
 		GoalPosition = player->GetPos();
 		Vector2 offset = (GoalPosition - position);
 		position += offset.Normalise() * stepwidth;
-		facing = -Vector2::AngleBetweenRAD(Vector2::up(), offset);
+		facing = Vector2::AngleBetweenRAD(Vector2::up(), offset * -1);
+		spriteFrame = spriteFrame ? false : true;
+		sprites->SetSpriteIndex(spriteFrame);
 	}
 	//DoMovement(GoalPosition-position);
 	//SolidCollision();

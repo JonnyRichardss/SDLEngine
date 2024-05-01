@@ -1,6 +1,7 @@
 #ifndef USE_ENEMY
 #define USE_ENEMY
 #include "GameObject.h"
+#include "Spritesheet.h"
 class MeleeCollider; class Projectile; class PlayerController; //fwd def
 
 class EnemyController : public GameObject
@@ -10,6 +11,8 @@ public:
 	void Init();
 	void InitVisuals();
 protected:
+	SpriteSheet* sprites;
+	bool spriteFrame;
 	PlayerController* player;
 	Vector2 GoalPosition;
 	bool alive;
