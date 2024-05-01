@@ -17,6 +17,7 @@ protected:
 	
 	bool BonusModeActive,BonusModeApplied;
 	IntegerDisplay* score;
+	IntegerDisplay* TimeLeft;
 	std::vector<int> prevMelees;
 	std::vector<int> prevProjectiles;
 	bool Update();

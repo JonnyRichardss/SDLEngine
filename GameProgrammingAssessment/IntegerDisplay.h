@@ -11,6 +11,7 @@ public:
 	void SetValue(int newVal);
 	int GetValue();
 	void AddValue(int newVal);
+	void SetName(std::string newName);
 protected:
 	ColourRGBA colour;
 	std::string fontPath;

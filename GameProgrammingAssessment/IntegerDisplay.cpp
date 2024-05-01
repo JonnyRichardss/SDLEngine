@@ -42,6 +42,11 @@ void IntegerDisplay::AddValue(int newVal)
 	UpdateTexture();
 }
 
+void IntegerDisplay::SetName(std::string newName)
+{
+	name = newName;
+}
+
 bool IntegerDisplay::Update()
 {
 	return true;

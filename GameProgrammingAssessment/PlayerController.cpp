@@ -31,6 +31,9 @@ void PlayerController::Init()
 	score = new IntegerDisplay(Vector2(SCORE_POS_X, SCORE_POS_Y),"Score", SCORE_FONT_PATH, SCORE_FONT_PTSIZE);
 	score->SetValue(0);
 	scene->DeferredRegister(score);
+	TimeLeft = new IntegerDisplay(Vector2(SCORE_POS_X + 25, (SCORE_POS_Y + (3 * SCORE_FONT_PTSIZE))), "Time Left", SCORE_FONT_PATH, SCORE_FONT_PTSIZE);
+	TimeLeft->SetValue(0);
+	scene->DeferredRegister(TimeLeft);
 	GameTimer.Start();
 }
 
@@ -60,14 +63,18 @@ bool PlayerController::Update()
 		BonusModeActive = true;
 		logging->Log("Score threshold hit! Bonus time will activate!");
 	}
+	TimeLeft->SetValue(std::chrono::duration_cast<std::chrono::seconds>(60s - GameTimer.GetTimeElapsed()).count());
 	if (GameTimer.GetTimeElapsed() >= 60s) {
 		if (BonusModeActive) {
-			if (!BonusModeApplied) {
+			if (!BonusModeApplied) {//inital apply
 				health *= 100;
 				a1Damage *= 3;
 				a2Damage *= 3;
+				TimeLeft->SetName("Bonus Time");
 				//send out msgs
 			}
+			//do every time its active
+			TimeLeft->SetValue(std::chrono::duration_cast<std::chrono::seconds>(75s - GameTimer.GetTimeElapsed()).count());
 		}
 		else {
 			GameRunning = false;
