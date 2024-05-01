@@ -131,6 +131,7 @@
     <ClCompile Include="AudioEngine.cpp" />
     <ClCompile Include="BoidScene.cpp" />
     <ClCompile Include="CollisionTestScene.cpp" />
+    <ClCompile Include="EndScreen.cpp" />
     <ClCompile Include="EnemyController.cpp" />
     <ClCompile Include="EnemySpawner.cpp" />
     <ClCompile Include="EshopAnim.cpp" />
@@ -168,6 +169,7 @@
     </ClInclude>
     <ClInclude Include="CollisionTestScene.h" />
     <ClInclude Include="ColourRGBA.h" />
+    <ClInclude Include="EndScreen.h" />
     <ClInclude Include="EnemyController.h" />
     <ClInclude Include="EnemySpawner.h" />
     <ClInclude Include="EshopAnim.h" />

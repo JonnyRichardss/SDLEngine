@@ -6,6 +6,7 @@
 #include "GameScene.h"
 #include "IntegerDisplay.h"
 #include <chrono>
+#include "EndScreen.h"
 using namespace std::chrono_literals;
 //technically these could go in global flags but they will require iterating and i dont want to recomp the whole project every time
 
@@ -48,7 +49,7 @@ void PlayerController::InitVisuals()
 	SDL_Rect DefaultRect = BBtoDestRect();
 	visuals->UpdateDestPos(&DefaultRect);
 
-	visuals->UpdateLayer(10);
+	visuals->UpdateLayer(8);
 }
 
 void PlayerController::AddScore(int numToAdd)
@@ -58,8 +59,16 @@ void PlayerController::AddScore(int numToAdd)
 
 bool PlayerController::Update()
 {
+	HpDisplay->SetValue(health);
 	if (!GameRunning) {
-		//show end screen?
+		if (!endScreenShown) {
+			EndScreen* endScreen = new EndScreen();
+			scene->DeferredRegister(endScreen);
+			endScreenShown = true;
+			score->SetPos(Vector2::zero());
+			TimeLeft->Hide();
+			HpDisplay->Hide();
+		}
 		return true; 
 	}
 	if (score->GetValue() > BONUS_MODE_SCORE_THRESHOLD && !BonusModeActive) {
@@ -68,7 +77,6 @@ bool PlayerController::Update()
 		logging->Log("Score threshold hit! Bonus time will activate!");
 	}
 	TimeLeft->SetValue(std::chrono::duration_cast<std::chrono::seconds>(60s - GameTimer.GetTimeElapsed()).count());
-	HpDisplay->SetValue(health);
 	if (GameTimer.GetTimeElapsed() >= 60s) {
 		if (BonusModeActive) {
 			if (!BonusModeApplied) {//inital apply

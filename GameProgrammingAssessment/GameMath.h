@@ -87,6 +87,10 @@ struct Vector2 {
         Vector2 newPos = RotateAroundOrigin(translated,angleRAD);
         return newPos + centre;
     }
+    static Vector2 Lerp(Vector2 a, Vector2 b,float fac) {
+        Vector2 offset = b - a;
+        return a + (offset)*fac;
+    }
     float GetMagnitude() {
         return sqrt(pow(x, 2) + pow(y, 2));
     }

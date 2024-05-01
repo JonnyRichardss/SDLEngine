@@ -12,10 +12,10 @@ MainScene::~MainScene()
 	Unload();
 }
 void MainScene::CreateSpawners(GameObject* player) {
-	std::vector<Vector2> positions = {{-GAME_MAX_X,0},{GAME_MAX_X,0},{0,-GAME_MAX_Y},{0,GAME_MAX_Y}};
-
-	for (Vector2 p : positions) {
-		UpdateQueue.push_back(new EnemySpawner(p,player));
+	std::vector<Vector2> positionsMins = {{-GAME_MAX_X,-GAME_MAX_Y},{GAME_MAX_X,-GAME_MAX_Y},{-GAME_MAX_X,-GAME_MAX_Y},{-GAME_MAX_X,GAME_MAX_Y}};
+	std::vector<Vector2> positionsMaxs = { {-GAME_MAX_X,GAME_MAX_Y},{GAME_MAX_X,GAME_MAX_Y},{GAME_MAX_X,-GAME_MAX_Y},{GAME_MAX_X,GAME_MAX_Y} };
+	for (int i = 0; i < positionsMaxs.size();i++) {
+		UpdateQueue.push_back(new EnemySpawner(positionsMaxs[i],positionsMins[i], player));
 	}
 }
 void MainScene::CreateObjects()

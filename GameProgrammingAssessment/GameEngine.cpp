@@ -139,7 +139,7 @@ void GameEngine::GameLoop() {
         clock->TickProfiling(PROFILING_STARTFRAME);
         input->PollInput();
         ProcessEvents();
-
+        if (ENGINE_QUIT_FLAG) break; //prevents the final update after quit
         clock->TickProfiling(PROFILING_INPUT);
         ActiveScene->Update();
         FPSUpdate();

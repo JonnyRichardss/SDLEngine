@@ -5,13 +5,15 @@ class PlayerController;
 class EnemySpawner : public GameObject
 {
 public:
-	EnemySpawner(Vector2 pos,GameObject* _player);
+	EnemySpawner(Vector2 _posMax,Vector2 _posMin,GameObject* _player);
 	void Init();
 	void InitVisuals();
 protected:
+	Vector2 posMin, posMax;
 	bool Update();
+	void Teleport();
 	PlayerController* player;
-	bool OddBeat;
+	int BeatCounter;
 	int SpawnCount;
 };
 #endif // !USE_ENEMYSPAWNER

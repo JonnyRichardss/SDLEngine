@@ -42,6 +42,11 @@ void IntegerDisplay::AddValue(int newVal)
 	UpdateTexture();
 }
 
+void IntegerDisplay::SetPos(Vector2 newPos)
+{
+	position = newPos;
+}
+
 void IntegerDisplay::SetName(std::string newName)
 {
 	name = newName;

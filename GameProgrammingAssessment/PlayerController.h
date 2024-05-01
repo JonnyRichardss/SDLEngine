@@ -16,7 +16,7 @@ protected:
 	float health;
 	Timer GameTimer;
 	int iFrames;
-	
+	bool endScreenShown;
 	IntegerDisplay* score;
 	IntegerDisplay* TimeLeft;
 	IntegerDisplay* HpDisplay;
