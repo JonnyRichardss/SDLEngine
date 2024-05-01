@@ -1,7 +1,7 @@
 #include "Projectile.h"
 #include "GameScene.h"
 int Projectile::nextID = 0;
-Projectile::Projectile(GameObject* _parent, std::string _name, float _speed, float size, float lifetimeSeconds, float _damage)
+Projectile::Projectile(GameObject* _parent, std::string _name, float _speed, float size, float lifetimeSeconds, float _damage,double _timing)
 {
 	parent = _parent;
 	name = _name;
@@ -15,6 +15,10 @@ Projectile::Projectile(GameObject* _parent, std::string _name, float _speed, flo
 	lifetime = FRAME_CAP * lifetimeSeconds;
 	damage = _damage;
 	ID = nextID++;
+	if (_timing > MS_PER_BEAT / 2.0) {
+		_timing = MS_PER_BEAT - _timing;
+	}
+	timing = _timing;
 }
 
 void Projectile::Init()
@@ -52,6 +56,11 @@ GameObject* Projectile::GetParent()
 float Projectile::GetDamage()
 {
 	return damage;
+}
+
+double Projectile::GetTiming()
+{
+	return timing;
 }
 
 int Projectile::GetID()

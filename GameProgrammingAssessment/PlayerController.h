@@ -7,6 +7,7 @@ class PlayerController : public GameObject
 public:
 	void Init();
 	void InitVisuals();
+	void AddScore(int numToAdd);
 protected:
 	bool alive;
 	float health;

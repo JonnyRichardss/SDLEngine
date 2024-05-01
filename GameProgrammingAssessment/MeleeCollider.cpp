@@ -1,7 +1,7 @@
 #include "MeleeCollider.h"
 #include "GameScene.h"
 int MeleeCollider::nextID = 0;
-MeleeCollider::MeleeCollider(GameObject* _parent,std::string _name,float _offset, int w, int h, float lifetimeSeconds,float _damage)
+MeleeCollider::MeleeCollider(GameObject* _parent,std::string _name,float _offset, int w, int h, float lifetimeSeconds,float _damage,double _timing)
 {
 	parent = _parent;
 	name = _name;
@@ -12,6 +12,10 @@ MeleeCollider::MeleeCollider(GameObject* _parent,std::string _name,float _offset
 	lifetime = FRAME_CAP * lifetimeSeconds;
 	damage = _damage;
 	ID = nextID++;
+	if (_timing > MS_PER_BEAT / 2.0) {
+		_timing = MS_PER_BEAT - _timing;
+	}
+	timing = _timing;
 }
 
 void MeleeCollider::Init()
@@ -45,6 +49,11 @@ int MeleeCollider::GetID()
 {
 	//ID is used by the damage receiver to check if it has already taken damage from this attack
 	return ID;
+}
+
+double MeleeCollider::GetTiming()
+{
+	return timing;
 }
 
 bool MeleeCollider::Update()

@@ -1,6 +1,7 @@
 #ifndef USE_ENEMY
 #define USE_ENEMY
 #include "GameObject.h"
+class MeleeCollider; class Projectile; class PlayerController; //fwd def
 namespace EnemyTypes {
 	enum Type {ALPHA,BRAVO,CHARLIE};
 }
@@ -11,7 +12,7 @@ public:
 	void Init();
 	void InitVisuals();
 protected:
-	GameObject* target;
+	PlayerController* player;
 	Vector2 GoalPosition;
 	EnemyTypes::Type type;
 	bool alive;
@@ -25,6 +26,9 @@ protected:
 	void CheckMeleeDamage();
 	void CheckProjectileDamage();
 	void TakeDamage(float damage);
+	void AddScore(MeleeCollider* collider);
+	void AddScore(Projectile* collider);
+	void AddScore(float damage, double timing);
 };
 #endif // !USE_ENEMY
 

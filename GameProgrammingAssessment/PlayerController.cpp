@@ -44,6 +44,11 @@ void PlayerController::InitVisuals()
 	visuals->UpdateLayer(10);
 }
 
+void PlayerController::AddScore(int numToAdd)
+{
+	score->AddValue(numToAdd);
+}
+
 bool PlayerController::Update()
 {
 	Vector2 MoveVector;
@@ -129,36 +134,40 @@ void PlayerController::ActionInput(InputActions::Action action, bool& scheduled,
 	bool inputUsed = input->GetActionState(action);
 	if (!inputUsed) return;
 
-	if (comboCounter >= 0 && comboCounter < maxCombo) {
-		if (scheduled) {
-			logging->DebugLog("Action already scheduled! Skipping!");
-			return;
-		}
-		timing = input->GetActionTiming(action);
-		if (conductor->PollBeat()) {
-			logging->DebugLog("Action perfectly timed! Scheduling for this beat!");
-			scheduled = true;
-		}
-		else if (timing > MS_PER_BEAT * ((TIMING_LENIENCY - 1) / TIMING_LENIENCY)) {
-			logging->DebugLog("Action early! Scheduling for next beat!");
-			scheduled = true;
-		}
-		else if (timing < MS_PER_BEAT / TIMING_LENIENCY) {
-			if (!used) {
-				logging->DebugLog("Action late! Performing immediately!");
-				DoAction(action);
-			}
-			else {
-				logging->DebugLog("Duplicate late action for beat! Skipping!");
-			}
+	if (!(comboCounter >= 0) && !(comboCounter < maxCombo)) {
+		logging->DebugLog("Action combo expired! Skipping!");
+		return;
+	}
+	if (scheduled) {
+		logging->DebugLog("Action already scheduled! Skipping!");
+		return;
+	}
+
+	double timingTemp = input->GetActionTiming(action);
+	if (conductor->PollBeat()) {
+		logging->DebugLog("Action perfectly timed! Scheduling for this beat!");
+		scheduled = true;
+		timing = timingTemp;
+	}
+	else if (timingTemp > MS_PER_BEAT * ((TIMING_LENIENCY - 1) / TIMING_LENIENCY)) {
+		logging->DebugLog("Action early! Scheduling for next beat!");
+		scheduled = true;
+		timing = timingTemp;
+	}
+	else if (timingTemp < MS_PER_BEAT / TIMING_LENIENCY) {
+		if (!used) {
+			logging->DebugLog("Action late! Performing immediately!");
+			DoAction(action);
+			timing = timingTemp;
 		}
 		else {
-			logging->DebugLog("Action out of time! Cancelling!");
+			logging->DebugLog("Duplicate late action for beat! Skipping!");
 		}
 	}
 	else {
-		logging->DebugLog("Action combo expired! Skipping!");
+		logging->DebugLog("Action out of time! Cancelling!");
 	}
+
 
 }
 
@@ -207,8 +216,8 @@ void PlayerController::DoAttack1()
 			return;
 		case 1:
 			logging->DebugLog("Attack1 landing!");
-			{	MeleeCollider* atk = new MeleeCollider(this, "Player Light Attack", TEST_COLLIDER_SIZE, 90, 40, 0.2, 10);
-				scene->DeferredRegister(atk); }
+			{MeleeCollider* atk = new MeleeCollider(this, "Player Light Attack", TEST_COLLIDER_SIZE, 90, 40, 0.2, 10, a1Timing);
+			scene->DeferredRegister(atk); }
 			a1Scheduled = false;
 			audio->PlaySound(2);
 			a1Beats = 0;
@@ -222,7 +231,7 @@ void PlayerController::DoAttack1()
 void PlayerController::DoAttack2() {
 	a2Used = true;
 	logging->DebugLog("Attack2  " + std::to_string(a2Timing));
-	Projectile* atk2 = new Projectile(this, "Player Projectile", 3, TEST_COLLIDER_SIZE, 5, 0);
+	Projectile* atk2 = new Projectile(this, "Player Projectile", 3, TEST_COLLIDER_SIZE, 5, 0,a2Timing);
 	scene->DeferredRegister(atk2);
 	a2Scheduled = false;
 	audio->PlaySound(2);

@@ -2,16 +2,22 @@
 #include "MeleeCollider.h"
 #include "Projectile.h"
 #include "GameScene.h"
-EnemyController::EnemyController(GameObject* _target, EnemyTypes::Type _enemyType, Vector2 _pos)
+#include "PlayerController.h"
+EnemyController::EnemyController(GameObject* _player, EnemyTypes::Type _enemyType, Vector2 _pos)
 {
-	target = _target;
+
 	type = _enemyType;
 	position = _pos;
+	alive = true;
+	player = dynamic_cast<PlayerController*>(_player);
+	if (player == nullptr) {
+		logging->Log("Enemy Given non-player reference for player!");
+		alive = false;
+	}
 }
 void EnemyController::Init()
 {
 	shown = true;
-	alive = true;
 	BoundingBox = { 20,20 };
 	collisionTags.push_back("Enemy");
 	collisionTags.push_back("Solid");
@@ -19,7 +25,7 @@ void EnemyController::Init()
 	deceleration = 0.1;//relying on just base friction
 	maxSpeed = ENEMY_SPEED;
 	
-	GoalPosition = target->GetPos();
+	GoalPosition = player->GetPos();
 }
 
 void EnemyController::InitVisuals()
@@ -35,7 +41,7 @@ static float stepwidth = 50;
 bool EnemyController::Update()
 {
 	if (conductor->PollBeat()) {
-		GoalPosition = target->GetPos();
+		GoalPosition = player->GetPos();
 		Vector2 offset = (GoalPosition - position);
 		position += offset.Normalise() * stepwidth;
 		facing = -Vector2::AngleBetweenRAD(Vector2::up(), offset);
@@ -81,6 +87,7 @@ void EnemyController::CheckMeleeDamage()
 		if (!(IsIDUsed(prevMelees, id))) {
 			prevMelees.push_back(id);
 			TakeDamage(collider->GetDamage());
+			AddScore(collider);
 		}
 	}
 }
@@ -99,6 +106,7 @@ void EnemyController::CheckProjectileDamage()
 		if (!(IsIDUsed(prevProjectiles, id))) {
 			prevProjectiles.push_back(id);
 			TakeDamage(collider->GetDamage());
+			AddScore(collider);
 			collider->HasHit();
 		}
 	}
@@ -109,4 +117,20 @@ void EnemyController::TakeDamage(float damage)
 	health -= damage;
 	if (health <= 0) alive = false;//die
 	logging->DebugLog("Enemy damage taken - new health: " + std::to_string(health));
+}
+
+void EnemyController::AddScore(MeleeCollider* collider)
+{
+	AddScore(collider->GetDamage(), collider->GetTiming());
+}
+
+void EnemyController::AddScore(Projectile* collider)
+{
+	AddScore(collider->GetDamage(), collider->GetTiming());
+}
+
+void EnemyController::AddScore(float damage, double timing)
+{
+	double ScoreMult = MS_PER_BEAT / (4.0 * timing);
+	player->AddScore(ScoreMult * damage);
 }
