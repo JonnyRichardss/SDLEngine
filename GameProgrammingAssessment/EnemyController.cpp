@@ -1,6 +1,7 @@
 #include "EnemyController.h"
 #include "MeleeCollider.h"
 #include "Projectile.h"
+#include "GameScene.h"
 EnemyController::EnemyController(GameObject* _target, EnemyTypes::Type _enemyType, Vector2 _pos)
 {
 	target = _target;
@@ -55,7 +56,7 @@ bool EnemyController::IsIDUsed(std::vector<int>& vec, int ID)
 void EnemyController::DeathCheck()
 {
 	if (!alive) {
-		//dostuff
+		scene->DeferredDeregister(this);
 	}
 }
 void EnemyController::CheckDamage()

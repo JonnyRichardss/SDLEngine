@@ -148,6 +148,7 @@
     <ClCompile Include="GameRNG.cpp" />
     <ClCompile Include="MainScene.cpp" />
     <ClCompile Include="MeleeCollider.cpp" />
+    <ClCompile Include="IntegerDisplay.cpp" />
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="RenderableComponent.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="MainScene.h" />
     <ClInclude Include="MeleeCollider.h" />
+    <ClInclude Include="IntegerDisplay.h" />
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="RenderableComponent.h" />

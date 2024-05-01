@@ -80,9 +80,9 @@ void GameScene::MoveStatics()
 void GameScene::RegisterObject(GameObject* obj)
 {
     UpdateQueue.push_back(obj);
+    obj->SetOwner(this);
     obj->Init();
     obj->InitVisuals();
-    obj->SetOwner(this);
     logging->FileLog("Scene " + name + ": registered object: "+obj->GetName());
 }
 

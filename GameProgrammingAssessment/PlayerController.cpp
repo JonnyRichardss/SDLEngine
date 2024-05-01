@@ -4,14 +4,16 @@
 #include "MeleeCollider.h"
 #include "Projectile.h"
 #include "GameScene.h"
+#include "IntegerDisplay.h"
 #include <chrono>
 using namespace std::chrono_literals;
 //technically these could go in global flags but they will require iterating and i dont want to recomp the whole project every time
 
 
-static Timer timer;
+
 void PlayerController::Init()
 {
+	
 	alive = true;
 	position = Vector2(0, 100);
 	name = "Player";
@@ -25,9 +27,10 @@ void PlayerController::Init()
 	a1Combo = a2Combo = dashCombo = 0;
 	acceleration = 1;
 	deceleration = 0.25;
-	
 	maxSpeed = PLAYER_SPEED;
-	timer.Start();
+	score = new IntegerDisplay(Vector2(SCORE_POS_X, SCORE_POS_Y),"Score", SCORE_FONT_PATH, SCORE_FONT_PTSIZE);
+	score->SetValue(0);
+	scene->DeferredRegister(score);
 	
 }
 

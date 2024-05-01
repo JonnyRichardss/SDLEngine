@@ -1,6 +1,7 @@
 #ifndef USE_PLAYERCONTROLLER
 #define USE_PLAYERCONTROLLER
 #include "GameObject.h"
+class IntegerDisplay;
 class PlayerController : public GameObject
 {
 public:
@@ -9,6 +10,7 @@ public:
 protected:
 	bool alive;
 	float health;
+	IntegerDisplay* score;
 	std::vector<int> prevMelees;
 	std::vector<int> prevProjectiles;
 	bool Update();

@@ -20,6 +20,12 @@ static const char* LOGFILE_NAME = "latest.log";
 static const char* BASE_ASSET_PATH = "Assets/";
 static const char* SPRITE_INFO_FORMAT = ".spritedims";
 
+static const char* SCORE_FONT_PATH = "Assets/cour.ttf";
+constexpr int SCORE_FONT_PTSIZE = 18;
+constexpr int SCORE_POS_X = -700;
+constexpr int SCORE_POS_Y = -400;
+
+
 constexpr bool DEBUG_DRAW_MELEES = true;
 constexpr bool DEBUG_DRAW_BB = false; 
 constexpr bool DEBUG_EXTRA_LOGGING = true; //designed for when using print debugging so I can (possibly) leave the logs in
