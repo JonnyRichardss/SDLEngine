@@ -1,6 +1,7 @@
 #ifndef USE_PLAYERCONTROLLER
 #define USE_PLAYERCONTROLLER
 #include "GameObject.h"
+#include "Spritesheet.h"
 #include "Timer.h"
 class IntegerDisplay;
 class PlayerController : public GameObject
@@ -12,6 +13,9 @@ public:
 	bool GameRunning;
 	bool BonusModeActive, BonusModeApplied;
 protected:
+	SpriteSheet* sprites;
+	bool moving;
+	bool walkFrame,idleFrame;
 	bool alive;
 	float health;
 	Timer GameTimer;

@@ -6,6 +6,7 @@
 #include "Projectile.h"
 #include "GameScene.h"
 #include "IntegerDisplay.h"
+
 #include <chrono>
 #include "EndScreen.h"
 using namespace std::chrono_literals;
@@ -26,6 +27,7 @@ void PlayerController::Init()
 	shown = true;
 	is_static = false;
 	a1Scheduled = a2Scheduled = dashScheduled = false;
+	idleFrame = walkFrame = false;
 	a1Timing = a2Timing = dashTiming = 0;
 	a1Combo = a2Combo = dashCombo = 0;
 	acceleration = 1;
@@ -45,7 +47,10 @@ void PlayerController::Init()
 
 void PlayerController::InitVisuals()
 {
-	visuals->LoadTexture("boid", ".png");
+	delete visuals;
+	sprites = new SpriteSheet();
+	visuals = sprites;//visuals is set to sprites so it renders out as that -- i have to access the spritesheet through sprites
+	sprites->InitSprites("player", ".png");
 	SDL_Texture* Tex = visuals->GetTexture();
 	SDL_Rect DefaultRect = BBtoDestRect();
 	visuals->UpdateDestPos(&DefaultRect);
@@ -106,14 +111,31 @@ bool PlayerController::Update()
 	//movement
 	facing = mouseDirFacing;
 	DoMovement(MoveVector);
-
+	moving = MoveVector.GetMagnitude() > 0;
 	//actions for on beat
 	if (conductor->PollBeat()) {
 		offBeatPassed = false;
 		logging->DebugLog("Beat "+std::to_string(conductor->GetBeat()));
-		ToggleColour();
+		//ToggleColour();
 		audio->PlaySound(0);
 		DoBeatAttacks();
+		if (!moving) {
+			idleFrame = idleFrame ? false : true;
+			sprites->SetSpriteIndex(idleFrame);
+		}
+		else {
+			walkFrame = walkFrame ? false : true;
+			sprites->SetSpriteIndex(walkFrame + 2);
+		}
+	/*	int currentSprite = sprites->GetSpriteIndex();
+		if (currentSprite == sprites->GetSpriteIndexMax()) {
+			sprites->SetSpriteIndex(0);
+		}
+		else {
+			sprites->SetSpriteIndex(++currentSprite);
+		}*/
+
+
 	}
 	else if (conductor->GetInputTiming() > MS_PER_BEAT / 2.0 && !offBeatPassed) {
 		ResetCombos();
