@@ -16,6 +16,7 @@ void GameScene::Init()
 {
     std::string logString ="Scene " +name+ ": registered objects: ";
     for (GameObject* obj : UpdateQueue) {
+        obj->SetOwner(this);
         obj->Init();
         obj->InitVisuals();
         logString.append(obj->GetName()+", ");

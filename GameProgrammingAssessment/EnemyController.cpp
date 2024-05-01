@@ -5,7 +5,7 @@
 #include "PlayerController.h"
 EnemyController::EnemyController(GameObject* _player, EnemyTypes::Type _enemyType, Vector2 _pos)
 {
-
+	name = "enemy";
 	type = _enemyType;
 	position = _pos;
 	alive = true;

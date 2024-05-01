@@ -24,9 +24,9 @@ void MainScene::CreateObjects()
 {
 	//CreateWalls();
 	PlayerController* player = new PlayerController();
-	RegisterObject(player);
+	UpdateQueue.push_back(player);
 	EnemyController* enemy = new EnemyController(player,EnemyTypes::BRAVO,{0,0});
-	RegisterObject(enemy);
+	UpdateQueue.push_back(enemy);
 }
 
 void MainScene::PreUpdate()
