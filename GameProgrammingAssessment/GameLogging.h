@@ -12,11 +12,13 @@ public:
 	void FileLog(std::string logText);
 	void DebugLog(std::string logText);
 	void ToggleConsoleLog();
+	void ToggleDebugLog();
 	void SaveLogFile();
 private:
 	GameLogging();
 	~GameLogging();
 	bool consoleLogEnabled=CONSOLE_LOG_DEFAULT;
+	bool showDebugLogs = DEBUG_EXTRA_LOGGING;
 	bool fileExists=false;
 	std::string LogPath;
 	std::vector<std::string> logBuffer;

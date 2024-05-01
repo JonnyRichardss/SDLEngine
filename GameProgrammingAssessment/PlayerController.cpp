@@ -110,7 +110,7 @@ bool PlayerController::Update()
 	//actions for on beat
 	if (conductor->PollBeat()) {
 		offBeatPassed = false;
-		logging->DebugLog(std::to_string(conductor->GetBeat()));
+		logging->DebugLog("Beat "+std::to_string(conductor->GetBeat()));
 		ToggleColour();
 		audio->PlaySound(0);
 		DoBeatAttacks();

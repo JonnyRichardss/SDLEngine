@@ -44,7 +44,7 @@ void GameLogging::FileLog(std::string logText)
     }
 }
 void GameLogging::DebugLog(std::string logText) {
-    if (DEBUG_EXTRA_LOGGING) {
+    if (showDebugLogs) {
         Log(logText);
     }
 }
@@ -53,6 +53,12 @@ void GameLogging::ToggleConsoleLog()
 {
     consoleLogEnabled = consoleLogEnabled ? false : true;
     std::cout << "Console logging " << (consoleLogEnabled ? "enabled" : "disabled") << "!\n";
+}
+
+void GameLogging::ToggleDebugLog()
+{
+    showDebugLogs = showDebugLogs ? false : true;
+    std::cout << "Extra logging " << (showDebugLogs ? "enabled" : "disabled") << "!\n";
 }
 
 void GameLogging::SaveLogFile()

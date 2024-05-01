@@ -39,7 +39,7 @@ void GameClock::Tick()
 	EnforceLimit();
 	frametime_ns = TimeSinceLastFrame();
 	last_frame_tp = std::chrono::high_resolution_clock::now();
-	if (DEBUG_FRAMETIME_LOG) {
+	if (showFrametimes) {
 		std::string logString = "Frame ";
 		logString.append(std::to_string(GetFrameCount()) + " - ");
 		logString.append(std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(frameProcessTime).count()) + "ms - ");
@@ -47,7 +47,7 @@ void GameClock::Tick()
 		logString.append(std::to_string((int)(GetBudgetPercent())) + "% ");
 
 		logging->Log(logString);
-		if (DEBUG_DO_PROFILING) {
+		if (showProfiling) {
 			std::string profileLog = "Profiling:\n";
 			profileLog.append("INPUT - " + std::to_string(std::chrono::duration_cast<std::chrono::microseconds>(input_tp - frame_start_tp).count()) + "\u00B5s\n");
 			profileLog.append("UPDATE - " + std::to_string(std::chrono::duration_cast<std::chrono::microseconds>(update_tp - input_tp).count()) + "\u00B5s\n");
@@ -95,7 +95,7 @@ int GameClock::GetFPS()
 
 void GameClock::TickProfiling(ProfilerPhases phase)
 {
-	if (!DEBUG_DO_PROFILING)
+	if (!showProfiling)
 		return;
 	auto TP = std::chrono::high_resolution_clock::now();
 	switch (phase) {
@@ -127,6 +127,20 @@ std::chrono::high_resolution_clock::time_point GameClock::SDLToTimePoint(int tim
 	else {
 		return ENGINE_START_TP + std::chrono::milliseconds(timestamp);
 	}
+}
+
+void GameClock::ToggleFrametimes()
+{
+	showFrametimes = showFrametimes ? false : true;
+	std::string temp = (showFrametimes ? "enabled" : "disabled");
+	logging->Log("Frametime Logging " + temp + "!\n");
+}
+
+void GameClock::ToggleProfiling()
+{
+	showProfiling = showProfiling ? false : true;
+	std::string temp = (showProfiling ? "enabled" : "disabled");
+	logging->Log("Profiling " + temp + "!\n");
 }
 
 void GameClock::SetFPSLimit(int newLimit)

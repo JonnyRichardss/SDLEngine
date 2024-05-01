@@ -16,10 +16,13 @@ public:
 	int GetFPS();
 	void TickProfiling(ProfilerPhases phase);
 	std::chrono::high_resolution_clock::time_point SDLToTimePoint(int timestamp);
+	void ToggleFrametimes();
+	void ToggleProfiling();
 private:
 	GameClock();
 	~GameClock();
-	
+	bool showFrametimes = DEBUG_FRAMETIME_LOG;
+	bool showProfiling = DEBUG_DO_PROFILING;
 	GameLogging* logging;
 	const double MS_offset_SDL;
 	const std::chrono::high_resolution_clock::time_point ENGINE_START_TP;

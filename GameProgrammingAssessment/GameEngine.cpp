@@ -109,11 +109,20 @@ void GameEngine::ProcessEvents()
                 ENGINE_QUIT_FLAG = true;
                 logging->Log("Recieved ESC input");
                 break;
-            case SDLK_F8:
+            case SDLK_F2:
                 FPS->ToggleVisibility();
                 break;
-            case SDLK_F4:
-                audio->ToggleTrack();
+            case SDLK_F7:
+                clock->ToggleFrametimes();
+                break;
+            case SDLK_F8:
+                clock->ToggleProfiling();
+                break;
+            case SDLK_F9:
+                logging->ToggleDebugLog();
+                break;
+            case SDLK_F10:
+                logging->ToggleConsoleLog();
                 break;
             case SDLK_SPACE:
                 input->HandleEvent(event);

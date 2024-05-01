@@ -30,7 +30,7 @@ constexpr int BONUS_MODE_SCORE_THRESHOLD = 10;
 
 constexpr bool DEBUG_DRAW_MELEES = true;
 constexpr bool DEBUG_DRAW_BB = false; 
-constexpr bool DEBUG_EXTRA_LOGGING = true; //designed for when using print debugging so I can (possibly) leave the logs in
+constexpr bool DEBUG_EXTRA_LOGGING = false; //designed for when using print debugging so I can (possibly) leave the logs in
 constexpr bool DEBUG_FRAMETIME_LOG = false;//also disables profiling if its on or not
 		constexpr bool DEBUG_DO_PROFILING = false;
 
