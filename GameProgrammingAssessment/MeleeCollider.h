@@ -1,6 +1,7 @@
 #ifndef USE_MELEEBOX
 #define USE_MELEEBOX
 #include "GameObject.h"
+#include "Spritesheet.h"
 class MeleeCollider : public GameObject
 {
 public:
@@ -12,6 +13,8 @@ public:
 	int GetID();
 	double GetTiming();
 protected:
+	SpriteSheet* sprites;
+	int spriteFrame;
 	double timing;
 	static int nextID;
 	int ID;

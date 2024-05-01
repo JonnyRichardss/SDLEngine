@@ -21,7 +21,7 @@ MeleeCollider::MeleeCollider(GameObject* _parent,std::string _name,float _offset
 void MeleeCollider::Init()
 {
 	collisionTags.push_back("MeleeAttack");
-	shown = false;
+	shown = true;
 }
 
 void MeleeCollider::InitVisuals()
@@ -31,7 +31,17 @@ void MeleeCollider::InitVisuals()
 		SDL_Texture* Tex = visuals->GetTexture();
 		SDL_Rect DefaultRect = BBtoDestRect();
 		visuals->UpdateDestPos(&DefaultRect);
-		shown = true;
+	}
+	else {
+		
+		spriteFrame = 0;
+		delete visuals;
+		sprites = new SpriteSheet();
+		visuals = sprites;
+		sprites->InitSprites("playerattack", ".png");
+		SDL_Texture* Tex = visuals->GetTexture();
+		SDL_Rect DefaultRect = BBtoDestRect();
+		visuals->UpdateDestPos(&DefaultRect);
 	}
 }
 
@@ -66,6 +76,12 @@ bool MeleeCollider::Update()
 		return false;
 	}
 	//else exist
+	if (spriteFrame < sprites->GetSpriteIndexMax()) {
+		sprites->SetSpriteIndex(spriteFrame++);
+	}
+	else {
+		shown = false;
+	}
 	facing = parent->GetFacing();
 	Vector2 offsetVec = Vector2::RotateAroundOrigin(Vector2::up(), facing) * offset;
 	position = parent->GetPos() - offsetVec;
