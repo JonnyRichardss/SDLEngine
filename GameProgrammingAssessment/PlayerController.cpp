@@ -114,6 +114,7 @@ bool PlayerController::Update()
 	//movement
 	facing = mouseDirFacing;
 	DoMovement(MoveVector);
+	EnforceScreenBoundary();
 	moving = MoveVector.GetMagnitude() > 0;
 	//actions for on beat
 	if (conductor->PollBeat()) {
@@ -147,6 +148,13 @@ bool PlayerController::Update()
 
 	CheckDamage();
 	return true;
+}
+void PlayerController::EnforceScreenBoundary()
+{
+	if (position.x > GAME_MAX_X-10) position.x = GAME_MAX_X-10;
+	if (position.x < 10-GAME_MAX_X) position.x = 10-GAME_MAX_X;
+	if (position.y > GAME_MAX_Y-10) position.y = GAME_MAX_Y-10;
+	if (position.y < 10-GAME_MAX_Y) position.y = 10-GAME_MAX_Y;
 }
 void PlayerController::ShowEndScreen()
 {

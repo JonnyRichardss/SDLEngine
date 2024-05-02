@@ -27,6 +27,7 @@ protected:
 	std::vector<int> prevMelees;
 	std::vector<int> prevProjectiles;
 	bool Update();
+	void EnforceScreenBoundary();
 	void ShowEndScreen();
 	void GetInput(Vector2& MoveVector, Vector2& mousePos);
 	void DecrementIFrames();

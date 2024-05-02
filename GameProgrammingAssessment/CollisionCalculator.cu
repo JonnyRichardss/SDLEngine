@@ -58,6 +58,7 @@ __device__ inline bool SATCheck(GameObjectCUDA* object, GameObjectCUDA* other,fl
 	//TRUE IS A COLLISION
 	//Last step -- implement actual alg
 	//we are assuming boxes so we only need up normal and right normal for both
+	//i added all of them in when debugging but i dont think they are needed
 	float2 normals[8];
 	normals[0] = CalcNormalAxis(object->points[0], object->points[1]);
 	normals[1] = CalcNormalAxis(object->points[1], object->points[3]);

@@ -26,7 +26,7 @@ constexpr int SCORE_FONT_PTSIZE = 18;
 constexpr int SCORE_POS_X = -700;
 constexpr int SCORE_POS_Y = -400;
 
-constexpr int BONUS_MODE_SCORE_THRESHOLD = 10;
+constexpr int BONUS_MODE_SCORE_THRESHOLD = 5000;
 
 constexpr bool DEBUG_DRAW_MELEES = false;
 constexpr bool DEBUG_DRAW_BB = false; 

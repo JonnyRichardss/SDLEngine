@@ -24,6 +24,7 @@ void BoidScene::CreateObjects()
 		boid->SetOwner(this);
 		boid->SetName(i);
 	}
+	UpdateQueue.push_back(new TextDisplay("Welcome to: \nBrian vs Some Dudes", { 0,-325 }, SCORE_FONT_PATH, 32, 4));
 	UpdateQueue.push_back(new TextDisplay("Controls:\nWASD - move\nMouse 1 - Melee Attack\nMouse 2 - Projectile Attack\nMouse Pointer - Aim\nESC - Exit", { -580,0 }, SCORE_FONT_PATH, 4,8));
 }
 
