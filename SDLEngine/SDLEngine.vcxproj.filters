@@ -104,9 +104,6 @@
     <ClCompile Include="Engine\Timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SDLEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\CollisionCalculator.cu" />

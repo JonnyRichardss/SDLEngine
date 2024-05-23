@@ -184,7 +184,6 @@
     <ClCompile Include="Engine\RenderEngine.cpp" />
     <ClCompile Include="Engine\SpriteSheet.cpp" />
     <ClCompile Include="Engine\Timer.cpp" />
-    <ClCompile Include="SDLEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\CollisionCalculator.cu" />

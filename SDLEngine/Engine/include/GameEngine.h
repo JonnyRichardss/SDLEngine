@@ -13,7 +13,7 @@
 #include "AudioEngine.h"
 //#include "InputHandler.h" TODO!
 #include <vector>
-class __declspec(dllexport) GameEngine
+class GameEngine
 {
 public:
 	static GameEngine* GetInstance();
