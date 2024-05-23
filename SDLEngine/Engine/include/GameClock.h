@@ -21,8 +21,8 @@ public:
 private:
 	GameClock();
 	~GameClock();
-	bool showFrametimes = DEBUG_FRAMETIME_LOG;
-	bool showProfiling = DEBUG_DO_PROFILING;
+	bool showFrametimes = false; // TODO!
+	bool showProfiling = false;// TODO!
 	GameLogging* logging;
 	const double MS_offset_SDL;
 	const std::chrono::high_resolution_clock::time_point ENGINE_START_TP;

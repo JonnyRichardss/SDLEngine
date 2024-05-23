@@ -1,18 +1,19 @@
 #ifndef USE_ENGINE
 #define USE_ENGINE
+
 #include "SDL.h"
 #include "GameClock.h"
 #include "RenderEngine.h"
 #include "GameObject.h"
 #include "FPSCounter.h"
-#include "Global_Flags.h"
+//#include "Global_Flags.h" TODO!
 #include "GameLogging.h"
 #include "GameScene.h"
-#include "GameConductor.h"
+//#include "GameConductor.h" TODO!
 #include "AudioEngine.h"
-#include "InputHandler.h"
+//#include "InputHandler.h" TODO!
 #include <vector>
-class GameEngine
+class __declspec(dllexport) GameEngine
 {
 public:
 	static GameEngine* GetInstance();
@@ -24,11 +25,11 @@ private:
 	GameLogging* logging;
 	RenderEngine* renderer;
 	AudioEngine* audio;
-	GameConductor* conductor;
+	//GameConductor* conductor;  TODO!
 	GameClock* clock;
 	FPSCounter* FPS;
 	GameScene* ActiveScene;
-	InputHandler* input;
+	//InputHandler* input; TODO!
 	std::vector<GameScene*> AllScenes;
 	void CreateScenes();
 	void SwitchScene(int SceneIndex);

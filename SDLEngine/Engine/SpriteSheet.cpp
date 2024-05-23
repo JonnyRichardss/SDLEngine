@@ -2,6 +2,7 @@
 #include "SDL_image.h"
 #include "RenderEngine.h"
 #include "GameUtils.h"
+
 int SpriteSheet::GetSpriteIndex()
 {
 	return currentSprite;

@@ -3,6 +3,8 @@
 #define USE_RENDERABLE
 #include "SDL.h"
 #include "GameLogging.h"
+static const char* BASE_ASSET_PATH = "Assets/"; // TODO!
+static const char* SPRITE_INFO_FORMAT = ".spritedims";// TODO!
 struct Vector2;
 class RenderableComponent
 {

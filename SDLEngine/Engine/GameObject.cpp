@@ -12,9 +12,9 @@ GameObject::GameObject()
 	logging = GameLogging::GetInstance();
 	window = renderer->GetWindow();
 	renderContext = renderer->GetRenderContext();
-	input = InputHandler::GetInstance();
+	//input = InputHandler::GetInstance(); TODO!
 	audio = AudioEngine::GetInstance();
-	conductor = GameConductor::GetInstance();
+	//conductor = GameConductor::GetInstance(); TODO!
 	GetWindowParams();
 	velocity = Vector2::zero();
 	position = Vector2::zero();

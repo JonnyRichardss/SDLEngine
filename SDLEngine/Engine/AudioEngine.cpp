@@ -1,7 +1,16 @@
 #include "AudioEngine.h"
 #include <string>
-#include "GameConductor.h"
+//#include "GameConductor.h"  TODO!
 #include "GameUtils.h"
+static bool AUDIO_FAILURE_FATAL = true; // TODO!
+static bool ENGINE_QUIT_FLAG = false; // TODO!
+constexpr float MUSIC_VOLUME = 1; // TODO!
+constexpr float MASTER_VOLUME = 1;// TODO!
+constexpr int MUSIC_START_OFFSET = 0;// TODO!
+//TODO! looks like the audio failure case used the non-global quit flag. This whole init wants re-doing properly
+//TODO! add way to change volume at runtime - probably set by library consumer again
+//engine settings struct seems like a good way to do this - pass when init'ing library
+
 static AudioEngine* _instance;
 AudioEngine* AudioEngine::GetInstance()
 {
@@ -60,7 +69,7 @@ AudioEngine::~AudioEngine()
 }
 void AudioEngine::StartMusic() {
     Mix_PlayMusic(mainTrack, 0);
-    GameConductor::GetInstance()->StartMusic(SDL_GetTicks());
+    //GameConductor::GetInstance()->StartMusic(SDL_GetTicks()); TODO!
 }
 double AudioEngine::GetTrackPos()
 {
@@ -69,7 +78,8 @@ double AudioEngine::GetTrackPos()
 }
 double AudioEngine::MSsinceLastBeat()
 {
-    return fmod(GetTrackPos(),MS_PER_BEAT);
+    return 0;
+    //return fmod(GetTrackPos(),MS_PER_BEAT); TODO!
 }
 void AudioEngine::PlaySound(int index)
 {

@@ -3,7 +3,10 @@
 #include <cmath>
 #include <sstream>
 #include <algorithm>
-
+static const int WINDOW_WIDTH = 1600;// TODO!
+static const int WINDOW_HEIGHT = 900;// TODO!
+static const int GAME_MAX_X = 800;// TODO!
+static const int GAME_MAX_Y = 450;// TODO!
 static RenderEngine* _instance;
 RenderEngine* RenderEngine::GetInstance()
 {

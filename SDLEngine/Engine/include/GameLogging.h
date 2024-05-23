@@ -2,7 +2,7 @@
 #define USE_GAMELOG
 #include <string>
 #include <vector>
-#include "Global_Flags.h"
+//#include "Global_Flags.h"  TODO!
 //TODO -- REWRITE THIS WHOLE THINGS AS A BACKEND FOR SDL_LOG -- IT HAS LOTS OF FEATURES BUILT IN
 class GameLogging
 {
@@ -17,8 +17,8 @@ public:
 private:
 	GameLogging();
 	~GameLogging();
-	bool consoleLogEnabled=CONSOLE_LOG_DEFAULT;
-	bool showDebugLogs = DEBUG_EXTRA_LOGGING;
+	bool consoleLogEnabled=true;  // TODO!
+	bool showDebugLogs = false;  // TODO!
 	bool fileExists=false;
 	std::string LogPath;
 	std::vector<std::string> logBuffer;

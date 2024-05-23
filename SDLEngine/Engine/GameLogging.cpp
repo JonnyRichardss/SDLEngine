@@ -3,6 +3,13 @@
 #include "GameUtils.h"
 #include <cstdio>
 #include <ctime>
+static const char* LOG_FOLDER_PATH = "Logs/";// TODO!
+static const char* LOGFILE_NAME = "latest.log";// TODO!
+static const bool VERBOSE_CONSOLE = false;// TODO!
+static const bool DO_FILE_LOGGING = true;// TODO!
+static const bool DO_BATCH_LOGGING = false;// TODO!
+static const bool CONSOLE_SHOW_TIME = false;// TODO!
+//TODO during refactor add a function to set these as settings and have defaults in engine_flags.h
 static GameLogging* _instance;
 GameLogging* GameLogging::GetInstance()
 {

@@ -5,9 +5,9 @@
 #include "GameMath.h"
 #include "GameClock.h"
 #include "ColourRGBA.h"
-#include "InputHandler.h"
+//#include "InputHandler.h" TODO!
 #include "AudioEngine.h"
-#include "GameConductor.h"
+//#include "GameConductor.h" TODO!
 #include <string>
 #include <vector>
 class GameEngine; //forward definition to prevent circular includes in header
@@ -64,10 +64,10 @@ protected:
 	GameLogging* logging;
 	RenderEngine* renderer;
 	//GameEngine* engine;
-	InputHandler* input;
+	//InputHandler* input; TODO!
 	GameScene* scene;
 	GameClock* clock;
-	GameConductor* conductor;
+	//GameConductor* conductor; TODO!
 	SDL_Window* window;
 	SDL_Renderer* renderContext;
 	RenderableComponent* visuals;

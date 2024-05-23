@@ -1,8 +1,9 @@
 #include "GameClock.h"
 #include "SDL.h"
-#include "Global_Flags.h"
+//#include "Global_Flags.h" TODO!
 #include <thread>
 static GameClock* _instance;
+static int FRAME_CAP = 60; // TODO!
 GameClock::GameClock() : ENGINE_START_TP(std::chrono::high_resolution_clock::now()), MS_offset_SDL (SDL_GetTicks())
 {
 	logging = GameLogging::GetInstance();
@@ -164,28 +165,36 @@ std::chrono::nanoseconds GameClock::TimeSinceLastFrame()
 {
 	return std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - last_frame_tp);
 }
-
-void GameClock::WaitFor(std::chrono::nanoseconds wait_ns)
-{
-	switch (GF_WAIT_METHOD) {
-	case WM_SDL:
-		SDL_Delay(std::chrono::duration_cast<std::chrono::milliseconds>(wait_ns).count());
-		break;
-	case WM_THREAD:
-		std::this_thread::sleep_for(wait_ns);
-		break;
-	case WM_BUSY:
-	{
-		auto wait_until = std::chrono::high_resolution_clock::now() + wait_ns;
-		while (std::chrono::high_resolution_clock::now() < wait_until) {
-			//DoThingsWhileWaiting()
-			//NOTE TO SELF - DONT ALLOW DISABLING FRAME LIMITER IF YOU IMPLEMENT FUNCTIONALITY IN HERE
-		}
-		break;
-	}
-	default:
-		throw "Invalid Wait Method";
-		//pretty sure the enum prevents invalid values being set but this isnt hurting anyone so
-		break;
+void GameClock::WaitFor(std::chrono::nanoseconds wait_ns) {
+	auto wait_until = std::chrono::high_resolution_clock::now() + wait_ns;
+	while (std::chrono::high_resolution_clock::now() < wait_until) {
+		//DoThingsWhileWaiting()
+		//NOTE TO SELF - DONT ALLOW DISABLING FRAME LIMITER IF YOU IMPLEMENT FUNCTIONALITY IN HERE
 	}
 }
+
+//Deprecated WaitFor version - I wrote it when testing different wait methods -- completely unnecessary as I chose one and stuck with it
+//void GameClock::WaitFor(std::chrono::nanoseconds wait_ns)
+//{
+//	switch (GF_WAIT_METHOD) {
+//	case WM_SDL:
+//		SDL_Delay(std::chrono::duration_cast<std::chrono::milliseconds>(wait_ns).count());
+//		break;
+//	case WM_THREAD:
+//		std::this_thread::sleep_for(wait_ns);
+//		break;
+//	case WM_BUSY:
+//	{
+		//auto wait_until = std::chrono::high_resolution_clock::now() + wait_ns;
+		//while (std::chrono::high_resolution_clock::now() < wait_until) {
+		//	//DoThingsWhileWaiting()
+		//	//NOTE TO SELF - DONT ALLOW DISABLING FRAME LIMITER IF YOU IMPLEMENT FUNCTIONALITY IN HERE
+		//}
+		//break;
+//	}
+//	default:
+//		throw "Invalid Wait Method";
+//		//pretty sure the enum prevents invalid values being set but this isnt hurting anyone so
+//		break;
+//	}
+//}

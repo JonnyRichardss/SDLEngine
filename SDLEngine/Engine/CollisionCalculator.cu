@@ -1,12 +1,11 @@
 #include "CollisionCalculator.cuh"
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
-#include "Global_Flags.h"
+//#include "Global_Flags.h" TODO!
 #include "GameMath.h"
 #include <math.h>
 #include "GameLogging.h"
-static int AllocSize = COLLISION_INIT_SIZE;
-
+static int MAX_COLLISIONS = 100;
 struct GameObjectCUDA {
 	int id;
 	/*
@@ -168,7 +167,7 @@ void AllocCUDA(int size) {
 namespace JRCollision {
 	void Init() {
 		//current state has this immediately reallocated
-		AllocCUDA(AllocSize);
+		//AllocCUDA(AllocSize); TODO!?
 	}
 	void Free()
 	{

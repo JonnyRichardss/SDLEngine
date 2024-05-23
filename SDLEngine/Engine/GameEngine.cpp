@@ -1,7 +1,8 @@
 #include "GameEngine.h"
-//#include "IncludeGameObjects.h"
-#include "IncludeScenes.h"
+#include <iostream>
+//#include "IncludeScenes.h" TODO!
 static GameEngine* _instance;
+static bool ENGINE_QUIT_FLAG = false;// TODO!
 GameEngine::GameEngine()
 {
     logging = GameLogging::GetInstance();
@@ -10,10 +11,10 @@ GameEngine::GameEngine()
         ENGINE_QUIT_FLAG = true;
     }
     clock = GameClock::GetInstance();
-    conductor = GameConductor::GetInstance();
+    //conductor = GameConductor::GetInstance(); TODO!
     renderer = RenderEngine::GetInstance();
     audio = AudioEngine::GetInstance();
-    input = InputHandler::GetInstance();
+    //input = InputHandler::GetInstance(); TODO!
     logging->Log("Initialised game engine.");
 }
 
@@ -30,18 +31,20 @@ GameEngine* GameEngine::GetInstance()
 
 void GameEngine::StartLoop()
 {
-    FPS = new FPSCounter();
-    FPS->Init();
-    CreateScenes();
-    GameLoop();
+    std::cout << "Hello, librarified World!" << std::endl;
+    //FPS = new FPSCounter();
+    //FPS->Init();
+    ///CreateScenes();
+    //GameLoop();
 }
 
 
 
  void GameEngine::CreateScenes()
 {
-     GameScene* boidScene = new BoidScene();
-     AllScenes.push_back(boidScene);
+     // TODO!
+    // GameScene* boidScene = new BoidScene();
+     //AllScenes.push_back(boidScene);
 
      //GameScene* eshopScene = new EshopScene();
      //AllScenes.push_back(eshopScene);
@@ -49,8 +52,8 @@ void GameEngine::StartLoop()
      //GameScene* collisionScene = new CollisionTestScene();
     // AllScenes.push_back(collisionScene);
       
-     GameScene* mainScene = new MainScene();
-     AllScenes.push_back(mainScene);
+     //GameScene* mainScene = new MainScene();
+     //AllScenes.push_back(mainScene);
 
      for (auto Scene : AllScenes) {
          Scene->CreateObjects();
@@ -98,7 +101,7 @@ void GameEngine::ProcessEvents()
         //I was going to part this out to input handler but these are all special case inputs so i'm leaving them here to separate them
         //Since i'm still processing events here I have to push mouse events back OUT to input so they can be timed
         if (event.type == SDL_MOUSEBUTTONDOWN) {
-            input->HandleEvent(event);
+            //input->HandleEvent(event); TODO!
         }
         if (event.type == SDL_KEYDOWN) {
             switch (event.key.keysym.sym) {
@@ -125,7 +128,7 @@ void GameEngine::ProcessEvents()
                 logging->ToggleConsoleLog();
                 break;
             case SDLK_SPACE:
-                input->HandleEvent(event);
+                //input->HandleEvent(event); TODO!
                 break;
             }
         }
@@ -146,7 +149,7 @@ void GameEngine::FPSUpdate() {
 void GameEngine::GameLoop() {
     while (!ENGINE_QUIT_FLAG) {
         clock->TickProfiling(PROFILING_STARTFRAME);
-        input->PollInput();
+        //input->PollInput(); TODO!
         ProcessEvents();
         if (ENGINE_QUIT_FLAG) break; //prevents the final update after quit
         clock->TickProfiling(PROFILING_INPUT);
@@ -155,14 +158,15 @@ void GameEngine::GameLoop() {
 
         clock->TickProfiling(PROFILING_UPDATE);
         renderer->RenderFrame();
-        if (DEBUG_DRAW_BB)
-           ActiveScene->DrawBBs();
+        
+        //if (DEBUG_DRAW_BB) TODO!
+         //  ActiveScene->DrawBBs();
 
         clock->TickProfiling(PROFILING_RENDER);
         clock->Tick();
 
-        if (DO_BATCH_LOGGING)
-            logging->SaveLogFile();
+        //if (DO_BATCH_LOGGING) TODO!
+            //logging->SaveLogFile();
     }
     logging->Log("Exiting Program");
     SDL_Quit();
